@@ -1,0 +1,36 @@
+<mat-form-field class="data-input" appearance="fill">
+  <mat-date-range-input
+    [rangePicker]="campaignTwoPicker"
+    [comparisonStart]="filter.control.value.startDate"
+    [comparisonEnd]="filter.control.value.endDate"
+    [min]="minDate"
+    [max]="nowDate"
+  >
+    <input
+      matStartDate
+      placeholder="Start date"
+      [ngModel]="filter.control.value.startDate"
+      (ngModelChange)="filter.control.value.startDate = $event"
+      [ngModelOptions]="{ standalone: true }"
+      [disabled]="loading"
+    />
+    <input
+      matEndDate
+      (dateChange)="
+        filter.control.value.startDate &&
+          filter.control.value.endDate &&
+          applyFilter(filter, {
+            startDate: parseMomentDate(filter.control.value.startDate),
+            endDate: parseMomentDate(filter.control.value.endDate)
+          })
+      "
+      placeholder="End date"
+      [ngModel]="filter.control.value.endDate"
+      (ngModelChange)="filter.control.value.endDate = $event"
+      [ngModelOptions]="{ standalone: true }"
+      [disabled]="loading"
+    />
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="campaignTwoPicker"></mat-datepicker-toggle>
+  <mat-date-range-picker #campaignTwoPicker></mat-date-range-picker>
+</mat-form-field>

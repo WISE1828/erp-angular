@@ -1,0 +1,131 @@
+<ng-template #eyeElement let-action="action">
+  <svg-icon
+    *ngIf="action"
+    (click)="action()"
+    [matTooltip]="'Детальный просмотр'"
+    class="eye-icon"
+    src="assets/icons/eye.svg"
+  ></svg-icon>
+</ng-template>
+
+<ng-template
+  #userLinkElement
+  let-redirectUrl="redirectUrl"
+  let-isActive="isActive"
+  let-userName="userName"
+  let-count="count"
+>
+  <a [matTooltip]="userName" [routerLink]="[redirectUrl]" [class.is_blocked]="isActive === false" *ngIf="redirectUrl">{{
+    userName
+  }}</a>
+  <span *ngIf="!redirectUrl && userName">{{ userName }}</span>
+  <span class="circle-item blink" *ngIf="count">{{ count }}</span>
+</ng-template>
+
+<ng-template #actionsElement let-edit="edit" let-save="save" let-close="close" let-delete="delete">
+  <div class="actions-group">
+    <svg-icon
+      *ngIf="edit"
+      [matTooltip]="'Редактировать'"
+      (click)="$event.stopPropagation(); edit()"
+      class="check-icon"
+      src="assets/icons/pencil.svg"
+    ></svg-icon>
+    <svg-icon
+      *ngIf="save"
+      [matTooltip]="'Сохранить'"
+      (click)="$event.stopPropagation(); save()"
+      class="check-icon"
+      src="assets/icons/check.svg"
+    ></svg-icon>
+    <svg-icon
+      *ngIf="close"
+      [matTooltip]="'Закрыть'"
+      (click)="$event.stopPropagation(); close()"
+      class="cancel-icon"
+      src="assets/icons/cross.svg"
+    ></svg-icon>
+    <svg-icon
+      *ngIf="delete"
+      [matTooltip]="'Удалить'"
+      (click)="$event.stopPropagation(); delete()"
+      class="cancel-icon"
+      src="assets/icons/cross.svg"
+    ></svg-icon>
+  </div>
+</ng-template>
+
+<ng-template
+  #itemsContainer
+  let-items="items"
+  let-classes="classes"
+  let-styles="styles"
+  let-element="element"
+  let-elements="elements"
+  let-showControl="showControl"
+>
+  <div class="row-custom" [ngClass]="classes" [ngStyle]="styles">
+    <div
+      class="cell-custom"
+      *ngFor="let item of items; trackBy: trackByIdentity"
+      [ngClass]="item?.classes"
+      [ngStyle]="item?.styles"
+    >
+      <ng-container
+        [ngTemplateOutlet]="cellBlock"
+        [ngTemplateOutletContext]="{
+          cellConfig: item,
+          element: element,
+          elements: elements,
+          showControl: showControl
+        }"
+      ></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #commentElement
+  let-isSelected="isSelected"
+  let-isSaveExternal="isSaveExternal"
+  let-isDisabled="isDisabled"
+  let-isHide="isHide"
+  let-direction="direction"
+  let-key="key"
+  let-comment="comment"
+  let-termId="termId"
+  let-select="select"
+  let-save="save"
+  let-name="name"
+>
+  <div class="comment__container">
+    <button
+      class="comment__arrow"
+      [hidden]="isHide"
+      [class.comment__left]="direction === 'left'"
+      [class.comment__right]="direction === 'right'"
+      [class.comment__top]="direction === 'top'"
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+      (click)="select(key); $event.stopPropagation()"
+    ></button>
+
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger"
+      [cdkConnectedOverlayOpen]="isSelected"
+      (overlayOutsideClick)="select(null)"
+    >
+      <app-comment
+        [text]="comment || ''"
+        [termId]="termId"
+        [name]="name"
+        [disable]="isDisabled"
+        [isSaveExternal]="isSaveExternal"
+        (click)="$event.stopPropagation()"
+        (hideComment)="select(null)"
+        (saveComment)="save($event)"
+      ></app-comment>
+    </ng-template>
+  </div>
+</ng-template>

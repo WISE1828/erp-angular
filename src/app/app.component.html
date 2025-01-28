@@ -1,0 +1,15 @@
+<app-alert></app-alert>
+<div>
+  <div class="component-container">
+    <app-nav-menu *ngIf="auth.isAuthenticated()" (onToggle)="expandMenu$.next($event)"></app-nav-menu>
+    <div class="content" [class.expanded-menu]="expandMenu$ | async">
+      <app-top-panel *ngIf="auth.isAuthenticated()"></app-top-panel>
+      <router-outlet>
+        <div class="loading-group" *ngIf="loading">
+          <span class="loading-text">Loading</span>
+          <app-spinner></app-spinner>
+        </div>
+      </router-outlet>
+    </div>
+  </div>
+</div>

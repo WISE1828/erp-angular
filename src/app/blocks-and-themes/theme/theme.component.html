@@ -1,0 +1,49 @@
+<div class="theme-title">
+  <div class="theme-name">{{ theme?.name | titlecase }}</div>
+  <div *ngIf="isAccessToCreate">
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="theme-menu-button">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="deleteTheme()">
+        <mat-icon>delete</mat-icon>
+        <span>Удалить тему</span>
+      </button>
+      <button mat-menu-item (click)="addGuide()">
+        <mat-icon>add</mat-icon>
+        <span>Добавить {{ textData.item }}</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>
+
+<div class="loading-message" *ngIf="loading">
+  <span>ДОБАВЛЕНИЕ НОВОГО {{ textData.item | uppercase }}А</span>
+  <app-spinner style="margin-left: 15px"></app-spinner>
+</div>
+
+<div class="guides-block container-fluid" *ngIf="themesItems?.length" [style.gap.px]="actions?.create && 20">
+  <ng-template [ngIf]="!actions?.create">
+    <app-guide
+      class="col-xl-3 col-lg-6 col-md-6 col-sm-12 d-flex"
+      *ngFor="let guide of themesItems"
+      [guide]="guide"
+      [guideThemeType]="theme?.guideThemeType"
+      (editGuideEmitter)="editGuide($event)"
+      (deleteGuideEmitter)="deleteGuide($event)"
+    ></app-guide>
+  </ng-template>
+  <ng-template [ngIf]="actions?.create">
+    <app-password-item
+      class="item-flex"
+      *ngFor="let guide of themesItems"
+      [item]="guide"
+      [loading]="loading"
+      [guideThemeType]="theme?.guideThemeType"
+      (editGuideEmitter)="editGuide($event)"
+      (deleteGuideEmitter)="deleteGuide($event)"
+    ></app-password-item>
+  </ng-template>
+</div>
+
+<div class="empty-list" *ngIf="!themesItems?.length">В ТЕМЕ ОТСУТСВУЮТ {{ textData.item | uppercase }}Ы</div>

@@ -1,0 +1,15 @@
+.find-input {
+  .mat-form-field-wrapper {
+    padding: 1.25em 0;
+  }
+  ::ng-deep.mat-form-field-flex {
+    padding: 0 5px;
+  }
+  ::ng-deep.mat-form-field-wrapper {
+    width: 100%;
+  }
+}
+
+.form-control-select {
+  padding-bottom: 1.25em;
+}

@@ -1,0 +1,67 @@
+<div class="administration">
+  <div class="adm-row">
+    <div class="adm-task-name">Оборотные средства за предыдущий месяц</div>
+    <button
+      *ngIf="!closingOS"
+      class="btn btn-close btn-s"
+      (click)="closeOS()"
+      [disabled]="statistic?.isWorkingCapitalTermClosed || isWorkingCapitalTermClosed"
+    >
+      <span *ngIf="!statistic?.isWorkingCapitalTermClosed && !isWorkingCapitalTermClosed">Закрыть</span>
+      <span *ngIf="statistic?.isWorkingCapitalTermClosed || isWorkingCapitalTermClosed">Закрыт</span>
+    </button>
+    <app-spinner *ngIf="closingOS"></app-spinner>
+  </div>
+  <div class="adm-row">
+    <div class="adm-task-name">Финансы за предыдущий месяц</div>
+    <button
+      *ngIf="!closingDailyRoi"
+      class="btn btn-close btn-s"
+      (click)="closeDailyRoi()"
+      [disabled]="statistic?.isPayedTermClosed || isPayedTermClosed"
+    >
+      <span *ngIf="!statistic?.isPayedTermClosed && !isPayedTermClosed">Закрыть</span>
+      <span *ngIf="statistic?.isPayedTermClosed || isPayedTermClosed">Закрыт</span>
+    </button>
+    <app-spinner *ngIf="closingDailyRoi"></app-spinner>
+  </div>
+  <div class="adm-row">
+    <div class="adm-task-name">Процентные сетки</div>
+    <button class="btn btn-close btn-s" (click)="openPercentsGridWindow()">
+      <span>Обзор</span>
+    </button>
+  </div>
+  <div class="adm-row">
+    <div class="adm-task-name">Мотивационные сетки</div>
+    <button class="btn btn-close btn-s" (click)="openMotivationsGridWindow()">
+      <span>Обзор</span>
+    </button>
+  </div>
+  <div class="adm-row">
+    <div class="adm-task-name">Отчеты</div>
+    <button class="btn btn-close btn-s" (click)="showReports.emit()">
+      <span>Обзор</span>
+    </button>
+  </div>
+
+  <div class="adm-row">
+    <div class="adm-task-name">Трекеры</div>
+    <button class="btn btn-close btn-s" (click)="showTrackers()">
+      <span>Обзор</span>
+    </button>
+  </div>
+
+  <div class="adm-row">
+    <div class="adm-task-name">Финансовый KPI</div>
+    <button class="btn btn-close btn-s" (click)="showBudget()">
+      <span>Обзор</span>
+    </button>
+  </div>
+
+  <div class="adm-row">
+    <div class="adm-task-name">Пересчет DailyRoi</div>
+    <button class="btn btn-close btn-s" (click)="showRoiRecount()">
+      <span>Обзор</span>
+    </button>
+  </div>
+</div>

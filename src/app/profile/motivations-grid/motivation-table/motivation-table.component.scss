@@ -1,0 +1,113 @@
+::ng-deep table {
+  width: 100%;
+}
+::ng-deep.mat-tab-header {
+  display: none !important;
+}
+
+.payment-item {
+  position: relative;
+  width: 224px;
+  min-height: 160px;
+  padding: 14px;
+  padding-top: 35px;
+  margin-bottom: 20px;
+  border: 1px solid #c4c4c4;
+  display: flex;
+  flex-direction: column;
+  margin-right: 22px;
+  justify-content: center;
+}
+
+.list-item {
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-item:last-child {
+  margin-bottom: 0;
+}
+
+.item-header {
+  font-size: 13px;
+  line-height: 15px;
+  color: #c4c4c4;
+}
+
+.item-content {
+  padding-top: 2px;
+  font-size: 15px;
+  line-height: 18px;
+  color: #595c5e;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.payment-info-item:first-child {
+  margin-bottom: 20px;
+}
+
+span.mat-expansion-indicator {
+  pointer-events: visiblefill !important;
+}
+
+mat-panel-description {
+  justify-content: space-between;
+}
+
+mat-expansion-panel-header {
+  pointer-events: none;
+}
+
+.control-buttons {
+  pointer-events: auto;
+  width: 60px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.delete-icon {
+  position: relative;
+  top: 0;
+  right: 0;
+}
+
+mat-panel-title {
+  width: 120px;
+}
+
+.details-view {
+  pointer-events: auto;
+}
+
+::ng-deep.mat-chip.mat-standard-chip {
+  span {
+    color: #ffffff;
+  }
+  background-color: #e3b04e;
+}
+
+.find-input {
+  .mat-form-field-wrapper {
+    padding: 1.25em 0;
+  }
+  ::ng-deep.mat-form-field-flex {
+    padding: 0 5px;
+  }
+  ::ng-deep.mat-form-field-wrapper {
+    width: 100%;
+  }
+}
+
+::ng-deep thead {
+  display: none;
+}
+
+.empty-data {
+  text-align: center;
+}

@@ -1,0 +1,34 @@
+<div class="linear-bar" [class.disabled]="disabled" [class.enabled]="!disabled">
+  <mat-slider
+    thumbLabel
+    aria-label="units"
+    #element
+    [step]="100"
+    [(value)]="value"
+    (valueChange)="checkValue($event)"
+    [min]="minValue"
+    [max]="maxValue"
+  ></mat-slider>
+  <div class="linear-text" *ngIf="!hideValues">
+    <span class="linear-text__start">{{ minValue | number: '1.0' }}</span>
+    <span class="linear-text__center" [matTooltip]="value | number: '1.0'">{{ progressValue }}%</span>
+    <span class="linear-text__end" *ngIf="disabled">{{ maxValue | number: '1.0' }}</span>
+
+    <div class="form-control linear-text__end" id="maxValue" #maxValueElement *ngIf="!disabled">
+      <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+        <input
+          matInput
+          type="number"
+          [min]="minValue"
+          [max]="maxValue"
+          [(ngModel)]="value"
+          [style.width.px]="('' + (value || 1)).length * 11"
+          [disabled]="disabled"
+          (ngModelChange)="checkValue($event)"
+          (focus)="maxValueElement.classList.toggle('focused')"
+          (blur)="maxValueElement.classList.toggle('focused')"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+</div>

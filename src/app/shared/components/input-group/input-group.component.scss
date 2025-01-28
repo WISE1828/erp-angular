@@ -1,0 +1,68 @@
+.remains-container {
+  display: flex;
+}
+.remains-block {
+  position: relative;
+  font-weight: 500;
+  display: flex;
+  align-items: baseline;
+}
+.money {
+  padding-left: 15px;
+}
+.remains-input {
+  font-size: 16px;
+  height: 30px;
+  border-radius: 0;
+  max-width: 60px;
+  border-bottom: 1px solid #d1d1d1;
+  &:after {
+    content: '₽';
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    color: #d1d1d1;
+    width: 5px;
+    height: 5px;
+  }
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+  color: #8a9094;
+  font-weight: 300;
+}
+
+.form-control-remains {
+  flex-direction: row;
+  position: relative;
+  padding-right: 10px;
+  gap: 10px;
+}
+
+.edit-buttons {
+  position: relative;
+  top: unset;
+  left: unset;
+  right: unset;
+  svg-icon > svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+.edit-block {
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.label-month {
+  font-size: 13px;
+  color: #e3b04e;
+  position: absolute;
+}

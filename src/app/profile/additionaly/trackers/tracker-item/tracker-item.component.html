@@ -1,0 +1,44 @@
+<h1 mat-dialog-title>Синхронизация с {{ data.title }}</h1>
+
+<div class="filters">
+  <ng-template [ngIf]="!isAdmin">
+    <div class="form-control">
+      <label>Токен</label>
+      <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+        <input matInput placeholder="Введите текст" [(ngModel)]="token" [readonly]="loading" />
+      </mat-form-field>
+    </div>
+  </ng-template>
+
+  <ng-template [ngIf]="isAdmin">
+    <div class="form-control form-control-select">
+      <label class="filter-label">Команды</label>
+      <select class="reg-select" [(ngModel)]="selectedTeam">
+        <option></option>
+        <option *ngFor="let team of teamList$ | async" [ngValue]="team">
+          {{ team.id }}
+        </option>
+      </select>
+    </div>
+
+    <ng-container *ngIf="selectedTeam">
+      <div class="form-control">
+        <label>Keitaro URL</label>
+        <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+          <input matInput placeholder="Введите текст" [(ngModel)]="selectedTeam.keitaroUrl" [readonly]="loading" />
+        </mat-form-field>
+      </div>
+
+      <div class="form-control">
+        <label>Токен фаундера</label>
+        <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+          <input matInput placeholder="Введите текст" [(ngModel)]="selectedTeam.adminApiKey" [readonly]="loading" />
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <button class="btn btn-submit btn-s" (click)="synchronize()" [disabled]="loading">
+    <span>{{ lastToken ? 'Изменить' : 'Cинхронизировать' }}</span>
+  </button>
+</div>

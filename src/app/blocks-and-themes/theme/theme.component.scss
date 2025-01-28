@@ -1,0 +1,52 @@
+.theme-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-name {
+  font-size: 18px;
+  color: #e3b04e;
+  font-weight: 500;
+}
+
+.theme-menu-button {
+  margin-left: 8px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d1d1d1;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.theme-menu-button:hover {
+  background-color: #f8f8f8;
+}
+
+.guides-block {
+  margin-top: 45px;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1750px;
+}
+
+.empty-list {
+  margin-top: 15px;
+  text-align: center;
+  color: #d1d1d1;
+  font-size: 13px;
+}
+
+.loading-message {
+  display: flex;
+  color: #d1d1d1;
+  font-size: 13px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.item-flex {
+  display: flex;
+}

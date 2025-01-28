@@ -1,0 +1,18 @@
+<mat-tab-group dynamicHeight [selectedIndex]="state">
+  <mat-tab>
+    <ng-container *ngTemplateOutlet="viewTab"></ng-container>
+  </mat-tab>
+  <mat-tab>
+    <ng-container *ngTemplateOutlet="editTab"></ng-container>
+  </mat-tab>
+</mat-tab-group>
+
+<ng-template #viewTab>
+  <button class="btn btn-close btn-s add-grid" (click)="edit()">
+    <span>Добавить сетку</span>
+  </button>
+  <app-percent-table (onEdit)="edit($event)" [reload]="isReload"></app-percent-table>
+</ng-template>
+<ng-template #editTab>
+  <app-percent-item [item]="item" (onClosed)="view()"></app-percent-item>
+</ng-template>

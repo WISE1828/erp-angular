@@ -1,0 +1,171 @@
+<div *ngIf="!loading" class="container working-capital">
+  <div class="header">
+    <div
+      *ngIf="(role === auth.roles.admin || role === auth.roles.teamlead) && showBackButton"
+      class="btn btn-back"
+      [queryParams]="returnFilters"
+      [routerLink]="['/working_capital/common']"
+    >
+      Вернуться к списку
+    </div>
+    <div class="user-card">
+      <div class="user-block">
+        <svg-icon class="user-icon" src="assets/icons/account-circle.svg"></svg-icon>
+        <div class="user-info">
+          <div class="user-name">
+            <a class="finances-link" [routerLink]="['/profile', user?.id]">
+              <span>{{ user?.lastName + ' ' + user?.firstName }}</span>
+            </a>
+          </div>
+          <div class="user-role">{{ auth.rolesRU[user?.roleId] }}</div>
+        </div>
+      </div>
+      <div class="add-info">
+        <div>ID: {{ user?.id }}</div>
+        <div>Команда: {{ user?.teamId }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="money-request">
+    <div
+      class="money-request-header-block"
+      [ngClass]="{ disabled: !workingCapitalData?.paymentInfoDailyGroups?.length }"
+    >
+      <h2 class="money-request-header">Запросы на оборотку</h2>
+      <svg-icon
+        *ngIf="!moneyRequestShown"
+        (click)="showMoneyRequest()"
+        class="chevron"
+        src="assets/icons/chevron-down.svg"
+      >
+      </svg-icon>
+      <svg-icon
+        *ngIf="moneyRequestShown"
+        (click)="showMoneyRequest()"
+        class="chevron"
+        src="assets/icons/chevron-up.svg"
+      >
+      </svg-icon>
+    </div>
+    <div *ngIf="workingCapitalData" [hidden]="!moneyRequestShown">
+      <button
+        *ngIf="isActive && (+userId === +paramsId || +role === +auth.roles.admin)"
+        class="btn-add btn"
+        (click)="addNewRequest()"
+        [disabled]="isRequestCreate || !columns?.length"
+      >
+        Добавить
+      </button>
+      <div class="empty-request-list" *ngIf="!workingCapitalData.unhandledMoneyRequests.length && !isRequestCreate">
+        <p>Необработанных запросов нет</p>
+        <p *ngIf="!columns?.length">Привязанных карт нет</p>
+      </div>
+      <div class="requests-container">
+        <div *ngIf="workingCapitalData.unhandledMoneyRequests.length" class="request-container">
+          <app-request-item
+            *ngFor="let request of workingCapitalData.unhandledMoneyRequests"
+            [request]="request"
+            [workingCapitalData]="workingCapitalData"
+            (deleteRequestItem)="onDeleteRequest($event)"
+          >
+          </app-request-item>
+        </div>
+
+        <app-creating-request-item
+          *ngIf="isRequestCreate"
+          (closeRequest)="closeRequest()"
+          (createRequest)="createRequest($event)"
+          [termId]="workingCapitalData.termId"
+          [columns]="columns"
+        ></app-creating-request-item>
+      </div>
+    </div>
+  </div>
+
+  <app-data-table
+    *ngIf="dataTableConfig"
+    [dataTable]="dataTableConfig"
+    [selectedItemId]="selectedItemId"
+    [loading]="loading"
+  ></app-data-table>
+
+  <div class="remains-container" [formGroup]="remainsForm" *ngIf="workingCapitalData?.paymentInfoDailyGroups.length">
+    <div class="remains-block">
+      <p>ФАКТИЧЕСКИЙ ОСТАТОК:</p>
+      <div *ngIf="!editingFactRemains" class="money">
+        {{ (workingCapitalData.factRemains?.usd || 0) + ' $ / ' + (workingCapitalData.factRemains?.rub || 0) + ' ₽' }}
+      </div>
+      <svg-icon
+        *ngIf="!editingFactRemains && isActive"
+        (click)="editingFactRemains = true"
+        class="pencil-icon"
+        src="assets/icons/pencil.svg"
+      >
+      </svg-icon>
+      <div *ngIf="editingFactRemains">
+        <div class="form-control form-control-remains">
+          <input class="remains-input" id="factRemainsUsd" type="number" formControlName="factRemainsUsd" />
+          <span class="currency">$</span>
+          <input class="remains-input" id="factRemainsRub" type="number" formControlName="factRemainsRub" />
+          <span class="currency">P</span>
+        </div>
+        <div class="edit-buttons">
+          <svg-icon
+            *ngIf="!remainsLoading"
+            (click)="saveRemains('editingFactRemains')"
+            class="check-icon"
+            src="assets/icons/check.svg"
+          ></svg-icon>
+          <svg-icon
+            *ngIf="!remainsLoading"
+            (click)="cancelEditing('editingFactRemains')"
+            class="cancel-icon"
+            src="assets/icons/cross.svg"
+          ></svg-icon>
+          <app-spinner *ngIf="remainsLoading"></app-spinner>
+        </div>
+      </div>
+    </div>
+    <div class="remains-block">
+      <p>ПОЛОЖЕННЫЙ ОСТАТОК:</p>
+      <div *ngIf="!editingNeedRemains" class="money">
+        {{ (workingCapitalData.needRemains?.usd || 0) + ' $ / ' + (workingCapitalData.needRemains?.rub || 0) + ' ₽' }}
+      </div>
+      <svg-icon
+        *ngIf="!editingNeedRemains && isActive"
+        (click)="editingNeedRemains = true"
+        class="pencil-icon"
+        src="assets/icons/pencil.svg"
+      >
+      </svg-icon>
+      <div *ngIf="editingNeedRemains">
+        <div class="form-control form-control-remains">
+          <input class="remains-input" id="needRemainsUsd" type="number" formControlName="needRemainsUsd" />
+          <span class="currency">$</span>
+          <input class="remains-input" id="needRemainsRub" type="number" formControlName="needRemainsRub" />
+          <span class="currency">P</span>
+        </div>
+        <div class="edit-buttons">
+          <svg-icon
+            *ngIf="!remainsLoading"
+            (click)="saveRemains('editingNeedRemains')"
+            class="check-icon"
+            src="assets/icons/check.svg"
+          ></svg-icon>
+          <svg-icon
+            *ngIf="!remainsLoading"
+            (click)="cancelEditing('editingNeedRemains')"
+            class="cancel-icon"
+            src="assets/icons/cross.svg"
+          ></svg-icon>
+          <app-spinner *ngIf="remainsLoading"></app-spinner>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loading-group" *ngIf="loading">
+  <span class="loading-text">Loading</span>
+  <app-spinner></app-spinner>
+</div>

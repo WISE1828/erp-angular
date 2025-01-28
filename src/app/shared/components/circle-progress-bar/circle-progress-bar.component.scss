@@ -1,0 +1,29 @@
+.circle-bar {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+.circle-bar__text {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  color: #c4c4c4;
+  width: 200px;
+  text-align: end;
+}
+.circle-bar__wrapper {
+  position: relative;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1;
+}
+.circle-bar__value {
+  position: absolute;
+  top: 50%;
+  bottom: auto;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}

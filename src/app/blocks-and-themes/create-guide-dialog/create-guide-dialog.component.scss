@@ -1,0 +1,45 @@
+.add-img-btn {
+  position: relative;
+  background-color: transparent;
+  border: 1px solid #d1d1d1;
+  color: #e3b04e;
+  padding: 0 16px;
+  margin-bottom: 15px;
+}
+
+.header-dialog {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  span {
+    cursor: pointer;
+    &:hover {
+      color: #efbf63;
+    }
+  }
+}
+
+.add-img-btn:hover:not(:disabled) {
+  background-color: transparent;
+  border-color: #e3b04e;
+}
+
+.load-input {
+  top: 0;
+  z-index: 2;
+  cursor: pointer;
+  width: 164px;
+  height: 36px;
+  opacity: 0;
+  position: absolute;
+}
+
+.img-name {
+  margin-bottom: 10px;
+}
+
+.img-preview {
+  max-width: 100px;
+  height: auto;
+  margin-bottom: 10px;
+}

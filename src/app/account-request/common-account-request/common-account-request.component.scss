@@ -1,0 +1,132 @@
+.container {
+  min-width: auto !important;
+}
+
+.cell-header {
+  min-height: 56px;
+  vertical-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cell-id {
+  width: 50px;
+  text-align: center;
+}
+
+.cell-percent {
+  width: 100px;
+}
+
+.cell-user {
+  padding-right: 20px;
+  padding-left: 20px;
+  width: 200px;
+  text-align: center;
+  position: relative;
+}
+
+.cell-data {
+  width: 170px;
+}
+
+.cell-result {
+  width: 250px;
+}
+
+.table {
+  margin-top: 15px;
+  width: fit-content;
+  text-align: center;
+}
+
+.form-control {
+  max-width: 250px;
+  padding-left: 15px;
+}
+
+.cell-result {
+  color: #e3b04e;
+}
+
+.request-item {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  top: 6px;
+  right: 2px;
+  border: 1px solid #cc1b1b;
+  border-radius: 50%;
+  font-size: 13px;
+  color: #cc1b1b;
+  padding-top: 2px;
+}
+
+@keyframes blink {
+  0% {
+    color: #cc1b1b;
+    border-color: #cc1b1b;
+  }
+  100% {
+    color: #8a9094;
+    border-color: #8a9094;
+  }
+}
+@-webkit-keyframes blink {
+  0% {
+    color: #cc1b1b;
+    border-color: #cc1b1b;
+  }
+  100% {
+    color: #8a9094;
+    border-color: #8a9094;
+  }
+}
+.blink {
+  -webkit-animation: blink 0.5s linear infinite;
+  -moz-animation: blink 0.5s linear infinite;
+  -ms-animation: blink 0.5s linear infinite;
+  -o-animation: blink 0.5s linear infinite;
+  animation: blink 0.5s linear infinite;
+}
+
+.user-clickable {
+  cursor: pointer;
+  color: #199ad2;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row-container {
+  display: flex;
+}
+
+.eye-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 6px;
+  right: -30px;
+  fill: #d1d1d1;
+}
+
+.eye-icon:hover svg {
+  fill: #e3b04e;
+}
+
+.row-container {
+  position: relative;
+}
+
+.content-row .cell {
+  padding: 4px 6px;
+}
+
+.reg-select {
+  min-width: 170px;
+}
+
+.mat-form-field {
+  margin-bottom: 4px;
+}

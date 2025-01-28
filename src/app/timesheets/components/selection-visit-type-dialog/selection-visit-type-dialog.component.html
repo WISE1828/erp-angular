@@ -1,0 +1,13 @@
+<h1 mat-dialog-title class="header-dialog">Выбор статуса</h1>
+<!--*ngIf="selectedType.value"-->
+<mat-radio-group class="visit-types-group" [formControl]="selectedType">
+  <ng-container *ngFor="let type of visitTypes">
+    <!--    <mat-radio-button *ngIf="type.value !== visitTypes.NONE" class="visit-types-group__button" [value]="type.value">-->
+    <!--      {{ type.value }}-->
+    <!--    </mat-radio-button>-->
+    <mat-radio-button class="visit-types-group__button" [value]="type.type">
+      {{ type.name }}
+    </mat-radio-button>
+  </ng-container>
+</mat-radio-group>
+<button class="btn btn-s" (click)="changeVisitType()">Изменить</button>

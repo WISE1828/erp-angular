@@ -1,0 +1,132 @@
+<h1 mat-dialog-title>Зарплатные проценты</h1>
+<form [formGroup]="form" id="team-lead-percents">
+  <div class="item-row">
+    <div class="item-row__header">Процентная сетка</div>
+    <button
+      #addPercentChart
+      *ngIf="isEditable && !percentChartId.value"
+      class="btn btn-close btn-s"
+      (click)="toggleContainer(selectData, addPercentChart)"
+    >
+      <span>Назначить</span>
+    </button>
+    <div #selectData [ngStyle]="{ display: !isEditable || !percentChartId.value ? 'none' : 'block' }">
+      <select
+        *ngIf="isEditable"
+        class="custom-input item-select"
+        [formControl]="percentChartId"
+        [disabled]="loading$ | async"
+      >
+        <ng-container *ngIf="percentCharts$ | async as percents">
+          <option
+            [disabled]="true"
+            *ngIf="percentChart && !includesFn(percents, percentChart?.id)"
+            [value]="percentChart?.id"
+          >
+            {{ percentChart?.name }} - {{ percentChart?.date }}
+          </option>
+          <option *ngFor="let percent of percents" [value]="percent?.id">
+            {{ percent?.name }} - {{ percent?.date }}
+          </option>
+        </ng-container>
+      </select>
+
+      <app-spinner *ngIf="loading$ | async"></app-spinner>
+    </div>
+    <div *ngIf="!isEditable" class="item-row__text">{{ percentChart?.name || 'Не назначена' }}</div>
+  </div>
+  <div class="item-row">
+    <div class="item-row__header">Проценты за стажировку</div>
+    <app-input
+      [isAccessToEdit]="isEditable"
+      [typeValue]="'FLOAT'"
+      [dynamicWidth]="false"
+      [prefix]="percentInternship.value ? percentInternship.value + '%' : 'Не назначена'"
+      [postfix]="'%'"
+      [isLoading]="loading$ | async"
+      [isValid]="percentInternship.valid"
+      [isInvalid]="percentInternship.invalid"
+      [formControl]="form.get('percentInternship')"
+    ></app-input>
+  </div>
+
+  <div class="item-row">
+    <div class="item-row__header">Процент от прибыли компании</div>
+    <app-input
+      [isAccessToEdit]="isEditable"
+      [typeValue]="'FLOAT'"
+      [dynamicWidth]="false"
+      [prefix]="percentOfAgencyClearProfit.value ? percentOfAgencyClearProfit.value + '%' : 'Не назначены'"
+      [postfix]="'%'"
+      [isLoading]="loading$ | async"
+      [isValid]="percentOfAgencyClearProfit.valid"
+      [isInvalid]="percentOfAgencyClearProfit.invalid"
+      [formControl]="form.get('percentOfAgencyClearProfit')"
+    ></app-input>
+  </div>
+
+  <div class="item-row">
+    <div class="item-row__header">Эксклюзивные проценты</div>
+    <button class="btn btn-close btn-s" (click)="openEspecialPercents()">
+      <span>Обзор</span>
+    </button>
+  </div>
+
+  <div class="item-row">
+    <div class="item-row__header">Проценты за команду (Смарт)</div>
+    <app-input
+      [isAccessToEdit]="isEditable"
+      [typeValue]="'FLOAT'"
+      [dynamicWidth]="false"
+      [prefix]="percentSmart.value + '%'"
+      [postfix]="'%'"
+      [isLoading]="loading$ | async"
+      [isValid]="percentSmart.valid"
+      [isInvalid]="percentSmart.invalid"
+      [formControl]="form.get('percentSmart')"
+      (isEditing)="isEdit = $event"
+    ></app-input>
+  </div>
+  <div class="item-row">
+    <div class="item-row__header">Проценты за команду (Баер)</div>
+    <app-input
+      [isAccessToEdit]="isEditable"
+      [typeValue]="'FLOAT'"
+      [dynamicWidth]="false"
+      [prefix]="percentBayer.value + '%'"
+      [postfix]="'%'"
+      [isLoading]="loading$ | async"
+      [isValid]="percentBayer.valid"
+      [isInvalid]="percentBayer.invalid"
+      [formControl]="form.get('percentBayer')"
+      (isEditing)="isEdit = $event"
+    ></app-input>
+  </div>
+  <div class="item-row">
+    <div class="item-row__header">Проценты за команду (Хелпер)</div>
+    <app-input
+      [isAccessToEdit]="isEditable"
+      [typeValue]="'FLOAT'"
+      [dynamicWidth]="false"
+      [prefix]="percentHelper.value + '%'"
+      [postfix]="'%'"
+      [isLoading]="loading$ | async"
+      [isValid]="percentHelper.valid"
+      [isInvalid]="percentHelper.invalid"
+      [formControl]="form.get('percentHelper')"
+      (isEditing)="isEdit = $event"
+    ></app-input>
+  </div>
+
+  <div class="form-submit-buttons">
+    <button
+      class="btn btn-save btn-s"
+      *ngIf="isEditable"
+      (click)="save()"
+      [attr.disabled]="form.invalid || isEdit || null"
+    >
+      Сохранить
+    </button>
+    <button class="btn btn-cancel btn-s" [mat-dialog-close]>{{ !isEditable ? 'Назад' : 'Отменить' }}</button>
+  </div>
+</form>

@@ -1,0 +1,32 @@
+<div class="login-container">
+  <div class="logo-group">
+    <img class="logo" src="../../assets/img/logo.png" />
+  </div>
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
+    <div
+      class="form-control form-control-login"
+      [ngClass]="{ invalid: form.get('email').touched && form.get('email').invalid }"
+    >
+      <label for="email">Логин</label>
+      <input id="email" type="email" formControlName="email" />
+      <div *ngIf="form.get('email').touched && form.get('email').invalid" class="validation">
+        <small *ngIf="form.get('email').errors.required"> Введите логин </small>
+        <small *ngIf="form.get('email').errors.email"> Некорректный логин </small>
+      </div>
+    </div>
+
+    <div class="form-control" [ngClass]="{ invalid: form.get('password').touched && form.get('password').invalid }">
+      <label for="password">Пароль:</label>
+      <input id="password" type="password" formControlName="password" />
+      <div class="validation" *ngIf="form.get('password').touched && form.get('password').invalid">
+        <small *ngIf="form.get('password').errors.required"> Введите пароль </small>
+      </div>
+    </div>
+
+    <div class="error-message" *ngIf="isError">
+      <span>{{ isAccountBlocked ? 'Доступ к аккаунту ограничен' : 'Неверный логин или пароль' }}</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-submit" [disabled]="form.invalid">Войти</button>
+  </form>
+</div>

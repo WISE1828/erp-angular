@@ -1,0 +1,28 @@
+<div class="remains-container" [formGroup]="form">
+  <div class="remains-block">
+    <div class="label">
+      <p class="label-text">{{ label }}:</p>
+      <div class="label-month" *ngIf="currentMonth">{{ currentMonth | uppercase }}</div>
+    </div>
+    <div *ngIf="!editing" class="money">
+      {{ viewData }}
+    </div>
+    <svg-icon *ngIf="!editing && !disabled" (click)="editing = true" class="pencil-icon" src="assets/icons/pencil.svg">
+    </svg-icon>
+    <div *ngIf="editing && inputsView?.length" class="edit-block">
+      <div class="form-control form-control-remains">
+        <ng-container *ngFor="let input of inputsView">
+          <div class="input-wrapper">
+            <input class="remains-input" type="number" [formControlName]="input.name" />
+            <span class="currency">{{ input.postfix }}</span>
+          </div>
+        </ng-container>
+      </div>
+      <div class="edit-buttons">
+        <svg-icon *ngIf="!loading" (click)="onSave()" class="check-icon" src="assets/icons/check.svg"></svg-icon>
+        <svg-icon *ngIf="!loading" (click)="onCancel()" class="cancel-icon" src="assets/icons/cross.svg"></svg-icon>
+        <app-spinner *ngIf="loading"></app-spinner>
+      </div>
+    </div>
+  </div>
+</div>

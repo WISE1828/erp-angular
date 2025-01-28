@@ -1,0 +1,48 @@
+<span class="item-row__text" *ngIf="!isAccessToEdit">{{ value || emptyMessage }}</span>
+
+<div class="item-row__content" *ngIf="isAccessToEdit">
+  <mat-form-field
+    appearance="legacy"
+    class="custom-input"
+    *ngIf="isLoadingOrEdit || !isEmpty"
+    [ngStyle]="{ width: !isEdit && value ? ('' + value).length * 10 + 'px' : 'auto' }"
+  >
+    <input
+      matInput
+      appNumberInput
+      type="number"
+      [dynamicWidth]="dynamicWidth"
+      [typeValue]="typeValue"
+      [min]="0"
+      [class.active]="isEdit"
+      [(ngModel)]="value"
+      [readonly]="!isEdit"
+    />
+  </mat-form-field>
+  <button *ngIf="!isLoadingOrEdit && isEmpty" class="btn btn-close btn-s" (click)="edit()">
+    <span>Назначить</span>
+  </button>
+  <ng-container *ngIf="isLoadingOrEdit || !isEmpty">
+    <div class="info-icons">
+      <span *ngIf="isInvalid && !isEmpty" class="error-icon">!</span>
+      <app-spinner *ngIf="isLoading"></app-spinner>
+      <span class="item-row__text" *ngIf="!isLoadingOrEdit && !isEmpty && postfix">
+        {{ postfix }}
+      </span>
+    </div>
+    <div class="edit-buttons">
+      <ng-container *ngIf="!isLoadingOrEdit && !isEmpty">
+        <svg-icon (click)="edit()" class="pencil-icon" src="assets/icons/pencil.svg"> </svg-icon>
+      </ng-container>
+      <ng-container *ngIf="isEdit">
+        <svg-icon
+          (click)="isValid && save()"
+          [class.invalid-icon]="isInvalid"
+          class="check-icon"
+          src="assets/icons/check.svg"
+        ></svg-icon>
+        <svg-icon (click)="close()" class="cancel-icon" src="assets/icons/cross.svg"></svg-icon>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,62 @@
+<div class="guide-item">
+  <article class="sy-card" [ngClass]="{ loading: loading }">
+    <div class="sy-card__img">
+      <a
+        *ngIf="themeType.Manuals === guideThemeType"
+        matTooltip="{{ guide.name }}"
+        routerLink="/themes/manuals/{{ guide.id }}"
+        class="post-thumbnail"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <img width="392" height="260" src="{{ guide.pictureLink }}" />
+      </a>
+      <a
+        *ngIf="themeType.Manuals != guideThemeType"
+        class="post-thumbnail"
+        href="{{ guide.meta }}"
+        target="_blank"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <img width="392" height="260" src="{{ guide.pictureLink }}" />
+      </a>
+      <svg-icon
+        *ngIf="isAccessToEdit"
+        (click)="editGuide()"
+        class="edit-guide-icon"
+        src="assets/icons/pencil.svg"
+      ></svg-icon>
+      <svg-icon
+        *ngIf="isAccessToEdit"
+        (click)="deleteGuide()"
+        class="delete-guide-icon"
+        src="assets/icons/cross.svg"
+      ></svg-icon>
+    </div>
+    <div class="sy-card__content p-4">
+      <header class="entry-header">
+        <h2 class="entry-title">
+          <a
+            *ngIf="themeType.Manuals === guideThemeType"
+            matTooltip="{{ guide.name }}"
+            routerLink="/themes/manuals/{{ guide.id }}"
+            >{{ guide.name | uppercase }}</a
+          >
+          <a
+            *ngIf="themeType.Manuals != guideThemeType"
+            class="transition cope_text line-clamp"
+            matTooltip="{{ guide.name }}"
+            href="{{ guide.meta }}"
+            target="_blank"
+          >
+            {{ guide.name | uppercase }}
+          </a>
+        </h2>
+      </header>
+    </div>
+  </article>
+  <div class="loading-group" *ngIf="loading">
+    <app-spinner></app-spinner>
+  </div>
+</div>

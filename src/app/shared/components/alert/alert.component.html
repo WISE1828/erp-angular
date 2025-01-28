@@ -1,0 +1,8 @@
+<div
+  *ngIf="errorMessage"
+  class="alert"
+  [ngClass]="{ 'success-message': type === 'success', 'error-message': type === 'error' }"
+>
+  {{ errorMessage | uppercase }}
+  <svg-icon (click)="closeAlert()" class="close-alert-icon icon" src="assets/icons/cross.svg"></svg-icon>
+</div>

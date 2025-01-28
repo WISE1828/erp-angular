@@ -1,0 +1,117 @@
+<form [formGroup]="form">
+  <div class="col">
+    <div
+      class="form-control form-control-payment"
+      [ngClass]="{ invalid: form.get('name').touched && form.get('name').invalid }"
+    >
+      <label>Название сетки</label>
+      <input class="common-info-input" type="text" formControlName="name" />
+      <div *ngIf="form.get('name').touched && form.get('name').invalid" class="validation">
+        <small *ngIf="form.get('name').errors.required"> Введите название </small>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="form-control form-control-payment">
+      <label>Название колличества</label>
+      <input class="common-info-input" type="text" formControlName="quantityName" />
+    </div>
+    <div class="form-control form-control-payment">
+      <label>Краткое название колличества</label>
+      <input class="common-info-input" type="text" formControlName="quantitySign" />
+    </div>
+  </div>
+  <div class="col">
+    <div class="form-control form-control-payment">
+      <label>Название бонуса</label>
+      <input class="common-info-input" type="text" formControlName="bonusName" />
+    </div>
+    <div class="form-control form-control-payment">
+      <label>Краткое название бонуса</label>
+      <input class="common-info-input" type="text" formControlName="bonusSign" />
+    </div>
+  </div>
+
+  <div class="payment-details">
+    <div class="payment-details-header-block">
+      <h2 class="payment-details-header">Пороги</h2>
+      <button class="payment-details-header-button btn" (click)="addItem()" [disabled]="isCreate">+</button>
+    </div>
+    <p class="empty-payment-list-info" *ngIf="!arrayItems?.length">Информация отсутствует</p>
+    <div class="payment-items-list">
+      <div formArrayName="quantityBonusInfoCollection" *ngFor="let arrayItem of arrayItems; let i = index">
+        <div [formGroupName]="i" #scroller (click)="!isEditing ? editItem(i, $event) : false">
+          <div class="creating-payment-item">
+            <div class="creating-item-buttons">
+              <svg-icon
+                class="accept-icon icon"
+                src="assets/icons/check.svg"
+                [class.icon-disabled]="array.invalid"
+                *ngIf="arrayItem.isEdit"
+                [matTooltip]="'Применить'"
+                (click)="getBonus(i).valid && getQuantity(i).valid && editItem(i, $event)"
+              >
+              </svg-icon>
+              <!--              <svg-icon-->
+              <!--                *ngIf="!arrayItem.isEdit"-->
+              <!--                class="edit-icon icon"-->
+              <!--                src="assets/icons/pencil.svg"-->
+              <!--                [class.icon-disabled]="isEditing"-->
+              <!--                (click)="editItem(i)"-->
+              <!--              >-->
+              <!--              </svg-icon>-->
+              <svg-icon
+                class="delete-icon icon"
+                src="assets/icons/cross.svg"
+                [class.icon-disabled]="isEditing && !arrayItem.isEdit"
+                [matTooltip]="isEditing ? 'Отменить' : 'Удалить'"
+                (click)="isEditing ? declineEditingItem(i, $event) : removeItem(i)"
+              ></svg-icon>
+            </div>
+            <div
+              class="form-control form-control-payment"
+              [ngClass]="{ invalid: getQuantity(i).touched && getQuantity(i).invalid }"
+            >
+              <label>{{ form.get('quantityName').value }}</label>
+              <input
+                class="common-info-input"
+                type="number"
+                formControlName="quantity"
+                [readOnly]="!arrayItem.isEdit"
+                appNumberInput
+              />
+              <div *ngIf="getQuantity(i).touched && getQuantity(i).invalid" class="validation">
+                <small *ngIf="getQuantity(i).errors.required"> Введите значение </small>
+              </div>
+            </div>
+            <div
+              class="form-control form-control-payment"
+              [ngClass]="{ invalid: getBonus(i).touched && getBonus(i).invalid }"
+            >
+              <label>{{ form.get('bonusName').value }}</label>
+              <input
+                appNumberInput
+                [readOnly]="!arrayItem.isEdit"
+                class="common-info-input"
+                type="number"
+                formControlName="bonus"
+              />
+              <div *ngIf="getBonus(i).touched && getBonus(i).invalid" class="validation">
+                <small *ngIf="getBonus(i).errors.required"> Введите значение </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-footer">
+    <button [disabled]="form.invalid || isEditing" class="btn btn-s" (click)="save()">
+      <span>Сохранить</span>
+    </button>
+    <button class="btn btn-s" (click)="close()">
+      <span>Назад</span>
+    </button>
+  </div>
+</form>

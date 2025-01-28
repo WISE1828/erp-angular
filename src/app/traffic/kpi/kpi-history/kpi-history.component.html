@@ -1,0 +1,227 @@
+<div id="kpi">
+  <form class="filters">
+    <div class="filters--left">
+      <div class="form-control form-control-picker">
+        <label class="filter-label">Дата</label>
+        <mat-form-field appearance="fill" class="input-date">
+          <input [formControl]="date" (ngModelChange)="dateChange()" matInput [matDatepicker]="dp" />
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp panelClass="example-month-picker"> </mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-control form-control-select">
+        <label class="filter-label">Статус</label>
+        <select
+          class="reg-select"
+          [ngModel]="status"
+          (ngModelChange)="applyFilters('status', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          [disabled]="loading"
+        >
+          <option *ngFor="let el of statusList" [ngValue]="el.id">
+            {{ el.label }}
+          </option>
+        </select>
+      </div>
+      <div class="form-control form-control-select" *ngIf="isAdmin">
+        <label class="filter-label">Команда</label>
+        <select
+          class="reg-select"
+          [ngModel]="team"
+          (ngModelChange)="applyFilters('team', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          [disabled]="loading"
+        >
+          <option *ngFor="let el of teamList" [ngValue]="el.id">
+            {{ el.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <div [class.table-disabled]="loading" class="dataTable--content">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      multiTemplateDataRows
+      *ngIf="dataSource.data?.length && !loading"
+      [trackBy]="trackByIdentity"
+    >
+      <ng-container matColumnDef="{{ column }}" *ngFor="let column of columnsToDisplay">
+        <th mat-header-cell *matHeaderCellDef #headerCellElement>{{ columnsNames[column] }}</th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container
+            [ngTemplateOutlet]="cellContent"
+            [ngTemplateOutletContext]="{ column: column, element: element, firstPanel: true, showId: isAdmin }"
+          ></ng-container>
+        </td>
+      </ng-container>
+
+      <div matColumnDef="expandedDetail" [ngClass]="'twice-th'">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+          <div class="detail" [@detailExpand]="isExpanded(element?.rowId) ? 'expanded' : 'collapsed'">
+            <mat-accordion>
+              <mat-expansion-panel
+                #panel
+                [hideToggle]="true"
+                [expanded]="isExpanded(teamEl?.rowId)"
+                *ngFor="let teamEl of element?.items || []"
+              >
+                <mat-expansion-panel-header>
+                  <div class="expand-row">
+                    <div class="expand-cell" *ngFor="let teamColumn of columnsToDisplay">
+                      <ng-container
+                        [ngTemplateOutlet]="cellContent"
+                        [ngTemplateOutletContext]="{
+                          column: teamColumn,
+                          element: teamEl,
+                          panel: panel,
+                          maxCap: element?.cap,
+                          parent: element,
+                          width: widthColumns[teamColumn]
+                        }"
+                      ></ng-container>
+                    </div>
+                  </div>
+                </mat-expansion-panel-header>
+
+                <div class="expand-row" *ngFor="let userEl of teamEl?.items || []" [ngClass]="'thrid-th'">
+                  <div class="expand-cell" *ngFor="let userColumn of columnsToDisplay">
+                    <ng-container
+                      [ngTemplateOutlet]="cellContent"
+                      [ngTemplateOutletContext]="{
+                        column: userColumn,
+                        element: userEl,
+                        maxCap: teamEl?.cap,
+                        parent: teamEl,
+                        width: widthColumns[userColumn]
+                      }"
+                    ></ng-container>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </td>
+      </div>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: columnsToDisplay"
+        [class.expanded-row]="isExpanded(element?.rowId)"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+    </table>
+
+    <div class="empty-container" *ngIf="!dataSource.data?.length && !loading">
+      <img src="/assets/icons/empty-white-box.svg" alt="Empty box" />
+      <p>Нет данных</p>
+    </div>
+    <div class="loading-group" *ngIf="loading">
+      <span class="loading-text">Loading</span>
+      <app-spinner></app-spinner>
+    </div>
+  </div>
+  <ng-template #statusContent let-state="state">
+    <div class="status" [ngClass]="statusState(state)">
+      <div class="circle"></div>
+      <div class="text">{{ statusText(state) }}</div>
+    </div>
+  </ng-template>
+
+  <ng-template
+    #cellContent
+    let-column="column"
+    let-element="element"
+    let-panel="panel"
+    let-firstPanel="firstPanel"
+    let-showId="showId"
+    let-parent="parent"
+    let-width="width"
+  >
+    <div
+      [style.width]="width"
+      [ngClass]="[
+        'cell',
+        'cell-' + column,
+        firstPanel ? 'first-th' : '',
+        column === 'isCapClosed' ? (!element?.isCapClosed ? 'red-label' : 'green-label') : ''
+      ]"
+      *ngIf="!parent || isExpanded(parent?.rowId)"
+    >
+      <ng-template [ngIf]="column != 'actions'">
+        <ng-template [ngIf]="column === 'offerStatus'">
+          <ng-template
+            [ngIf]="firstPanel && selectedRowId === element.rowId && editedFirstColumns.includes(column)"
+            [ngIfElse]="statusCell"
+          >
+            <ng-template [ngIf]="column === 'offerStatus'">
+              <div class="control">
+                <select class="reg-select" [(ngModel)]="selectedRow[column]">
+                  <option *ngFor="let el of statusList" [ngValue]="el.id">
+                    {{ el.label }}
+                  </option>
+                </select>
+              </div>
+            </ng-template>
+          </ng-template>
+          <ng-template #statusCell>
+            <ng-container *ngTemplateOutlet="statusContent; context: { state: element[column] }"></ng-container>
+          </ng-template>
+        </ng-template>
+
+        <ng-template [ngIf]="column != 'offerStatus'">
+          <ng-template [ngIf]="column === 'id' && showId">
+            {{ element[column] }}
+          </ng-template>
+          <ng-template [ngIf]="column != 'id'">
+            <ng-template [ngIf]="!firstPanel">
+              {{
+                column === 'cap' ? capView(element) : column === 'isCapClosed' ? closedView(element) : element[column]
+              }}
+              <div class="status" *ngIf="!element[column] && element[column] != 0" [ngClass]="statusState(0)">
+                <div class="text">{{ statusText(0) }}</div>
+              </div>
+            </ng-template>
+
+            <ng-template [ngIf]="firstPanel">
+              {{
+                column === 'cap' ? capView(element) : column === 'isCapClosed' ? closedView(element) : element[column]
+              }}
+              <div class="status" *ngIf="!element[column] && element[column] != 0" [ngClass]="statusState(0)">
+                <div class="text">{{ statusText(0) }}</div>
+              </div>
+            </ng-template>
+          </ng-template>
+          <ng-template [ngIf]="column === 'id' && !showId">
+            <div class="status" [ngClass]="statusState(0)">
+              <div class="text">{{ statusText(0) }}</div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </ng-template>
+      <ng-template [ngIf]="column === 'actions'">
+        <div class="controls">
+          <ng-template [ngIf]="!firstPanel && element?.items?.length > 0">
+            <div
+              class="expansion-indicator"
+              [style.transform]="isExpanded(element?.rowId) ? 'rotate(180deg)' : 'rotate(0deg)'"
+              (click)="$event.stopPropagation(); expandToggle(element?.rowId, parent ? 3 : 2)"
+            ></div>
+          </ng-template>
+
+          <ng-template [ngIf]="firstPanel && element?.items?.length > 0">
+            <div
+              class="expansion-indicator"
+              [style.transform]="isExpanded(element?.rowId) ? 'rotate(180deg)' : 'rotate(0deg)'"
+              (click)="expandToggle(element?.rowId, 1)"
+            ></div>
+          </ng-template>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

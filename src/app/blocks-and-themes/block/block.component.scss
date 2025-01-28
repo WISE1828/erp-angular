@@ -1,0 +1,30 @@
+.container {
+  min-width: 100%;
+  max-width: 1500px;
+}
+
+.empty-list {
+  min-width: 500px;
+  margin-top: 50px;
+  text-align: center;
+  color: #d1d1d1;
+  font-size: 13px;
+}
+
+.btn-add-theme {
+  color: #24272a;
+  min-width: 140px;
+}
+
+.themes-block {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+app-theme {
+  width: 100%;
+  margin-left: 0;
+  margin-bottom: 20px;
+}

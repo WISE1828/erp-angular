@@ -1,0 +1,9 @@
+.filters {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 25px;
+  ::ng-deep .mat-form-field {
+    margin-top: 0 !important;
+  }
+}

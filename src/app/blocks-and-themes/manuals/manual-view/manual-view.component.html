@@ -1,0 +1,15 @@
+<div [class.view-container]="isReadOnly">
+  <button *ngIf="isReadOnly" class="btn btn-s back" (click)="back()"><span>Назад</span></button>
+  <div class="editor-container">
+    <angular-editor
+      class="editor"
+      [class.full-screen-modal]="isFullSize"
+      *ngIf="!isReadOnly"
+      [(ngModel)]="htmlContent"
+      (ngModelChange)="metaChanges.emit(htmlContent)"
+      [config]="config"
+      [disabled]="isReadOnly"
+    ></angular-editor>
+    <div class="editor" *ngIf="isReadOnly" [innerHTML]="htmlContent | sanitizeHtml"></div>
+  </div>
+</div>

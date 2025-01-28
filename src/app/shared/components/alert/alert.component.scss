@@ -1,0 +1,24 @@
+.alert {
+  position: fixed;
+  background-color: #ffffff;
+  height: 60px;
+  z-index: 9999;
+  width: 100%;
+  color: #24272a;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  font-size: 13px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.close-alert-icon {
+  position: absolute;
+  right: 15px;
+  top: 5px;
+  fill: #696969;
+}
+
+.close-alert-icon:hover {
+  fill: #24272a;
+}

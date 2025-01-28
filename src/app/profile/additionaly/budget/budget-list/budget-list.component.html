@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Планы</h1>
+
+<button class="btn btn-s" style="margin-bottom: 10px" *ngIf="isAdmin">
+  <span *ngIf="!loading" (click)="create()">Создать</span>
+  <app-spinner *ngIf="loading"></app-spinner>
+</button>
+
+<mat-table [dataSource]="dataSource">
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
+
+  <ng-container cdkColumnDef="teamId">
+    <mat-header-cell *cdkHeaderCellDef>Команда</mat-header-cell>
+    <mat-cell *cdkCellDef="let element">{{ element.teamId }}</mat-cell>
+    <mat-footer-cell *cdkFooterCellDef></mat-footer-cell>
+  </ng-container>
+
+  <ng-container cdkColumnDef="commonBudget">
+    <mat-header-cell *cdkHeaderCellDef>План</mat-header-cell>
+    <mat-cell *cdkCellDef="let element" style="width: 50%">{{ element.commonBudget }}</mat-cell>
+    <mat-footer-cell *cdkFooterCellDef>Общий план: {{ totalCommonBudget }}</mat-footer-cell>
+  </ng-container>
+
+  <ng-container cdkColumnDef="button">
+    <mat-header-cell *cdkHeaderCellDef></mat-header-cell>
+    <mat-cell *cdkCellDef="let element">
+      <button class="btn btn-s" (click)="viewItem(element)">
+        <span *ngIf="!loading">Обзор</span>
+        <app-spinner *ngIf="loading"></app-spinner>
+      </button>
+    </mat-cell>
+    <mat-footer-cell *cdkFooterCellDef></mat-footer-cell>
+  </ng-container>
+</mat-table>

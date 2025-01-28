@@ -1,0 +1,17 @@
+<div class="item-row">
+  <div class="item-row__header">Стажировка</div>
+  <app-input
+    [isAccessToEdit]="isEditable"
+    [prefix]="days ? days + ' ' + (days | endWord: ['день', 'дня', 'дней']) + ' до окнчания' : 'не назначена'"
+    [postfix]="days ? (days | endWord: ['день', 'дня', 'дней']) + ' до окнчания' : ''"
+    [isLoading]="isLoading"
+    [isEdit]="isEdit"
+    [isValid]="formControl.valid"
+    [isInvalid]="formControl.invalid"
+    [oldValue]="days"
+    [formControl]="formControl"
+    (saveEvent)="save()"
+    (editEvent)="edit()"
+    (closeEvent)="cancel()"
+  ></app-input>
+</div>

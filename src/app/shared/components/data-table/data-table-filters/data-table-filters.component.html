@@ -1,0 +1,131 @@
+<form
+  class="filters"
+  [style.maxWidth]="maxWidthFilters"
+  *ngIf="dataTable?.filters?.length"
+  (window:resize)="calcWidth()"
+>
+  <div class="filters--left">
+    <ng-container *ngFor="let filter of dataTable?.filters">
+      <ng-template [ngIf]="filter?.control?.type === FILER_CONTROL_TYPE.DATE_MONTH">
+        <div class="form-control form-control-picker">
+          <label class="filter-label">{{ filter.label }}</label>
+          <mat-form-field appearance="fill" class="input-date">
+            <input
+              [min]="minDate"
+              matInput
+              [ngModel]="filter.control.value"
+              [ngModelOptions]="{ standalone: true }"
+              [matDatepicker]="dp"
+              [disabled]="loading"
+              [matDatepickerFilter]="dateFilterFn"
+            />
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker
+              #dp
+              startView="multi-year"
+              (monthSelected)="applyFilter(filter, parseMomentDate($event)); dp.close()"
+            >
+            </mat-datepicker>
+          </mat-form-field>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="filter?.control?.type === FILER_CONTROL_TYPE.DATE_PERIOD">
+        <div class="form-control form-control-picker">
+          <label class="filter-label">{{ filter.label }}</label>
+          <app-date-period
+            [filter]="filter"
+            [loading]="loading"
+            [applyFilter]="applyFilter.bind(this)"
+            [parseMomentDate]="parseMomentDate.bind(this)"
+          ></app-date-period>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="filter?.control?.type === FILER_CONTROL_TYPE.INPUT">
+        <div class="form-control">
+          <label class="filter-label">{{ filter.label }}</label>
+          <input
+            placeholder="{{ EMPTY_INPUT }}"
+            class="filter-input"
+            [ngModel]="filter.control.value"
+            (ngModelChange)="applyFilter(filter, $event)"
+            [ngModelOptions]="{ standalone: true }"
+            [type]="filter.control.valueType === VALUE_CONTROL_TYPE.NUMBER ? 'number' : 'text'"
+          />
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="filter?.control?.type === FILER_CONTROL_TYPE.SELECT">
+        <div class="form-control form-control-select">
+          <label class="filter-label">{{ filter.label }}</label>
+          <select
+            class="reg-select"
+            [ngModel]="filter.control.value"
+            (ngModelChange)="applyFilter(filter, $event)"
+            [ngModelOptions]="{ standalone: true }"
+            [disabled]="loading"
+          >
+            <option *ngFor="let el of filter.control.source | async" [value]="el.id">
+              {{ el.label }}
+            </option>
+          </select>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="filter?.control?.type === FILER_CONTROL_TYPE.MULTI_SELECT">
+        <div class="form-control form-control-select metrics">
+          <label class="filter-label">{{ filter.label }}</label>
+          <ng-template [ngIf]="filter?.control?.source | async" #source></ng-template>
+          <mat-select
+            class="reg-select"
+            [multiple]="!filter?.control?.disableMulti"
+            [ngModel]="filter.control.value"
+            (ngModelChange)="applyFilter(filter, $event)"
+            [ngModelOptions]="{ standalone: true }"
+            [disabled]="loading || !source"
+            [panelClass]="'multiSelect'"
+            [placeholder]="!source ? 'Нет данных' : 'Не выбрано'"
+          >
+            <mat-select-trigger *ngIf="filter?.control?.value as value">
+              <ng-template [ngIf]="value?.length"> Выбрано: {{ value?.length }} </ng-template>
+            </mat-select-trigger>
+            <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+              <input
+                #inputElement
+                matInput
+                placeholder="Введите текст для поиска"
+                [(ngModel)]="filter.control.search"
+                [ngModelOptions]="{ standalone: true }"
+                [readonly]="loading"
+                (keydown.space)="$event.stopPropagation()"
+                autocomplete="off"
+                type="search"
+              />
+              <svg-icon
+                class="delete-icon icon"
+                src="assets/icons/cross.svg"
+                *ngIf="filter?.control?.search"
+                matSuffix
+                (click)="filter.control.search = ''"
+              ></svg-icon>
+            </mat-form-field>
+            <div class="option-wrapper" *ngIf="filter.control.source | async as source">
+              <div class="option-list">
+                <div class="empty-option" *ngIf="isAllNotMatch(source, filter.control.search)">
+                  Данные {{ filter.control.search }} не найдены
+                </div>
+                <mat-option
+                  *ngFor="let el of source"
+                  [class.hide-select]="!isMatch(filter.control.search, el.label)"
+                  [value]="el.id"
+                  >{{ el.label }}</mat-option
+                >
+              </div>
+            </div>
+          </mat-select>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-content select="[filters-left]"></ng-content>
+  </div>
+  <div class="filters--right">
+    <ng-content select="[filters-right]"></ng-content>
+  </div>
+</form>

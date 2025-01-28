@@ -1,0 +1,624 @@
+<div class="container" *ngIf="userInfo && !(loading | async)">
+  <div class="profile-content">
+    <div class="left-block">
+      <ng-container [ngTemplateOutlet]="profileControls"></ng-container>
+    </div>
+    <div class="right-block block">
+      <div class="block-content">
+        <div>
+          <ng-container [ngTemplateOutlet]="profile"></ng-container>
+        </div>
+        <div>
+          <ng-container [ngTemplateOutlet]="charts"></ng-container>
+        </div>
+      </div>
+
+      <ng-container [ngTemplateOutlet]="circles"></ng-container>
+    </div>
+  </div>
+</div>
+
+<div class="loading-group" *ngIf="loading | async">
+  <span class="loading-text">Loading</span>
+  <app-spinner></app-spinner>
+</div>
+
+<ng-template #profileControls [formGroup]="form">
+  <div class="photo-block block">
+    <div class="banned-watermark" *ngIf="!userInfo?.isActive">
+      <span>Заблокирован</span>
+    </div>
+    <div *ngIf="isEditing">
+      <input (change)="loadPhoto($event)" class="load-input" type="file" accept=".jpg, .jpeg, .png" />
+      <div *ngIf="!userInfo.imageUrl" class="load-photo">
+        <span class="load-photo-button">+</span>
+      </div>
+      <div style="cursor: pointer; display: contents">
+        <img *ngIf="userInfo.imageUrl" class="photo round" src="{{ userInfo.imageUrl }}" alt="Avatar" />
+      </div>
+    </div>
+    <div class="empty-photo" *ngIf="!userInfo.imageUrl && !isEditing"></div>
+    <img
+      style="cursor: auto"
+      *ngIf="userInfo.imageUrl && !isEditing"
+      class="photo round"
+      src="{{ userInfo.imageUrl }}"
+      alt=""
+    />
+    <div class="social-icons">
+      <svg-icon
+        [ngClass]="{ 'empty-social': !userInfo.instagram }"
+        (click)="externalNavigate('inst')"
+        class="instagram-icon icon"
+        src="assets/icons/instagram.svg"
+      >
+      </svg-icon>
+      <svg-icon
+        [ngClass]="{ 'empty-social': !userInfo.telegram }"
+        (click)="externalNavigate('telegram')"
+        class="telegram-icon icon"
+        src="assets/icons/telegram.svg"
+      >
+      </svg-icon>
+      <svg-icon
+        [ngClass]="{ 'empty-social': !userInfo.vkontakte }"
+        (click)="externalNavigate('vk')"
+        class="vk-icon icon"
+        src="assets/icons/vk.svg"
+      >
+      </svg-icon>
+    </div>
+  </div>
+  <div class="contact-info-block block" *ngIf="!isEditing">
+    <mat-accordion>
+      <mat-expansion-panel hideToggle [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h2>Контактная информация</h2>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="contact-info-list list">
+          <div class="contact-info-item list-item">
+            <span class="item-header">Email</span>
+            <span class="item-content">{{ userInfo.email || '-' }}</span>
+          </div>
+          <div class="contact-info-item list-item">
+            <span class="item-header">Мобильный</span>
+            <span class="item-content">{{ userInfo.phoneNumber || '-' }}</span>
+          </div>
+          <div class="contact-info-item list-item">
+            <span class="item-header">Телеграм</span>
+            <span class="item-content">{{ userInfo.telegram || '-' }}</span>
+          </div>
+          <div class="contact-info-item list-item">
+            <span class="item-header">Instagram</span>
+            <span class="item-content">{{ userInfo.instagram || '-' }}</span>
+          </div>
+          <div class="contact-info-item list-item">
+            <span class="item-header">VK</span>
+            <span class="item-content">{{ userInfo.vkontakte || '-' }}</span>
+          </div>
+          <div class="contact-info-item list-item-row" *ngIf="!isPersonal && !isFinancier">
+            <div class="item-content">Платежные данные</div>
+            <button class="btn btn-close btn-s" (click)="showPaymentInfo()">
+              <span>Обзор</span>
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel hideToggle *ngIf="userId === paramsId || +role === +auth.roles.admin">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h2>Управление аккаунтом</h2>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="form-edit-buttons">
+          <button class="btn btn-edit btn-s m-r-10" [disabled]="!isCurrentMonth" (click)="startEditing()">
+            Редактировать
+          </button>
+          <button class="btn bth-change-pass btn-s" *ngIf="!isNotAdmin" (click)="changePassword(paramsId)">
+            Изменить пароль
+          </button>
+          <button
+            class="btn bth-change-pass btn-s"
+            *ngIf="!isNotAdmin && userId != paramsId && userInfo.isActive"
+            (click)="blockUser(+paramsId)"
+          >
+            Блокировать
+          </button>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel
+        hideToggle
+        *ngIf="(role === auth.roles.admin || role === auth.roles.financier) && +userId === +paramsId"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h2>Администрирование</h2>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-administration [statistic]="statistic" (showReports)="showReport()"> </app-administration>
+      </mat-expansion-panel>
+      <mat-expansion-panel hideToggle *ngIf="isAdditionView && form">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h2>Дополнительно</h2>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-additionaly>
+          <app-internship
+            *ngIf="isAdminViewSmart && isCurrentMonth"
+            [isEditable]="true"
+            [value]="userInfo?.internshipDays"
+            [id]="userInfo?.id"
+          ></app-internship>
+          <app-internship
+            *ngIf="isOthersViewSmart || (isAdminViewSmart && !isCurrentMonth)"
+            [isEditable]="false"
+            [value]="userInfo?.internshipDays"
+            [id]="userInfo?.id"
+          ></app-internship>
+
+          <ng-container>
+            <div class="item-row">
+              <div class="item-row__header" *ngIf="isAdminViewOther || isNotAdmin">
+                {{ isTeamLead ? 'Зарплатные проценты' : 'Процентная сетка' }}
+              </div>
+              <button *ngIf="isTeamLead" class="btn btn-close btn-s" (click)="openTeamLeadPercentGrid()">
+                <span>{{ isAdminViewOther ? 'Настроить' : 'Обзор' }}</span>
+              </button>
+
+              <ng-container *ngIf="!isTeamLead">
+                <button
+                  #addPercentChart
+                  *ngIf="!form.get('percentChartId').value && isAdminViewOther"
+                  class="btn btn-close btn-s"
+                  (click)="selectData.style.display = 'block'; addPercentChart.style.display = 'none'"
+                >
+                  <span>Назначить</span>
+                </button>
+                <div
+                  #selectData
+                  class="custom-input"
+                  [ngStyle]="{ display: !form.get('percentChartId').value ? 'none' : 'block' }"
+                >
+                  <select
+                    *ngIf="isAdminViewOther"
+                    class="custom-input item-select"
+                    formControlName="percentChartId"
+                    [disabled]="loading | async"
+                    (change)="setPercentChart()"
+                  >
+                    <ng-container *ngIf="percentCharts$ | async as percents">
+                      <option
+                        [disabled]="true"
+                        *ngIf="statistic?.percentChart && !includesFn(percents, statistic?.percentChart?.id)"
+                        [value]="statistic?.percentChart?.id"
+                      >
+                        {{ statistic?.percentChart?.name }} - {{ statistic?.percentChart?.date }}
+                      </option>
+                      <option *ngFor="let percentChart of percents" [value]="percentChart.id">
+                        {{ percentChart.name }} - {{ percentChart?.date }}
+                      </option>
+                    </ng-container>
+                  </select>
+
+                  <app-spinner *ngIf="loading | async"></app-spinner>
+                </div>
+                <span *ngIf="isNotAdmin" class="item-row__text">{{
+                  statistic?.percentChart?.name || 'Не назначена'
+                }}</span>
+              </ng-container>
+            </div>
+            <div class="item-row" *ngIf="isHelper || isPersonal">
+              <div class="item-row__header">Мотивационная сетка</div>
+
+              <ng-container>
+                <button
+                  #addMotivationChart
+                  *ngIf="!form.get('motivationChartId').value && isAdminViewOther"
+                  class="btn btn-close btn-s"
+                  (click)="selectData.style.display = 'block'; addMotivationChart.style.display = 'none'"
+                >
+                  <span>Назначить</span>
+                </button>
+                <div
+                  class="item-row__content"
+                  #selectData
+                  [ngStyle]="{ display: !form.get('motivationChartId').value ? 'none' : 'block' }"
+                >
+                  <select
+                    *ngIf="isAdminViewOther"
+                    class="custom-input item-select"
+                    formControlName="motivationChartId"
+                    [disabled]="loading | async"
+                    (change)="setMotivationChart()"
+                  >
+                    <ng-container *ngIf="motivationCharts$ | async as motivations">
+                      <option
+                        [disabled]="true"
+                        *ngIf="statistic?.motivationChart && !includesFn(motivations, statistic?.motivationChart?.id)"
+                        [value]="statistic?.motivationChart?.id"
+                      >
+                        {{ statistic?.motivationChart?.name }} - {{ statistic?.motivationChart?.date }}
+                      </option>
+                      <option *ngFor="let motivation of motivations" [value]="motivation.id">
+                        {{ motivation.name }} - {{ motivation?.date }}
+                      </option>
+                    </ng-container>
+                  </select>
+                  <app-spinner *ngIf="loading | async"></app-spinner>
+                </div>
+                <span *ngIf="isNotAdmin" class="item-row__text">{{
+                  statistic?.motivationChart?.name || 'Не назначена'
+                }}</span>
+              </ng-container>
+            </div>
+            <div class="item-row" *ngIf="isHelper || isPersonal">
+              <div class="item-row__header">Ставка</div>
+              <app-input
+                [isAccessToEdit]="isAdminViewOther"
+                [typeValue]="'FLOAT'"
+                [prefix]="form.get('bet').value ? form.get('bet').value : 'Не назначена'"
+                [isLoading]="loading | async"
+                [isValid]="form.get('bet').valid"
+                [isInvalid]="form.get('bet').invalid"
+                [formControl]="form.get('bet')"
+                [emptyMessage]="'Не назначена'"
+                (saveEvent)="setBet()"
+              ></app-input>
+            </div>
+
+            <div class="item-row">
+              <div class="item-row__header">Авансы</div>
+              <app-input
+                [isAccessToEdit]="isAdminViewOther"
+                [typeValue]="'FLOAT'"
+                [prefix]="form.get('prepaidExpense').value ? form.get('prepaidExpense').value : 'Не назначены'"
+                [isLoading]="loading | async"
+                [isValid]="form.get('prepaidExpense').valid"
+                [isInvalid]="form.get('prepaidExpense').invalid"
+                [formControl]="form.get('prepaidExpense')"
+                [emptyMessage]="'Не назначены'"
+                (saveEvent)="setPrepaidExpense()"
+              ></app-input>
+            </div>
+
+            <div class="item-row" *ngIf="isPersonal && !isFarmer">
+              <div class="item-row__header">Проценты от прибыли компании</div>
+              <app-input
+                [isAccessToEdit]="isAdminViewOther"
+                [typeValue]="'FLOAT'"
+                [prefix]="
+                  form.get('agencyProfitPercent').value ? form.get('agencyProfitPercent').value : 'Не назначены'
+                "
+                [isLoading]="loading | async"
+                [isValid]="form.get('agencyProfitPercent').valid"
+                [isInvalid]="form.get('agencyProfitPercent').invalid"
+                [formControl]="form.get('agencyProfitPercent')"
+                [emptyMessage]="'Не назначены'"
+                (saveEvent)="setAgencyProfitPercent()"
+              ></app-input>
+            </div>
+
+            <div class="item-row" *ngIf="isTeamLead">
+              <div class="item-row__header">Отчеты</div>
+
+              <ng-container>
+                <button class="btn btn-close btn-s" (click)="showReport()">
+                  <span>Обзор</span>
+                </button>
+              </ng-container>
+            </div>
+
+            <div class="item-row" *ngIf="isAccessToTrackers">
+              <div class="item-row__header">Трекеры</div>
+
+              <ng-container>
+                <button class="btn btn-close btn-s" (click)="showTrackers()">
+                  <span>Обзор</span>
+                </button>
+              </ng-container>
+            </div>
+
+            <div class="item-row" *ngIf="isAccessToHelperPercents">
+              <div class="item-row__header">Проценты с хелперов/смартов/баеров</div>
+
+              <ng-container>
+                <button class="btn btn-close btn-s" (click)="showHelperPercents()">
+                  <span>Обзор</span>
+                </button>
+              </ng-container>
+            </div>
+
+            <div class="item-row" *ngIf="isAdminOrTeamlead">
+              <div class="item-row__header">Финансовый KPI</div>
+
+              <ng-container>
+                <button class="btn btn-close btn-s" (click)="showBudget()">
+                  <span>Обзор</span>
+                </button>
+              </ng-container>
+            </div>
+          </ng-container>
+        </app-additionaly>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <div class="contact-info-block block" *ngIf="isEditing">
+    <mat-expansion-panel hideToggle *ngIf="userId === paramsId || +role === +auth.roles.admin" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Контактная информация</h2>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="contact-info-list list">
+        <div class="contact-info-item list-item list-item-edit">
+          <div class="form-control">
+            <label for="email">Email*</label>
+            <input class="contact-info-input" id="email" type="email" formControlName="email" />
+          </div>
+        </div>
+        <div class="contact-info-item list-item list-item-edit">
+          <div
+            class="form-control"
+            [ngClass]="{ invalid: form.get('phoneNumber').touched && form.get('phoneNumber').invalid }"
+          >
+            <label for="phoneNumber">Мобильный*</label>
+            <input class="contact-info-input" id="phoneNumber" type="tel" formControlName="phoneNumber" />
+            <div *ngIf="form.get('phoneNumber').touched && form.get('phoneNumber').invalid" class="validation">
+              <small *ngIf="form.get('phoneNumber').errors.required"> Введите номер мобильного </small>
+            </div>
+          </div>
+        </div>
+        <div class="contact-info-item list-item list-item-edit">
+          <div class="form-control">
+            <label for="telegram">Телеграм</label>
+            <input class="contact-info-input" id="telegram" type="string" formControlName="telegram" />
+          </div>
+        </div>
+        <div class="contact-info-item list-item list-item-edit">
+          <div class="form-control">
+            <label for="instagram">Instagram</label>
+            <input class="contact-info-input" id="instagram" type="string" formControlName="instagram" />
+          </div>
+        </div>
+        <div class="contact-info-item list-item list-item-edit">
+          <div class="form-control">
+            <label for="vkontakte">VK</label>
+            <input class="contact-info-input" id="vkontakte" type="string" formControlName="vkontakte" />
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</ng-template>
+
+<ng-template #profile [formGroup]="form">
+  <div *ngIf="!isEditing" class="user-info">
+    <h2>Общие данные</h2>
+    <div class="user-info-list list">
+      <div class="user-info-item list-item">
+        <span class="item-header">Имя</span>
+        <span class="item-content">{{ userInfo.firstName || '-' }}</span>
+      </div>
+      <div class="user-info-item list-item">
+        <span class="item-header">Фамилия</span>
+        <span class="item-content">{{ userInfo.lastName || '-' }}</span>
+      </div>
+      <div class="user-info-item list-item">
+        <span class="item-header">Отчество</span>
+        <span class="item-content">{{ userInfo.patronymic || '-' }}</span>
+      </div>
+      <div class="user-info-item list-item">
+        <span class="item-header">Дата Рождения</span>
+        <span class="item-content">{{ userInfo.birthday | date: 'longDate' || '-' }}</span>
+      </div>
+      <div class="user-info-item list-item">
+        <span class="item-header">ID</span>
+        <span class="item-content"># {{ userInfo.id || '-' }}</span>
+      </div>
+      <div class="user-info-item list-item">
+        <span class="item-header">Роль</span>
+        <span class="item-content">{{ auth.rolesRU[userInfo.roleId] || '-' }}</span>
+      </div>
+      <div class="user-info-item list-item">
+        <span class="item-header">Команда</span>
+        <span class="item-content">№ {{ userInfo.teamId || '-' }}</span>
+      </div>
+      <div class="user-info-item list-item">
+        <span class="item-header">Удалённая работа</span>
+        <span class="item-content">{{ userInfo?.isRemote ? 'Да' : 'Нет' }}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isEditing" class="user-info-edit">
+    <h2>Общие данные</h2>
+    <div class="user-info-list list">
+      <div class="user-info-item list-item list-item-edit">
+        <div
+          class="form-control"
+          [ngClass]="{ invalid: form.get('firstName').touched && form.get('firstName').invalid }"
+        >
+          <label for="firstName">Имя*</label>
+          <input class="common-info-input" id="firstName" type="string" formControlName="firstName" />
+          <div *ngIf="form.get('firstName').touched && form.get('firstName').invalid" class="validation">
+            <small *ngIf="form.get('firstName').errors.required"> Введите имя </small>
+          </div>
+        </div>
+      </div>
+      <div class="user-info-item list-item list-item-edit">
+        <div class="form-control" [ngClass]="{ invalid: form.get('lastName').touched && form.get('lastName').invalid }">
+          <label for="lastName">Фамилия*</label>
+          <input class="common-info-input" id="lastName" type="string" formControlName="lastName" />
+          <div *ngIf="form.get('lastName').touched && form.get('lastName').invalid" class="validation">
+            <small *ngIf="form.get('lastName').errors.required"> Введите фамилию </small>
+          </div>
+        </div>
+      </div>
+      <div class="user-info-item list-item list-item-edit">
+        <div
+          class="form-control"
+          [ngClass]="{ invalid: form.get('patronymic').touched && form.get('patronymic').invalid }"
+        >
+          <label for="patronymic">Отчество*</label>
+          <input class="common-info-input" id="patronymic" type="string" formControlName="patronymic" />
+          <div *ngIf="form.get('patronymic').touched && form.get('patronymic').invalid" class="validation">
+            <small *ngIf="form.get('patronymic').errors.required"> Введите отчество </small>
+          </div>
+        </div>
+      </div>
+      <div class="user-info-item list-item list-item-edit">
+        <div class="form-control">
+          <label for="birthday">Дата Рождения</label>
+          <input class="common-info-input" id="birthday" type="date" formControlName="birthday" />
+        </div>
+      </div>
+      <div class="user-info-item list-item list-item-edit">
+        <div class="form-control">
+          <label for="id">ID*</label>
+          <input class="common-info-input" id="id" type="number" formControlName="id" />
+        </div>
+      </div>
+      <div class="user-info-item list-item list-item-edit">
+        <div class="form-control form-control-select">
+          <label class="filter-label">Роль*</label>
+          <select class="reg-select" style="width: 100%" formControlName="roleId">
+            <option *ngFor="let role of roles" [value]="role.id">
+              {{ role.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="user-info-item list-item list-item-edit">
+        <div class="form-control">
+          <label for="teamId">Команда</label>
+          <input class="common-info-input" id="teamId" type="number" formControlName="teamId" />
+        </div>
+      </div>
+      <div class="user-info-item list-item list-item-edit">
+        <div class="form-control">
+          <mat-checkbox formControlName="isRemote" color="primary" [disabled]="isNotAdmin"
+            >Удалённая работа</mat-checkbox
+          >
+        </div>
+      </div>
+    </div>
+    <div class="form-edit-buttons">
+      <button class="btn btn-save btn-s" type="submit" [disabled]="form.invalid" (click)="submit()">Сохранить</button>
+      <button class="btn btn-cancel btn-s" (click)="cancelEditing()">Отменить</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #charts [formGroup]="form">
+  <div class="statistic-block" *ngIf="isBayerOrSmart">
+    <div class="layout">
+      <h2>Рабочие показатели</h2>
+      <div class="layout__block">
+        <mat-form-field appearance="fill" class="input-date">
+          <input [formControl]="date" matInput [matDatepicker]="dp" />
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker
+            #dp
+            startView="multi-year"
+            (monthSelected)="chosenMonthHandler($event, dp)"
+            panelClass="example-month-picker"
+          >
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <ng-container *ngIf="statistic && !(roleTimer.timer$ | async); else empty">
+      <div class="graph" style="min-height: 250px">
+        <app-chart *ngIf="!(loading | async)" [data]="chartData"> </app-chart>
+      </div>
+    </ng-container>
+  </div>
+  <div class="statistic-block" *ngIf="isAdminOrTeamlead">
+    <div class="layout">
+      <h2 *ngIf="userInfo.roleId === +auth.roles.admin">Рабочие показатели команд</h2>
+      <h2 *ngIf="userInfo.roleId === +auth.roles.teamlead">Рабочие показатели команды</h2>
+      <!-- input with period -->
+      <div class="layout__block">
+        <mat-form-field appearance="fill" class="input-date">
+          <input [formControl]="date" matInput [matDatepicker]="dp" [min]="minDate" />
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker
+            #dp
+            startView="multi-year"
+            (monthSelected)="chosenMonthHandler($event, dp)"
+            panelClass="example-month-picker"
+          >
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <ng-container *ngIf="statistic && !(roleTimer.timer$ | async); else empty">
+      <div class="graph-2" *ngIf="currentData" style="min-height: 250px">
+        <app-chart *ngIf="!(loading | async)" [data]="chartData"> </app-chart>
+        <div class="loading-group" *ngIf="loading | async">
+          <span class="loading-text">Loading</span>
+          <app-spinner></app-spinner>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="statistic-block" *ngIf="isHelper || isPersonal">
+    <div class="layout">
+      <h2>Рабочие показатели</h2>
+      <div class="layout__block">
+        <mat-form-field appearance="fill" class="input-date">
+          <input [formControl]="date" matInput [matDatepicker]="dp" />
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker
+            #dp
+            startView="multi-year"
+            (monthSelected)="chosenMonthHandler($event, dp)"
+            panelClass="example-month-picker"
+          >
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <ng-container *ngIf="statistic && !(roleTimer.timer$ | async); else empty">
+      <div class="graph" style="min-height: 250px">
+        <app-chart *ngIf="!(loading | async)" [data]="chartData"> </app-chart>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #circles [formGroup]="form">
+  <div class="statistic-data">
+    <ng-container *ngFor="let circle of circlesInfo; trackBy: circleRenderFn">
+      <app-circle-progress-bar
+        [title]="circle?.title"
+        [value]="circle?.value"
+        [color]="circle?.color"
+        [postfix]="circle?.postfix"
+        [maxValue]="circle?.maxValue != undefined ? circle?.maxValue : circle?.value"
+        [maxFill]="circle?.maxValue === undefined"
+      ></app-circle-progress-bar>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #empty>
+  <div class="empty-container">
+    <ng-container *ngIf="!(roleTimer.timer$ | async)">
+      <img src="/assets/icons/empty-white-box.svg" alt="Empty box" />
+      <p>Нет данных за выбранный период</p>
+    </ng-container>
+    <ng-container *ngIf="roleTimer.timer$ | async as time">
+      <div class="timer">
+        <mat-spinner [value]="(1 - time / roleTimer.seconds) * 100" [mode]="'determinate'"></mat-spinner>
+        <div class="value">{{ time * 1000 | date: 'H:mm:ss':'UTC' }}</div>
+      </div>
+      <p>
+        На данный момент происходит изменение роли для просматриваемого пользователя, процесс может занять от нескольких
+        секунд до одной минуты.
+      </p>
+    </ng-container>
+  </div>
+</ng-template>

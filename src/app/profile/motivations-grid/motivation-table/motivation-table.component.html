@@ -1,0 +1,73 @@
+<section>
+  <form class="filters" [formGroup]="form">
+    <div class="form-control-picker">
+      <label class="filter-label">Период</label>
+      <mat-form-field appearance="fill" class="input-date">
+        <input formControlName="date" matInput [matDatepicker]="dp" />
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker
+          #dp
+          startView="multi-year"
+          (monthSelected)="chosenMonthHandler($event, dp)"
+          panelClass="example-month-picker"
+        >
+        </mat-datepicker>
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+      <input matInput (input)="applyFilter(input.value)" placeholder="Введите текст" #input />
+
+      <svg-icon
+        class="delete-icon icon"
+        src="assets/icons/cross.svg"
+        *ngIf="input.value"
+        matSuffix
+        (click)="applyFilter((input.value = ''))"
+      ></svg-icon>
+    </mat-form-field>
+  </form>
+
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <mat-accordion mat-cell>
+        <mat-expansion-panel *matCellDef="let element" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ element.name }}
+            </mat-panel-title>
+            <mat-panel-description>
+              <span class="details-view"> Подробнее </span>
+              <div class="control-buttons">
+                <svg-icon
+                  class="edit-icon icon"
+                  src="assets/icons/pencil.svg"
+                  (click)="$event.stopPropagation(); edit(element)"
+                ></svg-icon>
+                <svg-icon
+                  (click)="$event.stopPropagation(); remove(element.id)"
+                  class="delete-icon icon"
+                  src="./assets/icons/cross.svg"
+                ></svg-icon>
+              </div>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-chip-list>
+            <mat-chip *ngFor="let item of element?.quantityBonusInfoCollection" [ngClass]="'btn'">
+              <span class="item-header"
+                >{{ element.bonusName }}: {{ item.bonus }} {{ element.quantityName }}: {{ item.quantity }}</span
+              >
+            </mat-chip>
+          </mat-chip-list>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div *ngIf="!dataSource?.filteredData?.length" class="empty-data">Нет данных</div>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</section>

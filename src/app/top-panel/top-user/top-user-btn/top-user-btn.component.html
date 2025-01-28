@@ -1,0 +1,28 @@
+<ng-template #loader>
+  <app-spinner style="margin-top: 25%"></app-spinner>
+</ng-template>
+
+<div (click)="isOpen = !isOpen" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+  <ng-container *ngIf="topData$ | async as topData">
+    <div
+      class="btn top-user-btn"
+      *ngIf="topData?.userTopStatistics?.length > 1 || topData?.teamTopStatistics?.length > 1"
+    >
+      <svg-icon class="user-icon" src="assets/icons/trophy.svg"></svg-icon>
+      <span>ТОП месяца</span>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen">
+  <div class="list-container">
+    <ng-container *ngIf="topData$ | async as topData; else loader">
+      <app-top-list
+        style="border-right: 1px solid #d1d1d1"
+        [topList]="topData.userTopStatistics"
+        listType="baer"
+      ></app-top-list>
+      <app-top-list [topList]="topData.teamTopStatistics" listType="team"></app-top-list>
+    </ng-container>
+  </div>
+</ng-template>

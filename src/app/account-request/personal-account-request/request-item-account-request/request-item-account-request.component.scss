@@ -1,0 +1,85 @@
+.request-item {
+  margin-top: 10px;
+  margin-right: 15px;
+  min-height: 190px;
+  position: relative;
+  border: 1px solid #c4c4c4;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: 250px;
+  padding-top: 25px;
+  padding-bottom: 30px;
+}
+
+.list-item {
+  margin-bottom: 13px;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-item:last-child {
+  margin-bottom: 0;
+}
+
+.item-header {
+  font-size: 13px;
+  line-height: 15px;
+  color: #c4c4c4;
+}
+
+.item-content {
+  padding-top: 5px;
+  font-size: 15px;
+  line-height: 18px;
+  color: #595c5e;
+  white-space: nowrap;
+  max-width: 228px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.request-item-buttons {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.payment-info-item:first-child {
+  margin-bottom: 20px;
+}
+
+.approve-icon {
+  margin-right: 10px;
+  fill: #8a9094;
+}
+
+.credit-card-icon {
+  fill: #8a9094;
+}
+
+.approve-icon:hover,
+.credit-card-icon:hover {
+  fill: #e3b04e;
+}
+
+.sing-buttons {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+}
+
+.credit-card-icon {
+  margin-right: 10px;
+}
+
+.disabled-icon {
+  cursor: not-allowed;
+  fill: #d1d1d1;
+}
+
+.disabled-icon:hover {
+  fill: #d1d1d1;
+}

@@ -1,0 +1,51 @@
+.creating-request-item {
+  margin-top: 10px;
+  min-height: 190px;
+  position: relative;
+  border: 1px solid #c4c4c4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+  padding-top: 25px;
+  padding-bottom: 10px;
+}
+
+.creating-item-buttons {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+input,
+select {
+  border: 1px solid #d1d1d1;
+  color: #595c5e;
+  width: 230px;
+  height: 25px;
+}
+
+select {
+  background-position: calc(100% - 16px) calc(0.7em), calc(100% - 12px) calc(0.7em), calc(100% - 2em) 0;
+}
+
+.reg-select {
+  padding-top: 0;
+}
+
+.invalid-creation svg {
+  fill: #d1d1d1;
+  border-color: #d1d1d1;
+  &:hover {
+    fill: #d1d1d1;
+    background-color: transparent;
+  }
+}
+
+.invalid-creation {
+  cursor: not-allowed;
+}
+
+.select-label {
+  margin-bottom: 5px;
+}

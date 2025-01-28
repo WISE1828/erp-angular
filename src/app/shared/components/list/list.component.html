@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>Отчеты</h1>
+<mat-list>
+  <mat-list-item *ngFor="let item of data?.items || []">
+    <span>{{ item.name }}</span>
+    <form class="filters" [formGroup]="item?.dateForm">
+      <div class="form-control-picker">
+        <mat-form-field appearance="fill" class="input-date">
+          <input formControlName="date" matInput [matDatepicker]="dp" [matDatepickerFilter]="dateFilterFn" />
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker
+            #dp
+            startView="multi-year"
+            (monthSelected)="chosenMonthHandler($event, dp, item?.dateForm)"
+            panelClass="example-month-picker"
+          >
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+    </form>
+    <button
+      class="btn btn-s"
+      (click)="getReport(item)"
+      [disabled]="item.loading || item?.dateForm?.get('date').invalid"
+    >
+      <span *ngIf="!item.loading">Сформировать</span>
+      <app-spinner *ngIf="item.loading"></app-spinner>
+    </button>
+  </mat-list-item>
+</mat-list>

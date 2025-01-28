@@ -1,0 +1,336 @@
+.container {
+  //min-width: 900px;
+  //width: fit-content;
+}
+
+.header-row {
+  width: fit-content;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 30px;
+  margin-top: 10px;
+  padding: 2px 5px;
+  font-size: 13px;
+}
+
+.user-container {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.user-card {
+  min-width: 270px;
+  width: fit-content;
+}
+
+.user-block {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  margin-left: 8px;
+}
+
+.user-name {
+  font-size: 24px;
+  color: #24272a;
+}
+
+.user-role {
+  font-size: 16px;
+  color: #e3b04e;
+}
+
+.add-info {
+  padding-left: 4px;
+  padding-top: 4px;
+  font-size: 13px;
+  color: #979797;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.finances-input {
+  border: 1px solid #d1d1d1;
+  width: 120px;
+  height: 28px;
+  margin: 0;
+  padding-right: 20px;
+}
+
+.form-control-profit {
+  position: relative;
+}
+
+.form-control-profit:after {
+  content: '₽';
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  color: #d1d1d1;
+}
+
+.profit-inputs {
+  display: flex;
+  align-items: center;
+  width: 200px;
+  height: 36px;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  margin-left: 10px;
+  padding: 4px 10px;
+  position: relative;
+  margin-bottom: 2px;
+}
+
+.profit-inputs:before {
+  //content: 'Профит';
+  position: absolute;
+  top: -27px;
+  left: 4px;
+  color: #e3b04e;
+  font-size: 13px;
+  font-weight: bolder;
+}
+
+.inputs-block {
+  z-index: 101;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 280px;
+  padding: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.inputs-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.finances-link {
+  color: #24272a;
+}
+.finances-link:hover {
+  color: #e3b04e;
+}
+
+.row {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.editable {
+  position: relative;
+
+  .form-control {
+    width: 100%;
+  }
+  input {
+    text-align: center;
+    background-color: transparent;
+    border-radius: 0;
+    height: 30px;
+    margin-top: 0;
+    padding-bottom: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #333333;
+    width: 90%;
+    border-bottom: 1px solid #d1d1d1;
+  }
+
+  input:focus {
+    border-color: #e3b04e;
+  }
+
+  input:disabled {
+    cursor: not-allowed;
+    border-bottom: 2px dotted #d1d1d1;
+    color: #8a9094;
+  }
+
+  .cell {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.cell-comission {
+  overflow: visible;
+}
+
+.edit-buttons-tax {
+  cursor: pointer;
+  display: flex;
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.cell-comission {
+  .info-icons {
+    position: absolute;
+    top: 6px;
+    left: 120px;
+  }
+  .error-icon {
+    color: #cc1b1b;
+    font-weight: bolder;
+  }
+}
+
+.total-comission-header {
+  position: relative;
+  font-weight: 500;
+}
+
+.total-comission {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.total-comission-value {
+  font-weight: 500;
+  font-size: 18px;
+  padding-left: 5px;
+}
+
+.total-comission-month {
+  font-size: 13px;
+  color: #e3b04e;
+  position: absolute;
+  top: 22px;
+}
+
+.total-comission-group {
+  font-size: 16px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+}
+
+.comission {
+  display: flex;
+  align-items: center;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.edit-tax input {
+  font-size: 16px;
+  height: 30px;
+  border-radius: 0;
+  max-width: 60px;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+.cell-with-comment {
+  position: relative;
+  overflow: visible;
+}
+
+.split-cell {
+  display: flex;
+}
+
+.comment {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  border: 5px solid transparent;
+  border-top: 5px solid #595c5e;
+
+  &__top {
+    left: calc(50% - 10px);
+    border: 10px solid transparent;
+    border-top: 10px solid #595c5e;
+  }
+  &__right {
+    right: 0;
+    left: auto;
+    border-right: 5px solid #595c5e;
+  }
+  &__left {
+    left: 0;
+    right: auto;
+    border-left: 5px solid #595c5e;
+  }
+}
+
+app-comment {
+  position: absolute;
+  top: -2px;
+  left: 100%;
+  z-index: 2;
+}
+
+.cell-size-1 {
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.cell-size-2 {
+  min-width: 240px;
+  max-width: 240px;
+}
+
+.cell-size-3 {
+  min-width: 360px;
+  max-width: 360px;
+}
+
+.cell-size-4 {
+  min-width: 210px;
+  max-width: 210px;
+}
+
+.header-cell-row-2 {
+  border-right: 1px solid #d1d1d1;
+  padding: 8px 0;
+}
+
+.header-cell-row-1 {
+  border-bottom: 1px solid #d1d1d1;
+  padding: 8px 0;
+}
+
+.header-cell {
+  min-height: 71px;
+}
+
+.mat-form-field-flex {
+  width: 260px;
+}

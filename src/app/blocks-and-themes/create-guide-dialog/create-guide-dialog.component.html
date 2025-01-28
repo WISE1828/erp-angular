@@ -1,0 +1,48 @@
+<h1 mat-dialog-title class="header-dialog">
+  {{ isEdit ? 'Редактирование' : 'Создание нового' }} гайда
+  <span (click)="toggleFullSize()" class="material-icons"> {{ isFullSize ? 'close_fullscreen' : 'fullscreen' }} </span>
+</h1>
+
+<mat-dialog-content>
+  <div [formGroup]="form">
+    <div class="form-control" [ngClass]="{ invalid: form.get('name').touched && form.get('name').invalid }">
+      <label for="name">Введите имя гайда</label>
+      <input class="reg-input" id="name" type="string" formControlName="name" />
+      <div *ngIf="form.get('name').touched && form.get('name').invalid" class="validation">
+        <small *ngIf="form.get('name').errors.required"> Обязательное поле </small>
+      </div>
+    </div>
+
+    <div
+      class="form-control"
+      *ngIf="data.guideThemeType != themeType.Manuals"
+      [ngClass]="{ invalid: form.get('link').touched && form.get('link').invalid }"
+    >
+      <label for="link">Добвьте ссылку</label>
+      <input class="reg-input" id="link" type="string" formControlName="link" />
+      <div *ngIf="form.get('link').touched && form.get('link').invalid" class="validation">
+        <small *ngIf="form.get('link').errors.required"> Обязательное поле </small>
+      </div>
+    </div>
+
+    <div>
+      <div *ngIf="fileName" class="img-name">{{ fileName }}</div>
+      <img *ngIf="imgPreview" class="img-preview" src="{{ imgPreview }}" />
+      <input (change)="browse($event)" #file class="load-input" type="file" accept=".jpg, .jpeg, .png" />
+      <button [disabled]="loading" class="btn add-img-btn" (click)="file.click()">Выберите изображение</button>
+    </div>
+
+    <app-manual-view
+      *ngIf="data.guideThemeType === themeType.Manuals"
+      [meta]="form.get('link').value"
+      [saved]="isSaved"
+      (metaChanges)="form.get('link').patchValue($event)"
+    ></app-manual-view>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button class="btn cancel-btn" (click)="close()">Отменить</button>
+  <button mat-button class="btn confirm-btn" [disabled]="form.invalid || !imgPreview" (click)="save()">
+    {{ isEdit ? 'Сохранить' : 'Создать' }}
+  </button>
+</mat-dialog-actions>

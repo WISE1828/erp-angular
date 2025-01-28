@@ -1,0 +1,15 @@
+.filters {
+  display: flex;
+  margin-top: 24px;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.nothing-found {
+  font-size: 18px;
+  color: #8a9094;
+  text-align: center;
+  margin-top: 15px;
+  padding: 200px 200px;
+  border: 1px solid #d1d1d1;
+}

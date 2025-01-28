@@ -1,0 +1,50 @@
+.top-panel {
+  height: 60px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+  justify-content: flex-end;
+  padding: 0 30px;
+}
+
+.top-panel-user {
+  display: flex;
+  align-items: center;
+}
+
+.top-panel-user-icon {
+  margin-right: 8px;
+  fill: #24272a;
+  &:hover {
+    fill: #e3b04e;
+  }
+}
+
+.top-panel-user-info {
+  margin-right: 5px;
+}
+
+.top-panel-user-name {
+  margin-right: 8px;
+}
+
+.top-panel-user-id {
+  color: #e3b04e;
+  font-weight: 500;
+}
+
+.top-panel-exit-icon {
+  padding-top: 2px;
+  fill: #54585c;
+}
+
+.top-panel-exit-icon:hover {
+  fill: #e3b04e;
+}
+
+.link {
+  &:hover .top-panel-user-icon {
+    fill: #e3b04e;
+  }
+}

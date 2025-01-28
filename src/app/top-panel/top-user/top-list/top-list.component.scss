@@ -1,0 +1,64 @@
+:host {
+  padding: 0 10px;
+  display: flex;
+}
+
+.mat-list-base .mat-list-item {
+  height: 24px;
+  margin: 5px;
+}
+
+.user-info {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #979797;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.header {
+  margin-bottom: 15px !important;
+  font-weight: bolder;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.list-type-column {
+  color: #e3b04e;
+}
+
+.profit-column {
+  color: #d1d1d1;
+}
+
+.user-position-1 {
+  font-size: 18px;
+  font-weight: bolder;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.user-position-2 {
+  font-size: 17px;
+  font-weight: bolder;
+}
+
+.user-position-3 {
+  font-size: 16px;
+  font-weight: bolder;
+}
+
+.name-list .user-position-1 {
+  color: #efbf63;
+}
+
+.name-list .user-position-2 {
+  color: #c0c0c0;
+}
+
+.name-list .user-position-3 {
+  color: #cd7f32;
+}

@@ -1,0 +1,138 @@
+::ng-deep .mat-grid-tile .mat-figure {
+  justify-content: end !important;
+}
+
+::ng-deep mat-checkbox {
+  margin-left: 15px;
+}
+
+::ng-deep .mat-select-arrow-wrapper {
+  opacity: 0 !important;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 900px;
+}
+
+mat-form-field {
+  margin-top: 0;
+  width: 100%;
+}
+
+.filter-button {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.form-control {
+  margin-bottom: 0;
+}
+
+select {
+  cursor: pointer;
+}
+
+select:disabled,
+.mat-select-disabled {
+  cursor: not-allowed;
+}
+
+.form-control,
+.form-control-picker {
+  width: 250px;
+}
+
+::ng-deep .mat-form-field-wrapper,
+.reg-select {
+  width: 100%;
+}
+
+.date-time--input {
+  padding: 2px 10px !important;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+.chart {
+  position: relative;
+}
+
+.loading-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: #b9b6b557;
+}
+.empty-data {
+  text-align: center;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+.metric-block--disabled {
+  filter: grayscale(1);
+}
+.metric-block--checkbox {
+  ::ng-deep {
+    .mat-checkbox-inner-container {
+      display: none;
+    }
+  }
+}
+.metric-block--item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  border-right: 5px;
+  padding: 3px;
+  mat-checkbox {
+    margin: 0;
+  }
+  &:first-child {
+    background: #ffffff1c;
+  }
+  color: white !important;
+  ::ng-deep {
+    .mat-checkbox-label {
+      color: white !important;
+    }
+  }
+}
+.metric-block--wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-direction: column;
+}
+
+section.chart-filters {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.metric-block {
+  flex-grow: 1;
+  flex-basis: 0;
+  cursor: pointer;
+  min-width: 200px;
+}
+.metric-block--wrapper {
+  border-radius: 5px;
+}

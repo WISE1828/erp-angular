@@ -1,0 +1,53 @@
+.empty-table {
+  height: 250px;
+}
+
+.result-money {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  min-width: fit-content;
+  margin-right: 2em;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filters {
+  margin-top: 24px;
+  max-width: 100%;
+  flex-wrap: wrap;
+  column-gap: 20px;
+  justify-content: end;
+}
+
+.layout-tax .cell {
+  border-bottom: none;
+  vertical-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cell-result-header {
+  color: #e3b04e;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+}
+
+.result-icon svg {
+  width: 54px !important;
+  height: 54px !important;
+  fill: #e3b04e;
+  margin-right: 10px;
+}
+
+.budget {
+  margin-left: auto;
+  width: 330px;
+}

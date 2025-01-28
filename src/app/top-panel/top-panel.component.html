@@ -1,0 +1,13 @@
+<div style="display: flex; justify-content: space-between; border-bottom: 1px solid #e5e5e5">
+  <app-top-user-btn *ngIf="hasAccess" style="margin-left: 40px"></app-top-user-btn>
+  <div class="top-panel">
+    <div class="top-panel-user link" [routerLink]="['profile', userId]">
+      <svg-icon class="top-panel-user-icon" src="assets/icons/account-outline.svg"></svg-icon>
+      <div class="top-panel-user-info">
+        <span class="top-panel-user-name">{{ userInfoService.userFullName }}</span>
+        <span class="top-panel-user-id">ID: {{ userId }}</span>
+      </div>
+    </div>
+    <svg-icon (click)="authService.logout()" class="top-panel-exit-icon icon" src="assets/icons/exit.svg"></svg-icon>
+  </div>
+</div>

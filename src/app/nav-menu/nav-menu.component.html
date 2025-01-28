@@ -1,0 +1,75 @@
+<div class="nav-menu" [ngClass]="{ 'menu-shrink': !expandMenu }">
+  <div class="logo-container">
+    <img class="logo" [ngClass]="{ 'small-logo': !expandMenu }" src="../../assets/img/logo.png" />
+  </div>
+  <div class="nav-items scroll">
+    <ng-container *ngFor="let mItem of MENU">
+      <ng-container *ngIf="mItem?.type === menuTypes.EXPANDED">
+        <div *ngIf="hasFnCall(mItem, 'getAccess')">
+          <div class="nav-item" routerLinkActive="active" [routerLink]="hasFnCall(mItem, 'getRoute')">
+            <svg-icon class="nav-icon" [src]="mItem.icon"></svg-icon>
+            <div [ngClass]="{ hidden: !expandMenu }" class="menu-with-number">{{ mItem.name }}</div>
+            <svg-icon
+              [ngClass]="{ open: mItem.expanded, hidden: !this.expandMenu }"
+              (click)="hasFnCall(mItem, 'toggle')"
+              class="submenu-icon"
+              src="assets/icons/chevron-down.svg"
+            ></svg-icon>
+            <div
+              *ngIf="hasFnCall(mItem, 'getInfoCircle') as info"
+              [ngClass]="{ hidden: !expandMenu }"
+              class="requests-number"
+            >
+              {{ info }}
+            </div>
+          </div>
+          <div
+            *ngIf="mItem?.submenu?.length"
+            [ngClass]="{ 'submenu-opened': mItem.expanded, hidden: !this.expandMenu }"
+            class="submenu"
+          >
+            <ng-container *ngFor="let smItem of mItem.submenu">
+              <span
+                *ngIf="hasFnCall(smItem, 'getAccess')"
+                routerLinkActive="active"
+                [routerLink]="hasFnCall(smItem, 'getRoute')"
+                class="submenu-item"
+                >{{ smItem.name }}
+                <div
+                  *ngIf="hasFnCall(smItem, 'getInfoCircle') as info"
+                  [ngClass]="{ hidden: !expandMenu }"
+                  class="requests-number small"
+                >
+                  {{ info }}
+                </div>
+              </span>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="mItem?.type === menuTypes.INLINE">
+        <div
+          *ngIf="hasFnCall(mItem, 'getAccess')"
+          class="nav-item"
+          routerLinkActive="active"
+          [routerLink]="hasFnCall(mItem, 'getRoute')"
+        >
+          <svg-icon class="nav-icon" [src]="mItem.icon"></svg-icon>
+          <span [ngClass]="{ hidden: !expandMenu }">{{ mItem.name }}</span>
+          <div
+            *ngIf="hasFnCall(mItem, 'getInfoCircle') as info"
+            [ngClass]="{ hidden: !expandMenu }"
+            class="requests-number"
+          >
+            {{ info }}
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div class="menu-toggle" [ngClass]="{ closed: !expandMenu }" (click)="toggleMenu()">
+    <svg-icon class="toggle-icon" src="assets/icons/chevron-down.svg"></svg-icon>
+    <span>Свернуть</span>
+  </div>
+</div>

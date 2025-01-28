@@ -1,0 +1,60 @@
+<h1 mat-dialog-title>Платежные даные</h1>
+<div class="payment-details">
+  <div class="payment-details-header-block" *ngIf="isAccessToCreate">
+    <span class="payment-details-header">Добавить</span>
+    <button class="payment-details-header-button btn" (click)="add()" [disabled]="isPaymentCreate || loading">+</button>
+  </div>
+  <div class="payment-items-list">
+    <p class="empty-payment-list-info" *ngIf="isEmpty">Информация отсутствует</p>
+    <ng-container *ngIf="!isEmpty">
+      <app-payment-item
+        *ngFor="let item of paymentInfoList"
+        [item]="item"
+        [isAccessToDelete]="isAccessToDelete"
+        [loading]="loading"
+        (delete)="delete(item)"
+      >
+      </app-payment-item>
+    </ng-container>
+
+    <div class="creating-payment-item" [formGroup]="paymentForm" *ngIf="isPaymentCreate">
+      <div class="creating-item-buttons">
+        <ng-container *ngIf="!loading">
+          <svg-icon
+            class="accept-icon icon"
+            src="assets/icons/check.svg"
+            (click)="createPaymentItem()"
+            [ngClass]="{ 'invalid-creation': paymentForm.invalid }"
+          >
+          </svg-icon>
+          <svg-icon class="delete-icon icon" src="assets/icons/cross.svg" (click)="closePaymentItem()"></svg-icon>
+        </ng-container>
+        <app-spinner *ngIf="loading"></app-spinner>
+      </div>
+
+      <div class="form-control form-control-select form-control-payment">
+        <label class="filter-label">Тип</label>
+        <select
+          class="reg-select reg-select-payment"
+          formControlName="paymentInfoType"
+          [attr.disabled]="loading || null"
+        >
+          <option *ngFor="let type of paymentInfoTypeList" [value]="type.paymentInfoType">
+            {{ type.name }}
+          </option>
+        </select>
+      </div>
+
+      <div
+        class="form-control form-control-payment"
+        [ngClass]="{ invalid: paymentForm.get('name').touched && paymentForm.get('name').invalid }"
+      >
+        <label for="name">Номер</label>
+        <input class="common-info-input" id="name" type="string" formControlName="name" [readOnly]="loading" />
+        <div *ngIf="paymentForm.get('name').touched && paymentForm.get('name').invalid" class="validation">
+          <small *ngIf="paymentForm.get('name').errors.required"> Введите номер карты </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

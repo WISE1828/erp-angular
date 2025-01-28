@@ -1,0 +1,101 @@
+<!-- <div *ngIf="!loading" class="container working-capital">
+  <div class="header">
+    <div
+      *ngIf="isAccessToRequest && showBackButton"
+      class="btn btn-back"
+      [queryParams]="returnFilters"
+      [routerLink]="['/account_request/common']"
+    >
+      Вернуться к списку
+    </div>
+    <div class="user-card">
+      <div class="user-block">
+        <svg-icon class="user-icon" src="assets/icons/account-circle.svg"></svg-icon>
+        <div class="user-info">
+          <div class="user-name">
+            <a class="finances-link" [routerLink]="['/profile', user?.id]">
+              <span>{{ user?.lastName + ' ' + user?.firstName }}</span>
+            </a>
+          </div>
+          <div class="user-role">{{ auth.rolesRU[user?.roleId] }}</div>
+        </div>
+      </div>
+      <div class="add-info">
+        <div>ID: {{ user?.id }}</div>
+        <div>Команда: {{ user?.teamId }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="money-request">
+    <div class="money-request-header-block">
+      <h2 class="money-request-header">Запросы на аккаунты</h2>
+      <svg-icon
+        *ngIf="!accountRequestsShown"
+        (click)="showAccountRequests()"
+        class="chevron"
+        src="assets/icons/chevron-down.svg"
+      >
+      </svg-icon>
+      <svg-icon
+        *ngIf="accountRequestsShown"
+        (click)="showAccountRequests()"
+        class="chevron"
+        src="assets/icons/chevron-up.svg"
+      >
+      </svg-icon>
+    </div>
+    <div *ngIf="accountRequestData" [hidden]="!accountRequestsShown">
+      <button
+        *ngIf="+userId === +paramsId || +role === +auth.roles.admin"
+        class="btn-add btn"
+        (click)="addNewRequest()"
+        [disabled]="isRequestCreate"
+      >
+        Добавить
+      </button>
+      <div class="empty-request-list" *ngIf="isRequestsEmpty">
+        <p>{{ isAccessToRequest ? 'Необработанных' : 'Созданных'}} запросов нет</p>
+      </div>
+      <div class="requests-container">
+        <div *ngIf="accountRequestData.accountRequests.length" class="request-container">
+          <ng-container *ngFor="let request of accountRequestData.accountRequests">
+            <app-request-item-account-request
+              *ngIf="!request.isApproved"
+              [request]="request"
+              [isReadOnly]="!isAccessToRequest"
+              [accountRequestData]="accountRequestData"
+              (deleteRequestItem)="onDeleteRequest($event)"
+              (updateRequest)="onUpdateRequest()"
+            >
+            </app-request-item-account-request>
+          </ng-container>
+        </div>
+
+        <app-creating-request-item
+          *ngIf="isRequestCreate"
+          (closeRequest)="closeRequest()"
+          (createRequest)="createRequest($event)"
+          [termId]="accountRequestData.id"
+          [userId]="paramsId"
+        ></app-creating-request-item>
+      </div>
+    </div>
+  </div>
+
+  <app-data-table
+    *ngIf="dataTableConfig"
+    [dataTable]="dataTableConfig"
+    [selectedItemId]="selectedItemId"
+    [loading]="loading"
+  ></app-data-table>
+</div>
+<div class="loading-group" *ngIf="loading">
+  <span class="loading-text">Loading</span>
+  <app-spinner></app-spinner>
+</div> -->
+<div *ngIf="!loading" class="container working-capital">
+  <a *ngIf="dataTableConfig" href="{{'https://react-farmer-app.azurewebsites.net/' + dataTableConfig.tableName}}"
+    >Перейти</a
+  >
+</div>

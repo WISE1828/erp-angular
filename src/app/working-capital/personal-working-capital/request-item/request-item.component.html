@@ -1,0 +1,41 @@
+<div class="request-item">
+  <div class="request-prop-item list-item">
+    <span class="item-header">Номер карты</span>
+    <span class="item-content">{{ request.paymentInfoName }}</span>
+  </div>
+  <div class="request-prop-item list-item">
+    <span class="item-header">Остаток</span>
+    <span class="item-content">{{ request.moneyRemains }}</span>
+  </div>
+  <div class="request-prop-item list-item">
+    <span class="item-header">Требуемые средства</span>
+    <span class="item-content">{{ request.moneyNeed }}</span>
+  </div>
+  <ng-container *ngIf="!loading">
+    <div class="request-item-buttons">
+      <svg-icon
+        (click)="onDeleteRequestItem(request.id)"
+        class="delete-icon icon"
+        src="../assets/icons/cross.svg"
+      ></svg-icon>
+    </div>
+    <div class="sing-buttons" *ngIf="[auth.roles.admin, auth.roles.teamlead].includes(role)">
+      <svg-icon
+        *ngIf="isPayAvailable"
+        (click)="pay(request)"
+        class="credit-card-icon icon"
+        src="../assets/icons/credit-card.svg"
+      ></svg-icon>
+      <svg-icon
+        [ngClass]="{ 'disabled-icon': !isApproveAvailable }"
+        (click)="isApproveAvailable && approveRequest(request)"
+        class="approve-icon icon"
+        src="../assets/icons/approve.svg"
+      ></svg-icon>
+    </div>
+  </ng-container>
+
+  <div class="request-item-buttons" *ngIf="loading">
+    <app-spinner></app-spinner>
+  </div>
+</div>

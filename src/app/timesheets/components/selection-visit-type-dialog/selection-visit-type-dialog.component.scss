@@ -1,0 +1,21 @@
+.visit-types-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+
+  &__button {
+    margin: 5px;
+  }
+}
+
+::ng-deep.mat-radio-outer-circle,
+::ng-deep.mat-radio-button * {
+  border-color: #e3b04e !important;
+}
+::ng-deep.mat-radio-inner-circle,
+::ng-deep.mat-radio-outer-circle {
+  border-radius: 5px;
+}
+::ng-deep .mat-radio-inner-circle {
+  background-color: #e3b04e !important;
+}

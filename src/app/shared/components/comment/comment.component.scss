@@ -1,0 +1,60 @@
+.comment-container {
+  padding: 10px;
+  min-width: 250px;
+  min-height: 100px;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.btn {
+  width: 90px;
+
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  height: 24px;
+  padding: 3px 12px 5px;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.disabled-add-btn {
+  background: #f1f3f4;
+  color: #3c4043;
+  opacity: 0.38;
+}
+
+.btn-add-comment {
+  margin-right: 10px;
+  background: #e3b04e;
+  color: #ffffff;
+}
+
+.btn-cancel-comment {
+  color: #e3b04e;
+  border: 1px solid #d1d1d1;
+  background: #fff;
+}
+
+textarea {
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  color: #595c5e;
+  padding: 5px;
+  min-width: 230px;
+  width: 100%;
+  min-height: 60px;
+  margin-bottom: 10px;
+  max-width: 500px;
+  max-height: 300px;
+}
+
+textarea::-webkit-input-placeholder {
+  color: #8a9094;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+}

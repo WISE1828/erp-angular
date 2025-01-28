@@ -1,0 +1,51 @@
+.item-name {
+  font-weight: 400;
+  color: #e3b04e;
+}
+
+.mat-dialog-title {
+  font-weight: 400;
+}
+
+.mat-dialog-content {
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border: 1px solid #d1d1d1;
+  color: #979797;
+}
+
+.mat-dialog-actions {
+  box-sizing: content-box;
+  justify-content: flex-end;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+}
+
+// общие
+
+input {
+  border: 1px solid #d1d1d1;
+  color: #595c5e;
+  width: 400px;
+}
+
+label {
+  color: #979797;
+}
+
+button:disabled {
+  background-color: #d1d1d1;
+  color: #979797;
+  cursor: not-allowed;
+}
+
+.form-control {
+  margin-bottom: 15px;
+}

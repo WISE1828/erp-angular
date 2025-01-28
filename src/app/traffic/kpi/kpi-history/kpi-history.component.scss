@@ -1,0 +1,44 @@
+.red-label {
+  color: red;
+}
+.green-label {
+  color: green;
+}
+
+#kpi {
+  .cell {
+    &-id,
+    &-actions {
+      div {
+        width: 50px !important;
+      }
+    }
+    &-isCapClosed,
+    &-date {
+      div {
+        width: 100px;
+      }
+    }
+    &-cap {
+      div {
+        width: 150px !important;
+      }
+    }
+  }
+
+  ::ng-deep {
+    .cdk-column {
+      &-id,
+      &-actions {
+        width: 50px !important;
+      }
+      &-isCapClosed,
+      &-date {
+        width: 100px;
+      }
+      &-cap {
+        width: 150px !important;
+      }
+    }
+  }
+}

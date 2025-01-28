@@ -1,0 +1,95 @@
+<section id="users-table">
+  <div class="filters">
+    <div class="form-control">
+      <label>Пользователи</label>
+      <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+        <input
+          matInput
+          (input)="setFilter({ filterValue: input.value, filterField: 'all' })"
+          placeholder="Введите текст"
+          #input
+        />
+        <svg-icon
+          class="delete-icon icon"
+          src="assets/icons/cross.svg"
+          *ngIf="input.value"
+          matSuffix
+          (click)="input.value = ''; setFilter({ filterValue: input.value, filterField: 'all' })"
+        ></svg-icon>
+      </mat-form-field>
+    </div>
+    <div class="form-control">
+      <label>Роли</label>
+      <select
+        class="reg-select"
+        (change)="setFilter({ filterValue: '' + selectRole.value, filterField: 'role' })"
+        #selectRole
+      >
+        <option *ngFor="let role of roleList" [value]="role">
+          {{ role }}
+        </option>
+      </select>
+    </div>
+    <div class="form-control" *ngIf="!isPromoOrItTeamLead">
+      <label>Команды</label>
+      <select
+        class="reg-select"
+        (change)="setFilter({ filterValue: '' + selectTeam.value, filterField: 'team' })"
+        #selectTeam
+      >
+        <option *ngFor="let team of teamList" [value]="team">
+          {{ team }}
+        </option>
+      </select>
+    </div>
+    <div class="form-control">
+      <mat-checkbox
+        (change)="setFilter({ filterValue: $event.checked ? 'Активен' : '', filterField: 'status' })"
+        color="primary"
+        >Только активные</mat-checkbox
+      >
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="id">
+      <th class="cell cell-header cell-data" mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
+      <td mat-cell *matCellDef="let element">{{ element?.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th class="cell cell-header cell-text" mat-header-cell mat-sort-header *matHeaderCellDef>ФИО</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="user-clickable" [routerLink]="['/profile', element?.id]">
+          {{ element?.name }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="role">
+      <th class="cell cell-header cell-text" mat-header-cell mat-sort-header *matHeaderCellDef>Роль</th>
+      <td mat-cell *matCellDef="let element">{{ element.role }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="team">
+      <th class="cell cell-header cell-data" mat-header-cell mat-sort-header *matHeaderCellDef>Команда</th>
+      <td mat-cell *matCellDef="let element">{{ element.team }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th class="cell cell-header cell-text" mat-header-cell mat-sort-header *matHeaderCellDef>Активность</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.isActive ? 'active' : 'blocked'">
+        {{ element.status }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell empty-data" colspan="5">Нет данных {{ input.value }}</td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" [pageSize]="25" showFirstLastButtons></mat-paginator>
+</section>

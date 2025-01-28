@@ -1,0 +1,26 @@
+.top-user-btn {
+  height: 60px;
+  background-color: transparent;
+  color: #e3b04e;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+}
+
+.top-user-btn:hover {
+  background-color: transparent;
+  color: #efbf63;
+}
+
+.user-icon {
+  display: flex;
+  margin-right: 10px;
+}
+
+.list-container {
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
+}

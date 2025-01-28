@@ -1,0 +1,26 @@
+::ng-deep .mat-list-item-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-icon {
+  width: 30px;
+}
+
+::ng-deep .mat-list-item-content {
+  justify-content: space-between;
+}
+
+.status-icon {
+  padding: 2px 10px;
+  border-radius: 10px;
+  color: #ffffff;
+  box-shadow: 3px 3px 7px 0 rgb(173 171 171);
+}
+.synchronize {
+  background: #299647d1;
+}
+.not_synchronize {
+  background: #e03535d1;
+}

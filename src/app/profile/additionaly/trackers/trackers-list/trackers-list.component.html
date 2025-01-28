@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Трекеры</h1>
+<mat-list>
+  <mat-list-item *ngFor="let item of trackersList">
+    <div class="logo-icon">
+      <img [src]="item.imageUrl" alt="Keitato" />
+    </div>
+    <div class="status-icon" [ngClass]="item.status ? 'synchronize' : 'not_synchronize'">
+      {{ item.name }}: {{ item.status ? 'Синхронизирован' : 'Не синхронизирован' }}
+    </div>
+    <button class="btn btn-s" (click)="item.action()">
+      <span *ngIf="!loading">Обзор</span>
+      <app-spinner *ngIf="loading"></app-spinner>
+    </button>
+  </mat-list-item>
+
+  <div *ngIf="!trackersList?.length">
+    <div class="nothing-found">Данных не найдено</div>
+  </div>
+</mat-list>

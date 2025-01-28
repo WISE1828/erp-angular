@@ -1,0 +1,12 @@
+<div class="container common-working-capital">
+  <button>
+    <a
+      *ngIf="dataTableConfig"
+      href="{{ 'https://react-farmer-app.azurewebsites.net/' + dataTableConfig.tableName }}"
+      target="_blank"
+      >Перейти</a
+    >
+  </button>
+
+  <!-- <app-data-table *ngIf="dataTableConfig" [dataTable]="dataTableConfig"></app-data-table> -->
+</div>

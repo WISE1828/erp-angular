@@ -1,0 +1,54 @@
+<div class="creating-request-item" [formGroup]="requestForm">
+  <div class="creating-item-buttons">
+    <div class="info-icons" *ngIf="isLoading">
+      <app-spinner></app-spinner>
+    </div>
+    <svg-icon
+      *ngIf="!isLoading"
+      class="accept-icon icon"
+      src="assets/icons/check.svg"
+      (click)="createRequestItem()"
+      [ngClass]="{ 'invalid-creation': requestForm.invalid }"
+    >
+    </svg-icon>
+    <svg-icon
+      *ngIf="!isLoading"
+      class="delete-icon icon"
+      src="assets/icons/cross.svg"
+      (click)="onCloseRequest()"
+    ></svg-icon>
+  </div>
+
+  <div class="form-control">
+    <label class="label">Количество</label>
+    <input class="request-input" id="count" type="number" formControlName="count" />
+    <div *ngIf="requestForm.get('count').touched && requestForm.get('count').invalid" class="validation">
+      <small *ngIf="requestForm.get('count').errors.required"> Введите количество </small>
+    </div>
+  </div>
+
+  <div class="form-control">
+    <label class="label">Стоимость</label>
+    <input class="request-input" id="cost" type="number" formControlName="cost" />
+    <div *ngIf="requestForm.get('cost').touched && requestForm.get('cost').invalid" class="validation">
+      <small *ngIf="requestForm.get('cost').errors.required"> Введите стоимость </small>
+    </div>
+  </div>
+
+  <div class="form-control">
+    <label class="label">Описание</label>
+    <input class="request-input" id="description" formControlName="description" />
+    <div *ngIf="requestForm.get('description').touched && requestForm.get('description').invalid" class="validation">
+      <small *ngIf="requestForm.get('description').errors.required"> Введите описание </small>
+    </div>
+  </div>
+
+  <div class="form-control">
+    <label class="select-label">Гео</label>
+    <select class="reg-select" formControlName="geoId">
+      <option *ngFor="let column of countries$ | async" [value]="column.id">
+        {{ column.shortName }}
+      </option>
+    </select>
+  </div>
+</div>

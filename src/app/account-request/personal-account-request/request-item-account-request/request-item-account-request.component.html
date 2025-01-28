@@ -1,0 +1,43 @@
+<div class="request-item">
+  <div class="request-prop-item list-item">
+    <span class="item-header">Количество</span>
+    <span class="item-content">{{ request.count }}</span>
+  </div>
+  <div class="request-prop-item list-item">
+    <span class="item-header">Стоимость</span>
+    <span class="item-content">{{ request.cost }}</span>
+  </div>
+  <div class="request-prop-item list-item">
+    <span class="item-header">Описание</span>
+    <span class="item-content">{{ request.description }}</span>
+  </div>
+  <div class="request-prop-item list-item">
+    <span class="item-header">Гео</span>
+    <span class="item-content">{{ request.geo.name }}</span>
+  </div>
+
+  <div class="form-control" *ngIf="!isReadOnly && isAdminOrTeamLeadFarmer">
+    <label class="select-label">Оператор</label>
+    <select class="reg-select" [formControl]="operatorId">
+      <option *ngFor="let column of users$ | async" [value]="column.value">
+        {{ column.label }}
+      </option>
+    </select>
+  </div>
+
+  <div class="request-item-buttons">
+    <svg-icon
+      (click)="onDeleteRequestItem(request.id)"
+      class="delete-icon icon"
+      src="../assets/icons/cross.svg"
+    ></svg-icon>
+  </div>
+  <div class="sing-buttons" *ngIf="!isReadOnly">
+    <svg-icon
+      [ngClass]="{ 'disabled-icon': !isApproveAvailable }"
+      (click)="isApproveAvailable && approveRequest(request)"
+      class="approve-icon icon"
+      src="../assets/icons/approve.svg"
+    ></svg-icon>
+  </div>
+</div>

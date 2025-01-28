@@ -1,0 +1,24 @@
+<div class="container common-finances">
+  <app-data-table
+    [dataTable]="dataTableConfig"
+    (filtersChange)="activeFilers = $event"
+    (filteredData)="parseDataById($event)"
+  >
+    <div filters-right class="form-control budget" *ngIf="budgetValue != undefined">
+      <label class="filter-label">Финансовый KPI</label>
+      <app-linear-progress-bar
+        [hideValues]="differenceDate?.asMonths() >= 2"
+        [maxValue]="budgetValue"
+        [ngModel]="getTotalProfit"
+        [ngModelOptions]="{ standalone: true }"
+        [disabled]="true"
+      ></app-linear-progress-bar>
+    </div>
+  </app-data-table>
+  <div class="result-money" *ngIf="currentItems">
+    <svg-icon class="result-icon" src="assets/icons/finances.svg"></svg-icon>
+    <p>
+      За период заработано: <span class="money">{{ getResultMoney | number: '1.1-1' }}</span>
+    </p>
+  </div>
+</div>

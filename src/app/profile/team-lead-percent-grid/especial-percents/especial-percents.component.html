@@ -1,0 +1,38 @@
+<div class="esp__wrapper" [class.no-click]="loading">
+  <div class="loading-group" *ngIf="loading">
+    <app-spinner></app-spinner>
+  </div>
+  <app-data-table
+    *ngIf="dataTableConfig"
+    [dataTable]="dataTableConfig"
+    [selectedItemId]="selectedItemId"
+    (filtersChange)="filterChange($event)"
+  >
+    <ng-container filters-left>
+      <div class="form-control form-control-select">
+        <label class="filter-label">Пользователь</label>
+        <select
+          class="reg-select"
+          [(ngModel)]="selectedUser"
+          [ngModelOptions]="{ standalone: true }"
+          [disabled]="!(users | async)?.length"
+        >
+          <ng-container *ngIf="users | async as userList">
+            <ng-container *ngIf="userList?.length; else empty">
+              <option [disabled]="true" [ngValue]="undefined">Не выбрано</option>
+              <option *ngFor="let el of userList" [ngValue]="el.id">
+                {{ el.label }}
+              </option>
+            </ng-container>
+          </ng-container>
+          <ng-template #empty> <option [disabled]="true" [ngValue]="undefined">Нет данных</option> </ng-template>
+        </select>
+      </div>
+    </ng-container>
+    <ng-container custom-content *ngIf="selectedUser">
+      <button class="btn btn-s" (click)="add(selectedUser)">
+        <span>+ Добавить</span>
+      </button>
+    </ng-container>
+  </app-data-table>
+</div>

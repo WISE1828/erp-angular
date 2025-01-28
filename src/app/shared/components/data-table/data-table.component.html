@@ -1,0 +1,147 @@
+<div class="dataTable--container">
+  <!-- filters -->
+  <app-data-table-filters [dataTable]="dataTable" [filters]="filters" [loading]="loading">
+    <ng-container filters-right>
+      <ng-content select="[filters-right]"></ng-content>
+    </ng-container>
+    <ng-container filters-left>
+      <ng-content select="[filters-left]"></ng-content>
+    </ng-container>
+  </app-data-table-filters>
+
+  <ng-container custom-content>
+    <ng-content select="[custom-content]"></ng-content>
+  </ng-container>
+
+  <!--   paginator -->
+  <!--    <mat-paginator-->
+  <!--      [pageSizeOptions]="pageSizes"-->
+  <!--      [hidePageSize]="loading || !showPagination || !dataSource?.filteredData?.length"-->
+  <!--    ></mat-paginator>-->
+
+  <!-- table -->
+  <div [class.table-disabled]="loading" class="dataTable--content">
+    <mat-table [dataSource]="dataSource" *ngIf="dataSource?.filteredData?.length">
+      <mat-header-row
+        *matHeaderRowDef="dataTable.displayColumns; sticky: dataTable?.rowConfig?.header?.sticky"
+      ></mat-header-row>
+      <mat-row *matRowDef="let row; columns: dataTable.displayColumns"></mat-row>
+      <mat-footer-row
+        *matFooterRowDef="dataTable?.displayFooter; sticky: dataTable?.rowConfig?.footer?.sticky"
+        [ngClass]="dataTable?.rowConfig?.footer?.classes"
+        [ngStyle]="dataTable?.rowConfig?.footer?.styles"
+      ></mat-footer-row>
+
+      <ng-container *ngFor="let cell of dataTable.cells; trackBy: cellFn; let index = index">
+        <ng-container [matColumnDef]="cell.matColumnDef">
+          <mat-header-cell
+            *matHeaderCellDef="let element"
+            [ngClass]="cell?.header?.classes"
+            [ngStyle]="cell?.header?.styles"
+          >
+            <ng-container
+              [ngTemplateOutlet]="cellBlock"
+              [ngTemplateOutletContext]="{ cellConfig: cell?.header, element: element, elements: dataSource.data }"
+            ></ng-container>
+          </mat-header-cell>
+          <mat-cell
+            *matCellDef="let element"
+            [ngClass]="cell?.cell?.classes"
+            [ngStyle]="cell?.cell?.styles"
+            (click)="$event.stopPropagation(); selectItem(element)"
+            [class.edited-cell]="selectedItemId && selectedItemId === element.rowId"
+          >
+            <ng-container
+              [ngTemplateOutlet]="cellBlock"
+              [ngTemplateOutletContext]="{
+                cellConfig: cell?.cell,
+                element: element,
+                elements: dataSource.data,
+                showControl: selectedItemId === element.rowId
+              }"
+            ></ng-container>
+          </mat-cell>
+          <mat-footer-cell
+            *matFooterCellDef="let element"
+            [ngClass]="cell?.footer?.classes"
+            [ngStyle]="cell?.footer?.styles"
+          >
+            <ng-container
+              [ngTemplateOutlet]="cellBlock"
+              [ngTemplateOutletContext]="{ cellConfig: cell?.footer, element: element, elements: dataSource.data }"
+            ></ng-container>
+          </mat-footer-cell>
+        </ng-container>
+      </ng-container>
+    </mat-table>
+    <div class="empty-container" *ngIf="!dataSource?.filteredData?.length && !loading">
+      <img src="/assets/icons/empty-white-box.svg" alt="Empty box" />
+      <p>Нет данных</p>
+    </div>
+    <div class="loading-group" *ngIf="loading">
+      <span class="loading-text">Loading</span>
+      <app-spinner></app-spinner>
+    </div>
+  </div>
+
+  <!-- cell layout -->
+  <ng-template
+    #cellBlock
+    let-cellConfig="cellConfig"
+    let-showControl="showControl"
+    let-element="element"
+    let-elements="elements"
+  >
+    <ng-template [ngIf]="showControl && cellConfig?.control">
+      <div class="control">
+        <ng-template [ngIf]="cellConfig?.control?.type === FILER_CONTROL_TYPE.INPUT">
+          <input
+            matInput
+            class="filter-input"
+            [ngModel]="cellConfig?.control?.calculatedValue(element)"
+            (ngModelChange)="setControlValue(cellConfig, $event, element)"
+            [ngModelOptions]="{ standalone: true }"
+            [type]="cellConfig.control.valueType === VALUE_CONTROL_TYPE.NUMBER ? 'number' : 'text'"
+          />
+        </ng-template>
+        <ng-template [ngIf]="cellConfig?.control?.type === FILER_CONTROL_TYPE.SELECT">
+          <select
+            class="reg-select"
+            [ngModel]="cellConfig?.control?.calculatedValue(element)"
+            (ngModelChange)="setControlValue(cellConfig, $event, element)"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <option *ngFor="let el of cellConfig?.control.source | async" [value]="el.id">
+              {{ el.label }}
+            </option>
+          </select>
+        </ng-template>
+        <ng-template [ngIf]="cellConfig?.control?.type === FILER_CONTROL_TYPE.SEARCH_INPUT">
+          <app-search-select
+            class="request-prop-item list-item"
+            [options]="cellConfig?.control.source | async"
+            [ngModel]="cellConfig?.control?.calculatedValue(element)"
+            (ngModelChange)="setControlValue(cellConfig, $event, element)"
+            [ngModelOptions]="{ standalone: true }"
+          >
+          </app-search-select>
+        </ng-template>
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="!showControl || !cellConfig?.control">
+      <ng-template [ngIf]="cellConfig?.label">{{ cellConfig.label }}</ng-template>
+      <ng-template [ngIf]="cellConfig?.content">
+        <ng-container
+          [ngTemplateOutlet]="cellTemplate(cellConfig.content, element)"
+          [ngTemplateOutletContext]="cellTemplateContext(cellConfig.content, element, elements)"
+        ></ng-container>
+      </ng-template>
+      <ng-template [ngIf]="cellConfig?.calculated">{{
+        calculateCell(cellConfig?.calculated, element, elements)
+      }}</ng-template>
+    </ng-template>
+  </ng-template>
+
+  <!-- cell-content container-->
+  <app-cell-content [cellBlock]="cellBlock"></app-cell-content>
+</div>

@@ -1,0 +1,72 @@
+<div class="visit-list" *ngIf="!loading">
+  <ng-container *ngIf="visitListFiltered">
+    <div>
+      <h2>Табель {{ currentMonth }}</h2>
+      <div class="settings">
+        <form class="filters" [formGroup]="form">
+          <div class="form-control-picker">
+            <label class="filter-label">Период</label>
+            <mat-form-field appearance="fill" class="input-date">
+              <input
+                [min]="minDate"
+                formControlName="date"
+                matInput
+                [matDatepicker]="dp"
+                [matDatepickerFilter]="dateFilterFn"
+              />
+              <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+              <mat-datepicker
+                #dp
+                startView="multi-year"
+                (monthSelected)="chosenMonthHandler($event, dp)"
+                panelClass="example-month-picker"
+              >
+              </mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="form-control">
+            <label>Роли</label>
+            <select
+              class="reg-select"
+              (change)="setFilter({ filterValue: +selectRole.value, filterField: 'roleId' })"
+              #selectRole
+            >
+              <option *ngFor="let role of roleList" [value]="role">
+                {{ rolesFilter[role] }}
+              </option>
+            </select>
+          </div>
+          <div class="form-control" *ngIf="!isTeamLead">
+            <label>Команды</label>
+            <select
+              class="reg-select"
+              (change)="setFilter({ filterValue: +selectTeam.value, filterField: 'teamId' })"
+              #selectTeam
+            >
+              <option *ngFor="let team of teamList" [value]="team">
+                {{ team }}
+              </option>
+            </select>
+          </div>
+        </form>
+      </div>
+    </div>
+    <app-employee-attendance-table
+      *ngIf="visitListFiltered.length; else visitListEmptyTmpl"
+      [setVisitList]="visitListFiltered"
+      [isAdmin]="isAdmin"
+      [isTeamLead]="isTeamLead"
+      [isLoading]="loading"
+      [maxDays]="maxDays"
+      (onUpdateCell)="updateCell($event)"
+    ></app-employee-attendance-table>
+  </ng-container>
+</div>
+
+<div class="loading-group" *ngIf="loading">
+  <span class="loading-text">Loading</span>
+  <app-spinner></app-spinner>
+</div>
+
+<ng-template #visitListEmptyTmpl>Нет данных для отображения</ng-template>

@@ -1,0 +1,9 @@
+<highcharts-chart
+  class="chart-area"
+  (window:resize)="setChart()"
+  [Highcharts]="highcharts"
+  [options]="chartOptions"
+  [(update)]="updated"
+  [oneToOne]="true"
+>
+</highcharts-chart>

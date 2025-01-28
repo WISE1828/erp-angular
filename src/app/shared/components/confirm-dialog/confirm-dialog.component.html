@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{ dialodData.title }}</h1>
+<mat-dialog-content
+  >{{ dialodData.content }} <span class="item-name">{{ dialodData.itemName }}</span
+  >?
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button class="btn cancel-btn" (click)="close()">{{ dialodData?.declineButton || 'Отменить' }}</button>
+  <button mat-button class="btn confirm-btn" (click)="save()">{{ dialodData.confirmButton }}</button>
+</mat-dialog-actions>

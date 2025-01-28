@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Создать кап.</h2>
+<form class="filters kpi" [formGroup]="form" (ngSubmit)="save()">
+  <div class="form-control">
+    <label class="filter-label">Название</label>
+    <input placeholder="{{ EMPTY_INPUT }}" class="filter-input" formControlName="name" type="text" />
+  </div>
+  <div class="form-control form-control-select">
+    <label class="filter-label">Гео</label>
+    <select class="reg-select" formControlName="geo">
+      <option *ngFor="let el of geoList" [ngValue]="el.code" [disabled]="!el?.id">
+        {{ el.label }}
+      </option>
+    </select>
+  </div>
+  <div class="form-control">
+    <label class="filter-label">Рекламодатель</label>
+    <input placeholder="{{ EMPTY_INPUT }}" class="filter-input" formControlName="advertiser" type="text" />
+  </div>
+  <div class="form-control">
+    <label class="filter-label">Условия</label>
+    <input placeholder="{{ EMPTY_INPUT }}" class="filter-input" formControlName="conditions" type="text" />
+  </div>
+  <div class="form-control form-control-select">
+    <label class="filter-label">Статус</label>
+    <select class="reg-select" formControlName="offerStatus">
+      <option *ngFor="let el of statusList" [ngValue]="el.id" [disabled]="!el?.id">
+        {{ el.label }}
+      </option>
+    </select>
+  </div>
+  <div class="form-control">
+    <label class="filter-label">Кап.</label>
+    <input placeholder="{{ EMPTY_INPUT }}" class="filter-input" formControlName="cap" type="number" />
+  </div>
+  <div class="form-control form-control-select">
+    <label class="filter-label">Ответственный</label>
+    <select class="reg-select" [disabled]="true">
+      <option *ngFor="let el of userList" [ngValue]="el.label" [disabled]="!el?.id">
+        {{ el.label }}
+      </option>
+    </select>
+  </div>
+  <div class="form-control">
+    <label class="filter-label">Комментарий</label>
+    <input placeholder="{{ EMPTY_INPUT }}" class="filter-input" formControlName="comment" type="text" />
+  </div>
+
+  <button class="btn-add btn" type="submit" [disabled]="form.invalid || loading">Сохранить</button>
+
+  <div class="loading-group loading-create" *ngIf="loading">
+    <span class="loading-text">Loading</span>
+    <app-spinner></app-spinner>
+  </div>
+</form>

@@ -1,0 +1,94 @@
+.cell-btn {
+  fill: #d1d1d1;
+  border: none;
+  cursor: pointer;
+  padding-right: 0 !important;
+
+  &:hover {
+    fill: #e3b04e;
+  }
+}
+
+.content-row .cell {
+  padding: 4px 6px;
+}
+
+.form-control-picker {
+  margin-bottom: 3px;
+}
+
+.reg-select {
+  min-width: 170px;
+}
+
+.layout-tax .cell {
+  justify-content: center;
+}
+
+.result-info {
+  width: 100%;
+  margin-left: 180px;
+}
+
+.cell-size-1 {
+  min-width: 40px;
+  max-width: 40px;
+}
+
+.cell-size-2 {
+  min-width: 135px;
+  max-width: 135px;
+}
+
+.cell-size-3 {
+  min-width: 140px;
+  max-width: 140px;
+}
+
+.cell-size-4 {
+  min-width: 270px;
+  max-width: 270px;
+}
+
+.cell-size-5 {
+  min-width: 405px;
+  max-width: 405px;
+}
+
+.cell-size-6 {
+  min-width: 110px;
+  max-width: 110px;
+}
+
+.filter-input {
+  min-width: 170px;
+  max-width: 170px;
+}
+
+.header-cell-row-2 {
+  border-right: 1px solid #d1d1d1;
+  padding: 8px 0;
+}
+
+.header-cell-row-1 {
+  border-bottom: 1px solid #d1d1d1;
+  padding: 8px 0;
+}
+
+.header-cell {
+  min-height: 71px;
+}
+
+.col {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.col:nth-child(1) {
+  width: calc(100% - 360px);
+}
+
+.col:nth-child(2) {
+  margin-left: auto;
+}

@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Создание новой темы</h1>
+<mat-dialog-content>
+  <div [formGroup]="form">
+    <div class="form-control" [ngClass]="{ invalid: form.get('name').touched && form.get('name').invalid }">
+      <label for="name">Введите название темы</label>
+      <input class="reg-input" id="name" type="string" formControlName="name" />
+      <div *ngIf="form.get('name').touched && form.get('name').invalid" class="validation">
+        <small *ngIf="form.get('name').errors.required"> Обязательное поле </small>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button class="btn cancel-btn" (click)="close()">Отменить</button>
+  <button mat-button class="btn confirm-btn" [disabled]="form.invalid" (click)="save()">Создать</button>
+</mat-dialog-actions>

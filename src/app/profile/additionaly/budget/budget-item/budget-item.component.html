@@ -1,0 +1,66 @@
+<h1 mat-dialog-title>{{ data?.mode === 'Update' ? 'Редактирование' : 'Создание' }} плана для команды</h1>
+
+<ng-container [formGroup]="form" *ngIf="!loading">
+  <div class="filters">
+    <div class="form-control form-control-select">
+      <label class="filter-label">Команда</label>
+      <select class="reg-select" formControlName="teamId">
+        <option></option>
+        <option *ngFor="let team of teamList" [ngValue]="team.id">
+          {{ team.id }}
+        </option>
+      </select>
+    </div>
+    <div class="form-control">
+      <label>План</label>
+      <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+        <input
+          matInput
+          type="number"
+          formControlName="commonBudget"
+          [readonly]="loading"
+          [min]="commonBudget - notAllocatedMoney"
+          (input)="checkValue(commonBudget)"
+        />
+      </mat-form-field>
+    </div>
+    <div class="form-control">
+      <label>Не распределено средств</label>
+      <mat-form-field appearance="legacy" class="find-input" [floatLabel]="'never'">
+        <input matInput type="number" [value]="notAllocatedMoney" [disabled]="true" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="list-wrapper">
+    <div class="sub-list" *ngIf="personalBudgets.value as team" formArrayName="personalBudgets">
+      <ng-container *ngFor="let user of personalBudgets.controls; let i = index">
+        <ng-container [formGroup]="user">
+          <div class="form-control">
+            <label>{{ user.get('name').value }}</label>
+            <app-linear-progress-bar
+              formControlName="budget"
+              [limitValue]="user.get('budget').value + notAllocatedMoney"
+              [maxValue]="commonBudget"
+              [disabled]="commonBudget == undefined"
+            ></app-linear-progress-bar>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="buttons-footer">
+    <button class="btn btn-submit btn-s" (click)="back()" [disabled]="loading">
+      <span>Отменить</span>
+    </button>
+    <button class="btn btn-submit btn-s" (click)="save()" [disabled]="loading">
+      <span>Сохранить</span>
+    </button>
+  </div>
+</ng-container>
+
+<div class="loading-group" *ngIf="loading">
+  <span class="loading-text">Loading</span>
+  <app-spinner></app-spinner>
+</div>

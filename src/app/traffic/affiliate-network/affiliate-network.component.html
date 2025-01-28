@@ -1,0 +1,196 @@
+<div class="dashboard-content">
+  <div class="filters">
+    <div class="form-control">
+      <label>Дата</label>
+      <select
+        class="reg-select"
+        [disabled]="loading"
+        [ngModel]="filters?.period?.filterValue"
+        (ngModelChange)="setFilter({ filterValue: $event, filterField: 'period' }); isNeedBackendFilters = true"
+      >
+        <option [ngValue]="'range-date'">Диапазон дат</option>
+        <option [ngValue]="'range-dateTime'">Диапазон дат и времени</option>
+      </select>
+    </div>
+    <ng-template [ngIf]="filters?.period?.filterValue == 'range-date'">
+      <div class="form-control-picker">
+        <label class="filter-label">Период</label>
+        <mat-form-field class="data-input" appearance="fill">
+          <mat-date-range-input
+            [disabled]="loading"
+            [formGroup]="campaignOne"
+            [rangePicker]="campaignTwoPicker"
+            [comparisonStart]="campaignOne.value.start"
+            [comparisonEnd]="campaignOne.value.end"
+          >
+            <input
+              matStartDate
+              placeholder="Start date"
+              formControlName="start"
+              (ngModelChange)="isNeedBackendFilters = true"
+            />
+            <input
+              matEndDate
+              placeholder="End date"
+              formControlName="end"
+              (ngModelChange)="isNeedBackendFilters = true"
+            />
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="campaignTwoPicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #campaignTwoPicker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="filters?.period?.filterValue == 'range-dateTime'">
+      <div class="form-control-picker">
+        <label class="filter-label">Период</label>
+        <mat-form-field class="data-input" appearance="fill" [formGroup]="campaignOne">
+          <input
+            matInput
+            [ngxMatDatetimePicker]="pickerStart"
+            placeholder="Choose a date"
+            class="date-time--input"
+            formControlName="start"
+            [disabled]="loading"
+            (ngModelChange)="isNeedBackendFilters = true"
+          />
+          <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerStart [showSeconds]="false">
+            <ng-template>
+              <span>OK</span>
+            </ng-template>
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+        <mat-form-field class="data-input" appearance="fill" [formGroup]="campaignOne">
+          <input
+            [disabled]="loading"
+            matInput
+            [ngxMatDatetimePicker]="pickerEnd"
+            class="date-time--input"
+            placeholder="Choose a date"
+            formControlName="end"
+            (ngModelChange)="isNeedBackendFilters = true"
+          />
+          <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerEnd [showSeconds]="false">
+            <ng-template>
+              <span>OK</span>
+            </ng-template>
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+      </div>
+    </ng-template>
+
+    <ng-container *ngIf="isAdminOrTeamLead">
+      <div class="form-control" *ngIf="!isTeamLead">
+        <label>Команды</label>
+        <select
+          class="reg-select"
+          [disabled]="loading"
+          [ngModel]="filters?.team?.filterValue"
+          (ngModelChange)="
+            setFilter({ filterValue: $event, filterField: 'team' });
+            setFilter({ filterValue: null, filterField: 'user' });
+            isNeedBackendFilters = true
+          "
+        >
+          <option *ngFor="let team of teamList" [ngValue]="team.id">
+            {{ team.name }}
+          </option>
+        </select>
+      </div>
+      <div class="form-control">
+        <label>Пользователи</label>
+        <select
+          class="reg-select"
+          [disabled]="(!isTeamLead && !filters?.team?.filterValue) || loading"
+          [ngModel]="filters?.user?.filterValue"
+          (ngModelChange)="setFilter({ filterValue: $event, filterField: 'user' }); isNeedBackendFilters = true"
+        >
+          <option *ngFor="let user of userList" [ngValue]="user?.id">
+            {{ user?.name }}
+          </option>
+        </select>
+      </div>
+    </ng-container>
+
+    <div class="form-control form-control-select metrics">
+      <label class="filter-label">Метрики</label>
+      <mat-select
+        class="reg-select"
+        multiple
+        [formControl]="metrics"
+        [disabled]="loading"
+        (selectionChange)="updMetrics()"
+      >
+        <mat-select-trigger>
+          <span *ngIf="metrics.value?.length"> Выбрано метрик: {{ metrics.value.length }} </span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let metric of metricsAll" [value]="metric">{{ metric.name }}</mat-option>
+      </mat-select>
+    </div>
+
+    <div class="form-control">
+      <label>С кликами</label>
+      <select
+        class="reg-select"
+        [disabled]="loading"
+        [ngModel]="filters?.clicks?.type"
+        (ngModelChange)="
+          setFilter({
+            filterValue: 0,
+            filterField: 'clicks',
+            type: $event,
+            source: FILTER_SOURCE.FRONT
+          })
+        "
+      >
+        <option [ngValue]="FILTER_TYPE.ALL">Все</option>
+        <option [ngValue]="FILTER_TYPE.GRATE_THAN">С кликами</option>
+      </select>
+    </div>
+
+    <div class="filter-button">
+      <button class="btn btn-s" (click)="updateByFilters()" [disabled]="loading">
+        <span>Применить</span>
+      </button>
+      <button class="btn btn-s btn-delete" (click)="clearFilters()" [disabled]="loading">
+        <span>Сбросить</span>
+      </button>
+    </div>
+  </div>
+
+  <mat-paginator
+    [style.visibility]="!dataSource?.data?.length ? 'hidden' : 'visible'"
+    [pageSizeOptions]="pageSizes"
+  ></mat-paginator>
+  <div class="chart" [class.table-disabled]="loading">
+    <mat-table #table [dataSource]="dataSource" matSort>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
+
+      <ng-container cdkColumnDef="name" sticky>
+        <mat-header-cell *cdkHeaderCellDef>Название</mat-header-cell>
+        <mat-cell *cdkCellDef="let element">{{ element.name }}</mat-cell>
+        <mat-footer-cell *cdkFooterCellDef></mat-footer-cell>
+      </ng-container>
+
+      <ng-container *ngFor="let column of columns; let index = index" [cdkColumnDef]="column.columnDef">
+        <mat-header-cell *cdkHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
+        <mat-cell *cdkCellDef="let row">{{ column.cell(row) }}</mat-cell>
+        <mat-footer-cell *cdkFooterCellDef>{{
+          getTotal(column.columnDef, column.view.type) + column.view.symbol
+        }}</mat-footer-cell>
+      </ng-container>
+    </mat-table>
+    <div class="empty-container" *ngIf="!dataSource?.filteredData?.length && !loading">
+      <img src="/assets/icons/empty-white-box.svg" alt="Empty box" />
+      <p>Нет данных</p>
+    </div>
+    <div class="loading-group" *ngIf="loading">
+      <span class="loading-text">Loading</span>
+      <app-spinner></app-spinner>
+    </div>
+  </div>
+</div>

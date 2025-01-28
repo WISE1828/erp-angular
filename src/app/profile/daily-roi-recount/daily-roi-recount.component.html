@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Пересчет DailyRoi</h1>
+<div>
+  <div class="form-control form-control-picker">
+    <label class="filter-label">{{ controlData.label }}</label>
+    <div style="display: flex; align-items: center; margin-bottom: 15px">
+      <app-date-period
+        [filter]="controlData"
+        [loading]="isLoading"
+        [applyFilter]="applyFilter.bind(this)"
+        [parseMomentDate]="parseMomentDate.bind(this)"
+      ></app-date-period>
+      <button
+        style="margin-top: 2px; margin-left: 15px"
+        class="btn btn-s"
+        (click)="recountRoi()"
+        [disabled]="isLoading"
+      >
+        <span>Пересчитать</span>
+      </button>
+      <app-spinner style="margin-left: 15px" *ngIf="isLoading"></app-spinner>
+    </div>
+    <div class="success-message" *ngIf="messages.success">DayliRoy успешно пересчитаны</div>
+    <div class="error-message" *ngIf="messages.error">При пересчете DayliRoy произошла ошибка</div>
+  </div>
+</div>

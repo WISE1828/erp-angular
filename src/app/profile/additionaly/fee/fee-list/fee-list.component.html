@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>Проценты с хелперов/смартов/баеров</h1>
+
+<div class="container-popup">
+  <div class="create-block">
+    <button class="btn btn-s btn-close" *ngIf="isAdmin" [disabled]="isCreate">
+      <span *ngIf="!loading" (click)="showCreate()">Создать</span>
+      <app-spinner *ngIf="loading"></app-spinner>
+    </button>
+
+    <div class="creating-request-item" [formGroup]="form" *ngIf="isCreate">
+      <div class="creating-item-buttons">
+        <svg-icon
+          *ngIf="!loading"
+          class="accept-icon icon"
+          src="assets/icons/check.svg"
+          [matTooltip]="'Сохранить'"
+          (click)="form.valid && createRequestItem()"
+          [ngClass]="{ 'invalid-creation': form.invalid }"
+        >
+        </svg-icon>
+        <svg-icon
+          *ngIf="!loading"
+          class="delete-icon icon"
+          src="assets/icons/cross.svg"
+          [matTooltip]="'Закрыть'"
+          (click)="onCloseRequest()"
+        ></svg-icon>
+      </div>
+
+      <div class="form-control">
+        <label class="select-label">Хелпер/смарт</label>
+        <select class="reg-select" formControlName="userId">
+          <option *ngFor="let user of usersList | async" [ngValue]="user.id">
+            {{ user.label }} {{ user?.role ? '(' + user.role + ')' : '' }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-control">
+        <label class="label">Процент</label>
+        <input class="input-base" id="percent" type="number" formControlName="profitPercent" />
+      </div>
+    </div>
+  </div>
+
+  <app-data-table [dataTable]="dataTableConfig" [selectedItemId]="selectedItemId"></app-data-table>
+</div>

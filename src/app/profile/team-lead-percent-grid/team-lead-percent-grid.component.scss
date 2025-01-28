@@ -1,0 +1,22 @@
+.form-submit-buttons {
+  padding-top: 20px;
+
+  button:nth-child(2) {
+    margin-left: 10px;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+::ng-deep {
+  #team-lead-percents {
+    .edit-buttons {
+      top: auto;
+    }
+  }
+}

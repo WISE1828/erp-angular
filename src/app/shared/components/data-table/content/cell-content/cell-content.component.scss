@@ -1,0 +1,123 @@
+.eye-icon,
+.check-icon,
+.cancel-icon {
+  fill: #d1d1d1;
+}
+
+.eye-icon:hover,
+.check-icon:hover,
+.cancel-icon:hover {
+  fill: #e3b04e;
+  cursor: pointer;
+}
+
+.row-custom {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  &:not(.column-direction) {
+    .cell-custom {
+      border-right: 1px solid #d1d1d1;
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+.cell-custom {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.column-direction {
+  flex-direction: column;
+  border-top: 1px solid #d1d1d1;
+  .cell-custom {
+    justify-content: center;
+    border-bottom: 1px solid #d1d1d1;
+    min-height: 35px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.circle-item {
+  background-color: white;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  top: 6px;
+  right: 6px;
+  border: 1px solid #cc1b1b;
+  border-radius: 50%;
+  font-size: 13px;
+  color: #cc1b1b;
+  padding-top: 2px;
+  cursor: default;
+}
+
+@keyframes blink {
+  0% {
+    color: #cc1b1b;
+    border-color: #cc1b1b;
+  }
+  100% {
+    color: #8a9094;
+    border-color: #8a9094;
+  }
+}
+@-webkit-keyframes blink {
+  0% {
+    color: #cc1b1b;
+    border-color: #cc1b1b;
+  }
+  100% {
+    color: #8a9094;
+    border-color: #8a9094;
+  }
+}
+.blink {
+  -webkit-animation: blink 1s linear infinite;
+  -moz-animation: blink 1s linear infinite;
+  -ms-animation: blink 1s linear infinite;
+  -o-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite;
+}
+
+.comment {
+  &__arrow {
+    cursor: pointer;
+    border: 5px solid transparent;
+    border-top: 5px solid #595c5e;
+  }
+  &__top {
+    left: calc(50% - 10px);
+    border: 10px solid transparent;
+    border-top: 10px solid #595c5e;
+    background: transparent;
+  }
+  &__right {
+    right: 0;
+    left: auto;
+    border-right: 5px solid #595c5e;
+    background: transparent;
+  }
+  &__left {
+    left: 0;
+    right: auto;
+    border-left: 5px solid #595c5e;
+    background: transparent;
+  }
+  &__container {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  &__content {
+  }
+}

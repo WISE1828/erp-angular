@@ -1,0 +1,19 @@
+<div class="payment-item">
+  <div class="payment-info-item list-item">
+    <span class="item-header">Платежная система</span>
+    <span class="item-content">{{ getName() }}</span>
+  </div>
+  <div class="payment-info-item list-item">
+    <span class="item-header">Номер</span>
+    <span class="item-content">{{ item.name }}</span>
+  </div>
+  <ng-container *ngIf="isAccessToDelete">
+    <svg-icon
+      *ngIf="!loading"
+      (click)="deletePaymentItem()"
+      class="delete-icon icon"
+      src="../assets/icons/cross.svg"
+    ></svg-icon>
+    <app-spinner class="delete-icon" *ngIf="loading"></app-spinner>
+  </ng-container>
+</div>

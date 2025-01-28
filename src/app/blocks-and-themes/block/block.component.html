@@ -1,0 +1,20 @@
+<div class="container" *ngIf="!loading">
+  <button *ngIf="isAccessToCreate" class="btn btn-add-theme btn-s" (click)="addTheme()">Добавить тему</button>
+  <div class="themes-block" *ngIf="themes?.length">
+    <app-theme
+      *ngFor="let theme of themes"
+      [theme]="theme"
+      [textData]="textData"
+      [actions]="actions"
+      (deleteThemeEmitter)="onThemeDeleting($event)"
+      (editThemeEmitter)="onThemeEditing()"
+    >
+    </app-theme>
+  </div>
+  <div class="empty-list" *ngIf="!themes?.length">ТЕМЫ ОТСУТСТВУЮТ</div>
+</div>
+
+<div class="loading-group" *ngIf="loading">
+  <span class="loading-text">Loading</span>
+  <app-spinner></app-spinner>
+</div>

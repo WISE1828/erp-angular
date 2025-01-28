@@ -1,0 +1,25 @@
+<form
+  (clickOutside)="onClickedOutside($event.target)"
+  class="comment-container"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <textarea
+    [disabled]="disable"
+    [readOnly]="disable"
+    formControlName="comment"
+    placeholder="Введите ваш комментарий"
+    class="textarea"
+  ></textarea>
+  <div class="btn-group">
+    <button
+      [disabled]="disable"
+      [ngClass]="{ 'disabled-add-btn': disable || form.invalid || form.get('comment').value === text }"
+      type="submit"
+      class="btn btn-add-comment"
+    >
+      Добавить
+    </button>
+    <button (click)="hideComment.emit(); $event.stopPropagation()" class="btn btn-cancel-comment">Отменить</button>
+  </div>
+</form>

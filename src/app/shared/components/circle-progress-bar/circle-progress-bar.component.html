@@ -1,0 +1,21 @@
+<div class="circle-bar">
+  <p class="circle-bar__text">{{ title }}</p>
+  <div class="circle-bar__wrapper" [style.color]="color || '#e3b04e'">
+    <div class="circle-bar__value">
+      {{ (maxFill ? value : progressValue) | numericPostfix: postfix }}
+    </div>
+    <round-progress
+      [current]="maxFill ? 100 : progressValue"
+      [max]="100"
+      [radius]="50"
+      [stroke]="2"
+      [color]="color || '#e3b04e'"
+      [background]="'#eaeaea'"
+      [rounded]="true"
+      [clockwise]="false"
+      [animationDelay]="100"
+      [duration]="800"
+      [animation]="'linearEase'"
+    ></round-progress>
+  </div>
+</div>

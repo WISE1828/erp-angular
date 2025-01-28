@@ -1,0 +1,75 @@
+.item {
+  &-row {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    &__header {
+      max-width: 240px;
+    }
+    &__text {
+      color: rgba(0, 0, 0, 0.38);
+      font-size: 14px;
+      font-weight: 300;
+      white-space: nowrap;
+    }
+    &__content {
+      display: flex;
+      align-items: baseline;
+      width: 100%;
+      max-width: 100px;
+    }
+  }
+  .edit-buttons {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 0 5px;
+  }
+}
+.btn-close {
+  //margin-left: 10px;
+  color: #ffffff;
+  width: 90px;
+}
+.btn:disabled {
+  cursor: not-allowed;
+  background-color: #c4c4c4;
+}
+app-spinner {
+  margin-left: 10px;
+  width: 70px;
+  justify-content: center;
+  display: flex;
+}
+.custom-input {
+  height: 35px;
+  width: 100%;
+  input {
+    width: 10px;
+    color: rgba(0, 0, 0, 0.38);
+    font-size: 14px;
+    font-weight: 300;
+  }
+  .active {
+    border-bottom: 1px solid #d1d1d1;
+    border-radius: 0;
+  }
+  .mat-form-field-infix {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+  }
+  .mat-form-field-flex {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-color: transparent;
+  }
+  .mat-form-field-wrapper {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 0;
+  }
+}

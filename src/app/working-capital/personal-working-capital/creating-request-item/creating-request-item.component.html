@@ -1,0 +1,46 @@
+<div class="creating-request-item" [formGroup]="requestForm">
+  <div class="creating-item-buttons">
+    <div class="info-icons" *ngIf="isLoading">
+      <app-spinner></app-spinner>
+    </div>
+    <svg-icon
+      *ngIf="!isLoading"
+      class="accept-icon icon"
+      src="assets/icons/check.svg"
+      (click)="createRequestItem()"
+      [ngClass]="{ 'invalid-creation': requestForm.invalid }"
+    >
+    </svg-icon>
+    <svg-icon
+      *ngIf="!isLoading"
+      class="delete-icon icon"
+      src="assets/icons/cross.svg"
+      (click)="onCloseRequest()"
+    ></svg-icon>
+  </div>
+
+  <div class="form-control">
+    <label class="select-label">Номер карты</label>
+    <select class="reg-select" formControlName="paymentInfo">
+      <option *ngFor="let column of columns" [ngValue]="column">
+        {{ column.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-control">
+    <label class="label">Остаток</label>
+    <input class="request-input" id="remains" type="number" formControlName="remains" />
+    <div *ngIf="requestForm.get('remains').touched && requestForm.get('remains').invalid" class="validation">
+      <small *ngIf="requestForm.get('remains').errors.required"> Введите данные об остатке </small>
+    </div>
+  </div>
+
+  <div class="form-control">
+    <label class="label">Требуемые средства</label>
+    <input class="request-input" id="need" type="number" formControlName="need" />
+    <div *ngIf="requestForm.get('need').touched && requestForm.get('need').invalid" class="validation">
+      <small *ngIf="requestForm.get('need').errors.required"> Введите данные о требуемом </small>
+    </div>
+  </div>
+</div>

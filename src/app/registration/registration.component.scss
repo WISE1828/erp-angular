@@ -1,0 +1,46 @@
+.registration-container {
+  min-height: 410px;
+  width: 360px;
+  margin: 0 auto;
+  margin-top: 50px;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+}
+
+.reg-input {
+  border: 1px solid #d1d1d1;
+  &.ng-invalid.ng-touched {
+    border-color: #cc1b1b;
+  }
+}
+
+.form-control {
+  margin-top: 15px;
+}
+
+.card {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-submit {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.successMessage,
+.errorMessage {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #28a745;
+}
+
+.errorMessage {
+  color: #cc1b1b;
+}
+
+.validation {
+  max-width: 260px;
+}

@@ -1,0 +1,27 @@
+<div class="container common-working-capital">
+  <app-data-table *ngIf="dataTableConfig" [dataTable]="dataTableConfig"></app-data-table>
+
+  <div class="result-footer" *ngIf="currentItems?.length && isTeamLead">
+    <div class="footer" [formGroup]="remainsForm">
+      <div class="total-comission-group">
+        <app-input-group
+          [label]="'КОМАНДНЫЙ ФАКТИЧЕСКИЙ ОСТАТОК'"
+          [loading]="loading"
+          [viewData]="remainsFactView"
+          [inputs]="remainsFactItems"
+          (save)="saveCommandRemains($event)"
+        ></app-input-group>
+      </div>
+
+      <div class="total-comission-group">
+        <app-input-group
+          [label]="'КОМАНДНЫЙ ПОЛОЖЕННЫЙ ОСТАТОК'"
+          [loading]="loading"
+          [viewData]="remainsNeedView"
+          [inputs]="remainsNeedItems"
+          (save)="saveCommandRemains($event)"
+        ></app-input-group>
+      </div>
+    </div>
+  </div>
+</div>

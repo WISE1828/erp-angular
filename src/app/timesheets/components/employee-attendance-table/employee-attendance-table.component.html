@@ -1,0 +1,67 @@
+<div class="timesheet-container">
+  <div class="loaging-table" *ngIf="isLoading">
+    <app-spinner></app-spinner>
+  </div>
+  <mat-table *ngIf="dataTable.length" [dataSource]="dataTable" class="employee-attendance-table mat-elevation-z1">
+    <ng-container matColumnDef="userName" sticky>
+      <mat-header-cell *matHeaderCellDef class="cell cell_userName">ФИО</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="cell cell_userName">{{ element?.user?.username }}</mat-cell>
+    </ng-container>
+
+    <ng-container *ngFor="let day of days">
+      <ng-container matColumnDef="{{ day }}">
+        <mat-header-cell *matHeaderCellDef class="cell cell_day">{{ day }}</mat-header-cell>
+        <mat-cell
+          *matCellDef="let element"
+          class="cell cell_day cell_day_value"
+          (click)="openDialog(element[+day - 1], +day - 1)"
+          [ngClass]="{ cursor_pointer: true, disabled_column: !isAdmin && !checkAccess(element[+day - 1]) }"
+        >
+          <ng-container
+            *ngTemplateOutlet="cellDayTemplate; context: { cellType: element[+day - 1]?.visitType }"
+          ></ng-container
+        ></mat-cell>
+      </ng-container>
+    </ng-container>
+
+    <ng-container>
+      <ng-container matColumnDef="skippedDays" stickyEnd>
+        <mat-header-cell *matHeaderCellDef class="cell cell_skippedDays">Пропущено дней</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell cell_skippedDays">{{ element?.skippedDays }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="incompleteDays" stickyEnd>
+        <mat-header-cell *matHeaderCellDef class="cell cell_incompleteDays">Неполных дней</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell cell_incompleteDays">{{ element?.incompleteDays }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="warnings" stickyEnd>
+        <mat-header-cell *matHeaderCellDef class="cell cell_warnings">Предупреждения</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell cell_warnings">{{ element?.warnings }}</mat-cell>
+      </ng-container>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnsTable; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnsTable"></mat-row>
+  </mat-table>
+</div>
+
+<ng-template #cellDayTemplate let-cellType="cellType">
+  <ng-container [ngSwitch]="cellType">
+    <ng-template ngSwitchCase="{{ visitTypes.ATTENDED }}">
+      <div class="day_type day_type_presence">1</div>
+    </ng-template>
+    <ng-template ngSwitchCase="{{ visitTypes.ABSENT }}">
+      <div class="day_type day_type_absence">у/н</div>
+    </ng-template>
+    <ng-template ngSwitchCase="{{ visitTypes.LATE }}">
+      <div class="day_type day_type_lateness">0</div>
+    </ng-template>
+    <ng-template ngSwitchCase="{{ visitTypes.REMOTE }}">
+      <div class="day_type day_type_remote-presence">Д</div>
+    </ng-template>
+    <ng-template ngSwitchCase="{{ visitTypes.INTERNSHIP }}">
+      <div class="day_type day_type_probation">С</div>
+    </ng-template>
+  </ng-container>
+</ng-template>
