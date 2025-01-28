@@ -1,11 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { checkNumber, consumableInRub, incomeInRub, spentInRub } from '../shared/math/formulas.base';
 import { AppSettings } from '../shared/services/settings';
-import { AdditionalFee } from '../shared/services/fee.service';
-import { shareReplay } from 'rxjs/operators';
-import { IDashboardItem } from '../shared/services/traffic.service';
 
 export interface ICommonFinanceItem {
   dailyRoiGroupStatisticDtos: ICommonDailyRoiItem[];
@@ -23,6 +20,7 @@ export interface ICommonDailyRoiItem {
   userRoleId: number;
   teamId: number;
   isActive: boolean;
+  comission: number;
   meta: {
     spentUSD: number;
     clearProfit: number;
@@ -61,6 +59,7 @@ export interface IDailyRoiItem {
   usdRub: number;
   comissionTax?: number;
   comissionTaxUsd?: number;
+  comission: number;
   accountsTax?: number;
   accountsTaxUsd?: number;
   dailyRoiTermCount?: number;
@@ -76,6 +75,7 @@ export interface IDailyRoiData {
   termTax: {
     comissionTax: number;
     comissionTaxUsd: number;
+    comission: number;
     accountsTax: number;
     accountsTaxUsd: number;
     accountComment: string;

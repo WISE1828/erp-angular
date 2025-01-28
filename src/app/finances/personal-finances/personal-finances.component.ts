@@ -70,6 +70,7 @@ export class PersonalFinancesComponent implements OnInit {
   public accountsTaxUsd: number;
   public comissionTax: number;
   public comissionTaxUsd: number;
+  public comission: number;
   public user: IUserInfo | IEmptyUser;
   public loading = false;
   public editingComission = false;
@@ -161,7 +162,17 @@ export class PersonalFinancesComponent implements OnInit {
             teamId: null,
           };
 
-          this.setDataTable();
+          const selectedYear = this.filters?.startDate
+            ? moment(this.filters.startDate, 'DD.MM.YYYY').year()
+            : new Date().getFullYear();
+
+          if ((this.isAdmin || this.isFinancier) && selectedYear <= 2024) {
+            this.setDataTableOld();
+          } else {
+            this.setDataTable();
+          }
+
+          // this.setDataTable();
           this.loading = false;
           this.cd.detectChanges();
         }),
@@ -401,6 +412,10 @@ export class PersonalFinancesComponent implements OnInit {
   get totalComissionTaxUSD() {
     return this.currentItems.reduce((acc, { comissionTaxUsd }) => comissionTaxUsd + acc, 0);
     // return this.comissionTaxUsd
+  }
+
+  get totalComission() {
+    return this.currentItems.reduce((acc, { comission }) => comission + acc, 0);
   }
 
   get totalAccountTax() {
@@ -756,6 +771,802 @@ export class PersonalFinancesComponent implements OnInit {
     }));
   }
   setDataTable() {
+    this.dataTableConfig = {
+      tableName: 'personalFinances',
+      displayColumns: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'usdRub', 'actions'],
+      displayFooter: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'usdRub', 'actions'],
+      actions: new Map<DataTableActions, (...args) => any>([
+        [
+          DataTableActions.SELECT,
+          selectedRowId => {
+            if (!this.isActive) return;
+            this.selectedItemId = selectedRowId;
+            this.refundSelect(selectedRowId);
+            this.cd.detectChanges();
+          },
+        ],
+        [
+          DataTableActions.CHANGE,
+          el => {
+            const updatedData = {
+              ...el,
+              rowId: undefined,
+              actions: undefined,
+            };
+            const currentItemIndex = this.currentItems.findIndex(el => el.id === updatedData.id);
+            if (currentItemIndex != -1) {
+              this.currentItems[currentItemIndex] = {
+                ...this.currentItems[currentItemIndex],
+                ...updatedData,
+              };
+            }
+            this.cd.detectChanges();
+          },
+        ],
+      ]),
+      filters: [
+        {
+          label: 'Период',
+          direction: FilterTarget.BACK,
+          control: {
+            value: {
+              startDate: moment().startOf('month'),
+              endDate: moment(),
+            },
+            name: 'period',
+            type: ControlType.DATE_PERIOD,
+            valueType: ValueType.OBJECT,
+          },
+        },
+      ],
+      cells: [
+        {
+          matColumnDef: 'date',
+          header: {
+            label: 'Дата',
+            classes: { 'w-150': true },
+          },
+          cell: {
+            calculated: el => formatDate(el.date, 'mediumDate', 'ru'),
+            classes: { 'w-150': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    label: 'Комиссия/Расходники*',
+                  },
+                  {
+                    label: 'Итого',
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+              }),
+            },
+            styles: { color: '#e3b04e' },
+            classes: { 'w-150': true },
+          },
+        },
+
+        {
+          matColumnDef: 'spent',
+          header: {
+            label: 'Потрачено',
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  // {
+                  //   label: '₽',
+                  //   styles: { borderTop: '1px solid #d1d1d1' },
+                  //   classes: { 'w-100': true },
+                  // },
+                  // {
+                  //   label: '$',
+                  //   styles: { borderTop: '1px solid #d1d1d1' },
+                  //   classes: { 'w-100': true },
+                  // },
+                ],
+              }),
+            },
+            classes: { 'w-200': true },
+          },
+          cell: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: (el, elements) => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.spentUSD, '$'),
+                    classes: { 'w-100': true },
+                    control: {
+                      calculatedValue: el => el.spentUSD,
+                      name: 'spentUSD',
+                      type: ControlType.INPUT,
+                      valueType: ValueType.NUMBER,
+                    },
+                  },
+                  // {
+                  //   label: parseNumberWithPrefix(el.spentUSD, '$'),
+                  //   control: {
+                  //     calculatedValue: el => el.spentUSD,
+                  //     name: 'spentUSD',
+                  //     type: ControlType.INPUT,
+                  //     valueType: ValueType.NUMBER,
+                  //   },
+                  //   classes: { 'w-100': true },
+                  // },
+                ],
+                element: el,
+                elements: elements,
+                showControl: this.selectedItemId === el?.rowId,
+              }),
+            },
+            styles: { backgroundColor: '#f3dcdc' },
+            classes: { 'w-200': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalComissionTax, '₽'),
+                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
+                          // },
+                          {
+                            label: parseNumberWithPrefix(this.totalSpentUSD, '$'),
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' }, //тут будет что то другое
+                            content: {
+                              templateCalculated: () => {
+                                return this.cellContent.commentElement;
+                              },
+                              contextCalculated: () => {
+                                return {
+                                  isSelected: this.selectedCommentId === 'comissionComment',
+                                  isDisabled: !this.isActive,
+                                  direction: 'top',
+                                  key: 'comissionComment',
+                                  name: 'comissionComment',
+                                  termId: this.termId,
+                                  isSaveExternal: false,
+                                  comment: this.comissionComment || '',
+                                  select: id => {
+                                    this.selectedCommentId = id;
+                                  },
+                                  save: () => {
+                                    console.log('save');
+                                  },
+                                };
+                              },
+                            },
+                          },
+                        ],
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalSpent, '₽'),
+                          //   styles: { borderBottom: 'none', backgroundColor: '#f3dcdc' },
+                          // },
+                          {
+                            label: parseNumberWithPrefix(this.totalSpentUSD, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#f3dcdc' },
+                          },
+                        ],
+                      }),
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+              }),
+            },
+            classes: { 'w-200': true },
+          },
+        },
+        {
+          matColumnDef: 'consumables',
+          header: {
+            label: '',
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    label: 'Комиссия',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: 'Расходники',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-200': true },
+          },
+          cell: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: (el, elements) => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.comission, '$'),
+                    control: {
+                      calculatedValue: el => el.comission,
+                      name: 'comission',
+                      type: ControlType.INPUT,
+                      valueType: ValueType.NUMBER,
+                    },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: parseNumberWithPrefix(el.consumablesUSD, '$'),
+                    content: {
+                      templateCalculated: () => {
+                        return this.cellContent.commentElement;
+                      },
+                      contextCalculated: el => {
+                        return {
+                          isSelected: this.selectedCommentId === el?.id,
+                          isDisabled: !this.isActive,
+                          isHide: this.selectedItemId,
+                          direction: 'top',
+                          key: el?.id,
+                          comment: el?.consumablesComment || '',
+                          termId: el?.termId,
+                          isSaveExternal: true,
+                          select: id => {
+                            this.selectedCommentId = id;
+                          },
+                          save: comment => {
+                            const item = this.currentItems.find(it => it.id === el.id);
+                            this.dataTableConfig.crudAPI.update({ ...item, consumablesComment: comment }).subscribe();
+                          },
+                        };
+                      },
+                    },
+                    control: {
+                      calculatedValue: el => el.consumablesUSD,
+                      name: 'consumablesUSD',
+                      type: ControlType.INPUT,
+                      valueType: ValueType.NUMBER,
+                    },
+                    classes: { 'w-100': true },
+                  },
+                ],
+                element: el,
+                elements: elements,
+                showControl: this.selectedItemId === el?.rowId,
+              }),
+            },
+            styles: { backgroundColor: '#f4e1e5' },
+            classes: { 'w-200': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: parseNumberWithPrefix(this.totalComission, '$'),
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          },
+                          {
+                            label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
+                            content: {
+                              templateCalculated: () => {
+                                return this.cellContent.commentElement;
+                              },
+                              contextCalculated: () => {
+                                return {
+                                  isSelected: this.selectedCommentId === 'accountComment',
+                                  isDisabled: !this.isActive,
+                                  direction: 'top',
+                                  key: 'accountComment',
+                                  name: 'accountComment',
+                                  termId: this.termId,
+                                  isSaveExternal: false,
+                                  comment: this.accountComment || '',
+                                  select: id => {
+                                    this.selectedCommentId = id;
+                                  },
+                                  save: () => {
+                                    console.log('save');
+                                  },
+                                };
+                              },
+                            },
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          },
+                        ],
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: parseNumberWithPrefix(this.totalConsumables, '₽'),
+                            styles: { borderBottom: 'none', backgroundColor: '#f4e1e5' },
+                          },
+                          {
+                            label: parseNumberWithPrefix(this.totalConsumablesUSD, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#f4e1e5' },
+                          },
+                        ],
+                      }),
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+              }),
+            },
+            classes: { 'w-200': true },
+          },
+        },
+        {
+          matColumnDef: 'incomeRUB',
+          header: {
+            label: 'Доход',
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    label: '₽',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: '$',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: '€',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-300': true },
+          },
+          cell: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: (el, elements) => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.incomeRUB, '₽'),
+                    control: {
+                      calculatedValue: el => el.incomeRUB,
+                      name: 'incomeRUB',
+                      type: ControlType.INPUT,
+                      valueType: ValueType.NUMBER,
+                    },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: parseNumberWithPrefix(el.incomeUSD, '$'),
+                    control: {
+                      calculatedValue: el => el.incomeUSD,
+                      name: 'incomeUSD',
+                      type: ControlType.INPUT,
+                      valueType: ValueType.NUMBER,
+                    },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: parseNumberWithPrefix(el.incomeEUR, '€'),
+                    control: {
+                      calculatedValue: el => el.incomeEUR,
+                      name: 'incomeEUR',
+                      type: ControlType.INPUT,
+                      valueType: ValueType.NUMBER,
+                    },
+                    classes: { 'w-100': true },
+                  },
+                ],
+                element: el,
+                elements: elements,
+                showControl: this.selectedItemId === el?.rowId,
+              }),
+            },
+            classes: { 'w-300': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            calculated: () => parseNumberWithPrefix(this.totalIncome, '₽'),
+                            styles: { borderBottom: 'none' },
+                          },
+                          {
+                            calculated: () => parseNumberWithPrefix(this.totalIncomeUSD, '$'),
+                            styles: { borderBottom: 'none' },
+                          },
+                          {
+                            calculated: () => parseNumberWithPrefix(this.totalIncomeEUR, '€'),
+                            styles: { borderBottom: 'none' },
+                          },
+                        ],
+                      }),
+                    },
+                    styles: {
+                      borderRight: '1px solid #d1d1d1',
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                },
+              }),
+            },
+            classes: { 'w-300': true },
+          },
+        },
+
+        {
+          matColumnDef: 'profit',
+          header: {
+            label: 'Профит',
+            classes: { 'w-100': true },
+          },
+          cell: {
+            calculated: el => parseNumberWithPrefix(el.profit, '₽'),
+            styles: { backgroundColor: '#d5ebd5' },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '₽'),
+                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                          },
+                        ],
+                      }),
+                    },
+                    styles: {
+                      borderRight: '1px solid #d1d1d1',
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                  borderLeft: 'none',
+                },
+              }),
+            },
+            styles: {
+              borderRight: 'none',
+              borderLeft: 'none',
+            },
+            classes: { 'w-100': true },
+          },
+        },
+        {
+          matColumnDef: 'roi',
+          header: {
+            label: 'ROI',
+            classes: { 'w-100': true },
+          },
+          cell: {
+            calculated: (el, elements) => parseNumberWithPrefix(el.roi, '%'),
+            styles: { backgroundColor: '#dedede' },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                          },
+                        ],
+                      }),
+                    },
+                    styles: {
+                      borderRight: '1px solid #d1d1d1',
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                  borderLeft: 'none',
+                },
+              }),
+            },
+            styles: {
+              borderRight: 'none',
+              borderLeft: 'none',
+            },
+            classes: { 'w-100': true },
+          },
+        },
+        {
+          matColumnDef: 'usdRub',
+          header: {
+            label: 'USD_RUB курс $',
+            classes: { 'w-100': true },
+          },
+          cell: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: (el, elements) => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.usdRub, '₽'),
+                    control: {
+                      calculatedValue: el => el.usdRub,
+                      name: 'usdRub',
+                      type: ControlType.INPUT,
+                      valueType: ValueType.NUMBER,
+                    },
+                    classes: { 'w-100': true },
+                  },
+                ],
+                element: el,
+                elements: elements,
+                showControl: this.selectedItemId === el?.rowId && this.canEditUsdRub(),
+              }),
+            },
+            styles: { backgroundColor: '#dedede' },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            calculated: () => parseNumberWithPrefix(this.avrUsdRub, '₽'),
+                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                          },
+                        ],
+                      }),
+                    },
+                    styles: {
+                      borderRight: '1px solid #d1d1d1',
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                  borderLeft: 'none',
+                },
+              }),
+            },
+            styles: {
+              borderRight: 'none',
+              borderLeft: 'none',
+            },
+            classes: { 'w-100': true },
+          },
+        },
+        {
+          matColumnDef: 'actions',
+          header: {
+            classes: { 'hide-border': true, 'w-50': true },
+          },
+          cell: {
+            content: {
+              templateCalculated: el => this.selectedItemId === el.rowId && this.cellContent.actionsElement,
+              contextCalculated: el =>
+                this.selectedItemId === el.rowId && {
+                  save: () => {
+                    const changes: any = this.dataTableConfig.cells.reduce((acc, cur) => {
+                      if (cur.cell?.control?.name && cur.cell?.control?.value) {
+                        acc[cur.cell?.control?.name] = parseByType(
+                          cur.cell?.control?.valueType,
+                          cur.cell?.control?.value
+                        );
+                      }
+                      return acc;
+                    }, {});
+
+                    const item = this.currentItems.find(it => it.id === el.id);
+
+                    const updatedData = {
+                      ...item,
+                      ...changes,
+                      profit: this.financesService.getProfit(this.itemById(el.id)),
+                      roi: this.financesService.getRoi(this.currentItems, this.itemById(el.id)),
+                      rowId: undefined,
+                      actions: undefined,
+                    };
+
+                    this.dataTableConfig.crudAPI.update(updatedData).subscribe();
+                  },
+                  close: () => {
+                    this.dataTableInstance.resetControlValue(el.id);
+                    this.selectedItemId = null;
+                    this.cd.detectChanges();
+                  },
+                },
+            },
+            classes: { 'hide-border': true, 'w-50': true },
+          },
+          footer: {
+            styles: { display: 'none' },
+            classes: { 'w-50': true },
+          },
+        },
+      ],
+      crudAPI: {
+        list: ({
+          startDate = moment().startOf('month').format('DD.MM.YYYY'),
+          endDate = moment().format('DD.MM.YYYY'),
+        }) => {
+          return combineLatest(
+            this.loadBudgets(startDate),
+            this.financesService.getDailyRoies(this.paramsId, startDate, endDate)
+          ).pipe(
+            map(([budget, finances]) => finances),
+            map(response => {
+              this.updateDailyROI(response);
+              this.filterProfit();
+              this.editingAccounts = false;
+              this.editingComission = false;
+              this.refundSelect();
+              return this.currentItems;
+            }),
+            map(items => this.tableMappedItems(items))
+          );
+        },
+        listSide: () => {
+          this.filterProfit();
+          return this.tableMappedItems(this.currentItems);
+        },
+        update: item => {
+          return this.financesService.updateRow(item).pipe(
+            tap(resp => {
+              this.selectedItemId = null;
+              this.dataTableInstance.updListSync(resp);
+            })
+          );
+        },
+      },
+      rowConfig: {
+        header: {
+          sticky: true,
+        },
+        footer: {
+          sticky: true,
+          styles: { marginTop: '50px' },
+        },
+      },
+    };
+  }
+
+  setDataTableOld() {
     this.dataTableConfig = {
       tableName: 'personalFinances',
       displayColumns: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'usdRub', 'actions'],
