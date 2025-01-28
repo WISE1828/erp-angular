@@ -773,8 +773,8 @@ export class PersonalFinancesComponent implements OnInit {
   setDataTable() {
     this.dataTableConfig = {
       tableName: 'personalFinances',
-      displayColumns: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'actions'],
-      displayFooter: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'actions'],
+      displayColumns: ['date', 'spent', 'consumables', 'incomeRUB', 'includingMonth', 'includingMinus', 'actions'],
+      displayFooter: ['date', 'spent', 'consumables', 'incomeRUB', 'includingMonth', 'includingMinus', 'actions'],
       actions: new Map<DataTableActions, (...args) => any>([
         [
           DataTableActions.SELECT,
@@ -1261,15 +1261,50 @@ export class PersonalFinancesComponent implements OnInit {
         },
 
         {
-          matColumnDef: 'profit',
+          matColumnDef: 'includingMonth',
           header: {
-            label: 'Профит',
-            classes: { 'w-100': true },
+            label: 'Внутри месяца',
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    label: 'Профит',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: 'ROI',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-200': true },
           },
           cell: {
-            calculated: el => parseNumberWithPrefix(el.profit, '₽'),
-            styles: { backgroundColor: '#d5ebd5' },
-            classes: { 'w-100': true },
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: (el, elements) => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.profit, '$'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#d5ebd5' },
+                  },
+                  {
+                    label: parseNumberWithPrefix(el.roi, '%'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#dedede' },
+                  },
+                ],
+                element: el,
+                elements: elements,
+                showControl: this.selectedItemId === el?.rowId,
+              }),
+            },
+            classes: { 'w-200': true },
           },
           footer: {
             content: {
@@ -1279,15 +1314,7 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     content: {
                       templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: el => ({
-                        items: [
-                          {
-                            label: '',
-                            styles: { border: 'none' },
-                          },
-                        ],
-                        styles: { border: 'none' },
-                      }),
+                      contextCalculated: el => ({}),
                     },
                   },
                   {
@@ -1296,44 +1323,72 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '₽'),
+                            label: parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
+                          {
+                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            styles: { borderBottom: 'none', backgroundColor: '#e5e5e5' },
+                          },
                         ],
                       }),
-                    },
-                    styles: {
-                      borderRight: '1px solid #d1d1d1',
                     },
                   },
                 ],
                 classes: {
                   'column-direction': true,
                 },
-                styles: {
-                  borderTop: 'none',
-                  borderRight: 'none',
-                  borderLeft: 'none',
-                },
               }),
             },
-            styles: {
-              borderRight: 'none',
-              borderLeft: 'none',
-            },
-            classes: { 'w-100': true },
+            classes: { 'w-200': true },
           },
         },
+
         {
-          matColumnDef: 'roi',
+          matColumnDef: 'includingMinus',
           header: {
-            label: 'ROI',
-            classes: { 'w-100': true },
+            label: 'C учетом Минуса',
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    label: 'Профит',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: 'ROI',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-200': true },
           },
           cell: {
-            calculated: (el, elements) => parseNumberWithPrefix(el.roi, '%'),
-            styles: { backgroundColor: '#dedede' },
-            classes: { 'w-100': true },
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: (el, elements) => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.profit, '$'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#d5ebd5' },
+                  },
+                  {
+                    label: parseNumberWithPrefix(el.roi, '%'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#dedede' },
+                  },
+                ],
+                element: el,
+                elements: elements,
+                showControl: this.selectedItemId === el?.rowId,
+              }),
+            },
+            classes: { 'w-200': true },
           },
           footer: {
             content: {
@@ -1343,15 +1398,7 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     content: {
                       templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: el => ({
-                        items: [
-                          {
-                            label: '',
-                            styles: { border: 'none' },
-                          },
-                        ],
-                        styles: { border: 'none' },
-                      }),
+                      contextCalculated: el => ({}),
                     },
                   },
                   {
@@ -1360,32 +1407,24 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
-                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                            label: parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                          },
+                          {
+                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            styles: { borderBottom: 'none', backgroundColor: '#e5e5e5' },
                           },
                         ],
                       }),
-                    },
-                    styles: {
-                      borderRight: '1px solid #d1d1d1',
                     },
                   },
                 ],
                 classes: {
                   'column-direction': true,
                 },
-                styles: {
-                  borderTop: 'none',
-                  borderRight: 'none',
-                  borderLeft: 'none',
-                },
               }),
             },
-            styles: {
-              borderRight: 'none',
-              borderLeft: 'none',
-            },
-            classes: { 'w-100': true },
+            classes: { 'w-200': true },
           },
         },
         {
