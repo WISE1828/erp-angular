@@ -773,8 +773,8 @@ export class PersonalFinancesComponent implements OnInit {
   setDataTable() {
     this.dataTableConfig = {
       tableName: 'personalFinances',
-      displayColumns: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'usdRub', 'actions'],
-      displayFooter: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'usdRub', 'actions'],
+      displayColumns: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'actions'],
+      displayFooter: ['date', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'actions'],
       actions: new Map<DataTableActions, (...args) => any>([
         [
           DataTableActions.SELECT,
@@ -1071,37 +1071,37 @@ export class PersonalFinancesComponent implements OnInit {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: el => ({
                         items: [
-                          {
-                            label: parseNumberWithPrefix(this.totalComission, '$'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                          },
-                          {
-                            label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
-                            content: {
-                              templateCalculated: () => {
-                                return this.cellContent.commentElement;
-                              },
-                              contextCalculated: () => {
-                                return {
-                                  isSelected: this.selectedCommentId === 'accountComment',
-                                  isDisabled: !this.isActive,
-                                  direction: 'top',
-                                  key: 'accountComment',
-                                  name: 'accountComment',
-                                  termId: this.termId,
-                                  isSaveExternal: false,
-                                  comment: this.accountComment || '',
-                                  select: id => {
-                                    this.selectedCommentId = id;
-                                  },
-                                  save: () => {
-                                    console.log('save');
-                                  },
-                                };
-                              },
-                            },
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                          },
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalComission, '$'),
+                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          // },
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
+                          //   content: {
+                          //     templateCalculated: () => {
+                          //       return this.cellContent.commentElement;
+                          //     },
+                          //     contextCalculated: () => {
+                          //       return {
+                          //         isSelected: this.selectedCommentId === 'accountComment',
+                          //         isDisabled: !this.isActive,
+                          //         direction: 'top',
+                          //         key: 'accountComment',
+                          //         name: 'accountComment',
+                          //         termId: this.termId,
+                          //         isSaveExternal: false,
+                          //         comment: this.accountComment || '',
+                          //         select: id => {
+                          //           this.selectedCommentId = id;
+                          //         },
+                          //         save: () => {
+                          //           console.log('save');
+                          //         },
+                          //       };
+                          //     },
+                          //   },
+                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          // },
                         ],
                       }),
                     },
@@ -1112,7 +1112,7 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.totalConsumables, '₽'),
+                            label: parseNumberWithPrefix(this.totalComission, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#f4e1e5' },
                           },
                           {
@@ -1140,21 +1140,21 @@ export class PersonalFinancesComponent implements OnInit {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
-                  {
-                    label: '₽',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
-                  {
-                    label: '$',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
-                  {
-                    label: '€',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
+                  // {
+                  //   label: '₽',
+                  //   styles: { borderTop: '1px solid #d1d1d1' },
+                  //   classes: { 'w-100': true },
+                  // },
+                  // {
+                  //   label: '$',
+                  //   styles: { borderTop: '1px solid #d1d1d1' },
+                  //   classes: { 'w-100': true },
+                  // },
+                  // {
+                  //   label: '€',
+                  //   styles: { borderTop: '1px solid #d1d1d1' },
+                  //   classes: { 'w-100': true },
+                  // },
                 ],
               }),
             },
@@ -1165,16 +1165,16 @@ export class PersonalFinancesComponent implements OnInit {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: (el, elements) => ({
                 items: [
-                  {
-                    label: parseNumberWithPrefix(el.incomeRUB, '₽'),
-                    control: {
-                      calculatedValue: el => el.incomeRUB,
-                      name: 'incomeRUB',
-                      type: ControlType.INPUT,
-                      valueType: ValueType.NUMBER,
-                    },
-                    classes: { 'w-100': true },
-                  },
+                  // {
+                  //   label: parseNumberWithPrefix(el.incomeRUB, '₽'),
+                  //   control: {
+                  //     calculatedValue: el => el.incomeRUB,
+                  //     name: 'incomeRUB',
+                  //     type: ControlType.INPUT,
+                  //     valueType: ValueType.NUMBER,
+                  //   },
+                  //   classes: { 'w-100': true },
+                  // },
                   {
                     label: parseNumberWithPrefix(el.incomeUSD, '$'),
                     control: {
@@ -1185,16 +1185,16 @@ export class PersonalFinancesComponent implements OnInit {
                     },
                     classes: { 'w-100': true },
                   },
-                  {
-                    label: parseNumberWithPrefix(el.incomeEUR, '€'),
-                    control: {
-                      calculatedValue: el => el.incomeEUR,
-                      name: 'incomeEUR',
-                      type: ControlType.INPUT,
-                      valueType: ValueType.NUMBER,
-                    },
-                    classes: { 'w-100': true },
-                  },
+                  // {
+                  //   label: parseNumberWithPrefix(el.incomeEUR, '€'),
+                  //   control: {
+                  //     calculatedValue: el => el.incomeEUR,
+                  //     name: 'incomeEUR',
+                  //     type: ControlType.INPUT,
+                  //     valueType: ValueType.NUMBER,
+                  //   },
+                  //   classes: { 'w-100': true },
+                  // },
                 ],
                 element: el,
                 elements: elements,
@@ -1227,18 +1227,18 @@ export class PersonalFinancesComponent implements OnInit {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: el => ({
                         items: [
-                          {
-                            calculated: () => parseNumberWithPrefix(this.totalIncome, '₽'),
-                            styles: { borderBottom: 'none' },
-                          },
+                          // {
+                          //   calculated: () => parseNumberWithPrefix(this.totalIncome, '₽'),
+                          //   styles: { borderBottom: 'none' },
+                          // },
                           {
                             calculated: () => parseNumberWithPrefix(this.totalIncomeUSD, '$'),
                             styles: { borderBottom: 'none' },
                           },
-                          {
-                            calculated: () => parseNumberWithPrefix(this.totalIncomeEUR, '€'),
-                            styles: { borderBottom: 'none' },
-                          },
+                          // {
+                          //   calculated: () => parseNumberWithPrefix(this.totalIncomeEUR, '€'),
+                          //   styles: { borderBottom: 'none' },
+                          // },
                         ],
                       }),
                     },
@@ -1361,89 +1361,6 @@ export class PersonalFinancesComponent implements OnInit {
                         items: [
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
-                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
-                          },
-                        ],
-                      }),
-                    },
-                    styles: {
-                      borderRight: '1px solid #d1d1d1',
-                    },
-                  },
-                ],
-                classes: {
-                  'column-direction': true,
-                },
-                styles: {
-                  borderTop: 'none',
-                  borderRight: 'none',
-                  borderLeft: 'none',
-                },
-              }),
-            },
-            styles: {
-              borderRight: 'none',
-              borderLeft: 'none',
-            },
-            classes: { 'w-100': true },
-          },
-        },
-        {
-          matColumnDef: 'usdRub',
-          header: {
-            label: 'USD_RUB курс $',
-            classes: { 'w-100': true },
-          },
-          cell: {
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: (el, elements) => ({
-                items: [
-                  {
-                    label: parseNumberWithPrefix(el.usdRub, '₽'),
-                    control: {
-                      calculatedValue: el => el.usdRub,
-                      name: 'usdRub',
-                      type: ControlType.INPUT,
-                      valueType: ValueType.NUMBER,
-                    },
-                    classes: { 'w-100': true },
-                  },
-                ],
-                element: el,
-                elements: elements,
-                showControl: this.selectedItemId === el?.rowId && this.canEditUsdRub(),
-              }),
-            },
-            styles: { backgroundColor: '#dedede' },
-            classes: { 'w-100': true },
-          },
-          footer: {
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: el => ({
-                items: [
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: el => ({
-                        items: [
-                          {
-                            label: '',
-                            styles: { border: 'none' },
-                          },
-                        ],
-                        styles: { border: 'none' },
-                      }),
-                    },
-                  },
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: el => ({
-                        items: [
-                          {
-                            calculated: () => parseNumberWithPrefix(this.avrUsdRub, '₽'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
