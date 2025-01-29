@@ -24,6 +24,11 @@
     }
   }
 }
+
+.mat-header-cell .ng-star-inserted {
+  display: none !important;
+}
+
 .cell-custom {
   display: flex;
   width: 100%;

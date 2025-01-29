@@ -836,7 +836,7 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: 'Комиссия/Расходники*',
+                    label: 'Минус пред. периода/Неоплаченный траф',
                   },
                   {
                     label: 'Итого',
@@ -862,7 +862,7 @@ export class PersonalFinancesComponent implements OnInit {
                 items: [
                   // {
                   //   label: '₽',
-                  //   styles: { borderTop: '1px solid #d1d1d1' },
+                  //   styles: { display: '1px solid #d1d1d1' },
                   //   classes: { 'w-100': true },
                   // },
                   // {
@@ -874,6 +874,7 @@ export class PersonalFinancesComponent implements OnInit {
               }),
             },
             classes: { 'w-200': true },
+            // styles: { display: 'none' },
           },
           cell: {
             content: {
@@ -925,7 +926,7 @@ export class PersonalFinancesComponent implements OnInit {
                           // },
                           {
                             label: parseNumberWithPrefix(this.totalSpentUSD, '$'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' }, //тут будет что то другое
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' }, //Минус пред периода
                             content: {
                               templateCalculated: () => {
                                 return this.cellContent.commentElement;
@@ -984,18 +985,19 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'consumables',
           header: {
             label: '',
+            // styles: { display: '1px solid #d1d1d1' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
                   {
                     label: 'Комиссия',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
                   },
                   {
                     label: 'Расходники',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
                   },
                 ],
@@ -1071,10 +1073,10 @@ export class PersonalFinancesComponent implements OnInit {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: el => ({
                         items: [
-                          // {
-                          //   label: parseNumberWithPrefix(this.totalComission, '$'),
-                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                          // },
+                          {
+                            label: parseNumberWithPrefix(this.totalComission, '$'), //Неоплаченный траф
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          },
                           // {
                           //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
                           //   content: {
@@ -1136,29 +1138,30 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'incomeRUB',
           header: {
             label: 'Доход',
+
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
-                items: [
-                  // {
-                  //   label: '₽',
-                  //   styles: { borderTop: '1px solid #d1d1d1' },
-                  //   classes: { 'w-100': true },
-                  // },
-                  // {
-                  //   label: '$',
-                  //   styles: { borderTop: '1px solid #d1d1d1' },
-                  //   classes: { 'w-100': true },
-                  // },
-                  // {
-                  //   label: '€',
-                  //   styles: { borderTop: '1px solid #d1d1d1' },
-                  //   classes: { 'w-100': true },
-                  // },
-                ],
+                // items: [
+                //   // {
+                //   //   label: '₽',
+                //   //   styles: { borderTop: '1px solid #d1d1d1' },
+                //   //   classes: { 'w-100': true },
+                //   // },
+                //   // {
+                //   //   label: '$',
+                //   //   styles: { borderTop: '1px solid #d1d1d1' },
+                //   //   classes: { 'w-100': true },
+                //   // },
+                //   // {
+                //   //   label: '€',
+                //   //   styles: { borderTop: '1px solid #d1d1d1' },
+                //   //   classes: { 'w-100': true },
+                //   // },
+                // ],
               }),
             },
-            classes: { 'w-300': true },
+            classes: { 'w-200': true },
           },
           cell: {
             content: {
@@ -1201,7 +1204,7 @@ export class PersonalFinancesComponent implements OnInit {
                 showControl: this.selectedItemId === el?.rowId,
               }),
             },
-            classes: { 'w-300': true },
+            classes: { 'w-200': true },
           },
           footer: {
             content: {
@@ -1243,7 +1246,7 @@ export class PersonalFinancesComponent implements OnInit {
                       }),
                     },
                     styles: {
-                      borderRight: '1px solid #d1d1d1',
+                      // borderRight: '1px solid #d1d1d1',
                     },
                   },
                 ],
@@ -1256,7 +1259,7 @@ export class PersonalFinancesComponent implements OnInit {
                 },
               }),
             },
-            classes: { 'w-300': true },
+            classes: { 'w-200': true },
           },
         },
 
@@ -1314,7 +1317,15 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     content: {
                       templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: el => ({}),
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
                     },
                   },
                   {
@@ -1323,20 +1334,27 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
+                            calculated: () => parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
-                            styles: { borderBottom: 'none', backgroundColor: '#e5e5e5' },
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
                       }),
+                    },
+                    styles: {
+                      // borderRight: '1px solid #d1d1d1',
                     },
                   },
                 ],
                 classes: {
                   'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
                 },
               }),
             },
@@ -1398,7 +1416,15 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     content: {
                       templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: el => ({}),
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
                     },
                   },
                   {
@@ -1407,20 +1433,27 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
+                            calculated: () => parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
-                            styles: { borderBottom: 'none', backgroundColor: '#e5e5e5' },
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
                       }),
+                    },
+                    styles: {
+                      // borderRight: '1px solid #d1d1d1',
                     },
                   },
                 ],
                 classes: {
                   'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
                 },
               }),
             },

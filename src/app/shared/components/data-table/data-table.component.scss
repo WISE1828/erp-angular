@@ -103,6 +103,19 @@ mat-table {
     }
   }
 
+  // .cdk-header-cell .ng-star-inserted {
+  //   display: none;
+  // }
+
+  mat-footer-cell,
+  cell-custom {
+    border-left: none;
+    border-bottom: 1px solid #d1d1d1;
+    &:nth-last-child(-n + 2) {
+      border-right: none;
+    }
+  }
+
   ::ng-deep {
     mat-footer-row.mat-table-sticky {
       bottom: -1px !important;
