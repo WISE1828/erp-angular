@@ -97,7 +97,7 @@
 
   <div class="result-footer">
     <div class="footer" [formGroup]="taxForm" *ngIf="currentItems?.length">
-      <div *ngIf="termId" class="total-comission-group">
+      <!-- <div *ngIf="termId" class="total-comission-group">
         <app-input-group
           *ngIf="selectedItemId; else totalRefunds"
           [label]="'ВОЗВРАТЫ'"
@@ -119,9 +119,9 @@
             (save)="updateRefunds($event)"
           ></app-input-group>
         </ng-template>
-      </div>
+      </div> -->
 
-      <div *ngIf="termId" class="total-comission-group">
+      <!-- <div *ngIf="termId" class="total-comission-group">
         <app-input-group
           [label]="'ОБЩАЯ КОМИССИЯ'"
           [loading]="loading"
@@ -131,7 +131,7 @@
           [disabled]="!isActive"
           (save)="updateCommissions($event)"
         ></app-input-group>
-      </div>
+      </div> -->
 
       <div *ngIf="termId" class="total-comission-group">
         <app-input-group
@@ -151,7 +151,7 @@
         <svg-icon class="result-icon" src="assets/icons/finances.svg"></svg-icon>
         <p>
           За период заработано:
-          <span class="money">{{ getResultMoney | currency: 'RUB' }}</span>
+          <span class="money">{{ getResultMoney | currency: 'USD' }}</span>
         </p>
       </div>
     </div>

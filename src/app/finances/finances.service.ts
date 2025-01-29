@@ -126,6 +126,9 @@ export class FinancesService {
   }
 
   public getProfit(item: IDailyRoiItem): number {
+    if (item.usdRub === 0) {
+      item.usdRub = 1;
+    }
     const income = incomeInRub(item);
     const spent = spentInRub(item);
     const consumables = consumableInRub(item);

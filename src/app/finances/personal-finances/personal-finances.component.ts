@@ -481,10 +481,12 @@ export class PersonalFinancesComponent implements OnInit {
   get totalProfitAsBackend(): number {
     let taxes = null;
     this.currentItems.forEach(el => {
-      taxes =
-        taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
+      // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
+      // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
+      taxes = taxes + el.comission + el.accountsTax + el.accountsTaxUsd;
     });
 
+    // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
     return (
       this.totalIncome +
       this.totalIncomeUSD * this.avrUSD +
@@ -492,6 +494,27 @@ export class PersonalFinancesComponent implements OnInit {
       (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
       (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
     );
+
+    // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
+    // return this.profit + this.refundsToRub - taxes;
+  }
+
+  get totalProfitAsBackendOld(): number {
+    let taxes = null;
+    this.currentItems.forEach(el => {
+      taxes =
+        taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
+    });
+
+    // return this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD;
+    return (
+      this.totalIncome +
+      this.totalIncomeUSD * this.avrUSD +
+      this.totalIncomeEUR * this.avrEUR -
+      (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
+      (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
+    );
+
     // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
     // return this.profit + this.refundsToRub - taxes;
   }
@@ -514,7 +537,17 @@ export class PersonalFinancesComponent implements OnInit {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
   get getTotalProfit(): number {
-    return this.totalProfitAsBackend;
+    const selectedYear = this.filters?.startDate
+      ? moment(this.filters.startDate, 'DD.MM.YYYY').year()
+      : new Date().getFullYear();
+
+    if (selectedYear <= 2024) {
+      return this.totalProfitAsBackendOld;
+    } else {
+      return this.totalProfitAsBackend;
+    }
+
+    // return this.totalProfitAsBackend;
     //return checkNumber(this.income - this.expose, 0);
   }
   get getResultMoney(): number {
@@ -631,11 +664,12 @@ export class PersonalFinancesComponent implements OnInit {
 
   // ACCOUТS TAXES
   get accountsTaxView() {
-    return this.taxForm.get('accountsTax').value + ' ₽ / ' + this.taxForm.get('accountsTaxUsd').value + ' $';
+    // return this.taxForm.get('accountsTax').value + ' ₽ / ' + this.taxForm.get('accountsTaxUsd').value + ' $';
+    return this.taxForm.get('accountsTaxUsd').value + ' $';
   }
   get accountsTaxItems() {
     return [
-      { name: 'accountsTax', value: this.taxForm.get('accountsTax').value, postfix: '₽' },
+      // { name: 'accountsTax', value: this.taxForm.get('accountsTax').value, postfix: '₽' },
       { name: 'accountsTaxUsd', value: this.taxForm.get('accountsTaxUsd').value, postfix: '$' },
     ];
   }
@@ -1334,7 +1368,7 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
@@ -1433,7 +1467,7 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.totalProfitAsBackend, '$'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
