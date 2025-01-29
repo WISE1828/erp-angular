@@ -35,7 +35,7 @@
     [dataTable]="dataTableConfig"
     [selectedItemId]="selectedItemId"
     [loading]="loading"
-    (filtersChange)="activeFilers = $event"
+    (filtersChange)="filtersAndDateChange($event)"
     (filteredData)="parseDataById($event)"
   >
     <ng-container filters-left [formGroup]="form">

@@ -15,6 +15,7 @@ import {
   FilterTarget,
   ValueType,
 } from '../../shared/components/data-table/data-table.models';
+import { oldTableBeforeDate } from '../../shared/constants';
 import { parseByType, parseNumberWithPrefix } from '../../shared/helpers';
 import { IEmptyUser } from '../../shared/interfaces/empty-user.interface';
 import { checkNumber } from '../../shared/math/formulas.base';
@@ -195,6 +196,21 @@ export class PersonalFinancesComponent implements OnInit {
       profitTo: new FormControl(null, []),
     });
     this.refundSelect();
+  }
+
+  filtersAndDateChange(value: any): void {
+    this.activeFilers = value;
+
+    this.filters.startDate = moment(value[0].control.value.startDate).format('DD.MM.YYYY');
+    this.filters.endDate = moment(value[0].control.value.endDate).format('DD.MM.YYYY');
+
+    const startDate = moment(value[0].control.value.startDate);
+
+    if ((this.isAdmin || this.isFinancier) && startDate.isBefore(oldTableBeforeDate)) {
+      this.setDataTableOld();
+    } else {
+      this.setDataTable();
+    }
   }
 
   get returnFilters() {
@@ -537,19 +553,15 @@ export class PersonalFinancesComponent implements OnInit {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
   get getTotalProfit(): number {
-    const selectedYear = this.filters?.startDate
-      ? moment(this.filters.startDate, 'DD.MM.YYYY').year()
-      : new Date().getFullYear();
+    return this.totalProfitAsBackend;
+  }
 
-    if (selectedYear <= 2024) {
-      return this.totalProfitAsBackendOld;
-    } else {
-      return this.totalProfitAsBackend;
-    }
-
+  get getTotalProfitOld(): number {
+    return this.totalProfitAsBackendOld;
     // return this.totalProfitAsBackend;
     //return checkNumber(this.income - this.expose, 0);
   }
+
   get getResultMoney(): number {
     let result = 0;
     let percent = 0;
@@ -844,8 +856,13 @@ export class PersonalFinancesComponent implements OnInit {
           direction: FilterTarget.BACK,
           control: {
             value: {
-              startDate: moment().startOf('month'),
-              endDate: moment(),
+              // startDate: moment().startOf('month'),
+              // endDate: moment(),
+
+              startDate: this.filters?.startDate
+                ? moment(this.filters.startDate, 'DD.MM.YYYY')
+                : moment().startOf('month'),
+              endDate: this.filters?.endDate ? moment(this.filters.endDate, 'DD.MM.YYYY') : moment(),
             },
             name: 'period',
             type: ControlType.DATE_PERIOD,
@@ -1372,7 +1389,7 @@ export class PersonalFinancesComponent implements OnInit {
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '$'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
@@ -1471,7 +1488,7 @@ export class PersonalFinancesComponent implements OnInit {
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '$'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
@@ -1545,8 +1562,15 @@ export class PersonalFinancesComponent implements OnInit {
       ],
       crudAPI: {
         list: ({
-          startDate = moment().startOf('month').format('DD.MM.YYYY'),
-          endDate = moment().format('DD.MM.YYYY'),
+          // startDate = moment().startOf('month').format('DD.MM.YYYY'),
+          // endDate = moment().format('DD.MM.YYYY'),
+          startDate = (this.filters?.startDate
+            ? moment(this.filters.startDate, 'DD.MM.YYYY')
+            : moment().startOf('month')
+          ).format('DD.MM.YYYY'),
+          endDate = (this.filters?.endDate ? moment(this.filters.endDate, 'DD.MM.YYYY') : moment()).format(
+            'DD.MM.YYYY'
+          ),
         }) => {
           return combineLatest(
             this.loadBudgets(startDate),
@@ -1629,8 +1653,10 @@ export class PersonalFinancesComponent implements OnInit {
           direction: FilterTarget.BACK,
           control: {
             value: {
-              startDate: moment().startOf('month'),
-              endDate: moment(),
+              startDate: this.filters?.startDate
+                ? moment(this.filters.startDate, 'DD.MM.YYYY')
+                : moment().startOf('month'),
+              endDate: this.filters?.endDate ? moment(this.filters.endDate, 'DD.MM.YYYY') : moment(),
             },
             name: 'period',
             type: ControlType.DATE_PERIOD,
@@ -2115,7 +2141,7 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '₽'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfitOld, '₽'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                         ],
@@ -2341,8 +2367,16 @@ export class PersonalFinancesComponent implements OnInit {
       ],
       crudAPI: {
         list: ({
-          startDate = moment().startOf('month').format('DD.MM.YYYY'),
-          endDate = moment().format('DD.MM.YYYY'),
+          // startDate = moment().startOf('month').format('DD.MM.YYYY'),
+          // endDate = moment().format('DD.MM.YYYY'),
+
+          startDate = (this.filters?.startDate
+            ? moment(this.filters.startDate, 'DD.MM.YYYY')
+            : moment().startOf('month')
+          ).format('DD.MM.YYYY'),
+          endDate = (this.filters?.endDate ? moment(this.filters.endDate, 'DD.MM.YYYY') : moment()).format(
+            'DD.MM.YYYY'
+          ),
         }) => {
           return combineLatest(
             this.loadBudgets(startDate),
