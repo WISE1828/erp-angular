@@ -163,11 +163,9 @@ export class PersonalFinancesComponent implements OnInit {
             teamId: null,
           };
 
-          const selectedYear = this.filters?.startDate
-            ? moment(this.filters.startDate, 'DD.MM.YYYY').year()
-            : new Date().getFullYear();
+          const startDate = moment(this.filters?.startDate);
 
-          if ((this.isAdmin || this.isFinancier) && selectedYear <= 2024) {
+          if ((this.isAdmin || this.isFinancier) && startDate.isBefore(oldTableBeforeDate)) {
             this.setDataTableOld();
           } else {
             this.setDataTable();

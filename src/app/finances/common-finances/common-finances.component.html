@@ -1,7 +1,7 @@
 <div class="container common-finances">
   <app-data-table
     [dataTable]="dataTableConfig"
-    (filtersChange)="activeFilers = $event"
+    (filtersChange)="filtersAndDateChange($event)"
     (filteredData)="parseDataById($event)"
   >
     <div filters-right class="form-control budget" *ngIf="budgetValue != undefined">
