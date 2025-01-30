@@ -85,15 +85,15 @@ export class CommonFinancesComponent implements OnInit {
   ngOnInit(): void {
     this.role = +localStorage.getItem('role');
     this.teamId = +localStorage.getItem('teamId');
-    // this.setDataTable();
+    this.setDataTable();
 
-    this.refreshDate();
+    // this.refreshDate();
 
-    if ((this.isAdmin || this.isFinancier) && this.startDate.isBefore(oldTableBeforeDate)) {
-      this.setDataTableOld();
-    } else {
-      this.setDataTable();
-    }
+    // if ((this.isAdmin || this.isFinancier) && this.startDate.isBefore(oldTableBeforeDate)) {
+    //   this.setDataTableOld();
+    // } else {
+    //   this.setDataTable();
+    // }
   }
 
   filtersAndDateChange(value: any): void {
@@ -212,6 +212,9 @@ export class CommonFinancesComponent implements OnInit {
   }
   get totalComissionTaxUSD() {
     return this.currentItems?.reduce((acc, { comissionTaxUsd }) => comissionTaxUsd + acc, 0);
+  }
+  get totalComission() {
+    return this.currentItems?.reduce((acc, { comission }) => comission + acc, 0);
   }
   get totalAccountTax() {
     return this.currentItems?.reduce((acc, { accountTax }) => accountTax + acc, 0);
@@ -349,11 +352,25 @@ export class CommonFinancesComponent implements OnInit {
         'spent',
         'consumables',
         'incomeRUB',
-        'profit',
-        'roi',
+        'minusPeriod',
+        'unpaidTraffic',
+        'slices',
+        'includingMonth',
+        'includingMinus',
         'actions',
       ],
-      displayFooter: ['teamId', 'spent', 'consumables', 'incomeRUB', 'profit', 'roi', 'actions'],
+      displayFooter: [
+        'teamId',
+        'spent',
+        'consumables',
+        'incomeRUB',
+        'minusPeriod',
+        'unpaidTraffic',
+        'slices',
+        'includingMonth',
+        'includingMinus',
+        'actions',
+      ],
       filters: [
         {
           label: 'Период',
@@ -469,22 +486,22 @@ export class CommonFinancesComponent implements OnInit {
           matColumnDef: 'roleName',
           header: {
             label: 'Роль',
-            classes: { 'w-100': true },
+            classes: { 'w-70': true },
           },
           cell: {
             calculated: el => el.roleName,
-            classes: { 'w-100': true },
+            classes: { 'w-70': true },
           },
         },
         {
           matColumnDef: 'teamId',
           header: {
             label: 'Команда',
-            classes: { 'w-100': true },
+            classes: { 'w-60': true },
           },
           cell: {
             calculated: el => el.teamId,
-            classes: { 'w-100': true },
+            classes: { 'w-60': true },
           },
           footer: {
             content: {
@@ -492,10 +509,11 @@ export class CommonFinancesComponent implements OnInit {
               contextCalculated: () => ({
                 items: [
                   {
-                    label: 'Комиссия/Расходники*',
+                    label: '',
                   },
                   {
                     label: 'Итого',
+                    styles: { borderLeft: '1px solid #d1d1d1' },
                   },
                 ],
                 classes: {
@@ -511,35 +529,35 @@ export class CommonFinancesComponent implements OnInit {
         {
           matColumnDef: 'spent',
           header: {
-            label: 'Потрачено Тест',
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: () => ({
-                items: [
-                  {
-                    label: '₽',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
-                  {
-                    label: '$',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
-                ],
-              }),
-            },
-            classes: { 'w-200': true },
+            label: 'Потрачено',
+            // content: {
+            //   templateCalculated: () => this.cellContent.itemsContainer,
+            //   contextCalculated: () => ({
+            //     items: [
+            //       // {
+            //       //   label: '₽',
+            //       //   styles: { borderTop: '1px solid #d1d1d1' },
+            //       //   classes: { 'w-100': true },
+            //       // },
+            //       // {
+            //       //   label: '$',
+            //       //   styles: { borderTop: '1px solid #d1d1d1' },
+            //       //   classes: { 'w-100': true },
+            //       // },
+            //     ],
+            //   }),
+            // },
+            classes: { 'w-100': true },
           },
           cell: {
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
-                  {
-                    label: parseNumberWithPrefix(el.spent, '₽'),
-                    classes: { 'w-100': true },
-                  },
+                  // {
+                  //   label: parseNumberWithPrefix(el.spent, '₽'),
+                  //   classes: { 'w-100': true },
+                  // },
                   {
                     label: parseNumberWithPrefix(el.spentUSD, '$'),
                     classes: { 'w-100': true },
@@ -548,7 +566,7 @@ export class CommonFinancesComponent implements OnInit {
               }),
             },
             styles: { backgroundColor: '#f3dcdc' },
-            classes: { 'w-200': true },
+            classes: { 'w-100': true },
           },
           footer: {
             content: {
@@ -559,16 +577,16 @@ export class CommonFinancesComponent implements OnInit {
                     content: {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: () => ({
-                        items: [
-                          {
-                            label: parseNumberWithPrefix(this.totalComissionTax, '₽'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
-                          },
-                          {
-                            label: parseNumberWithPrefix(this.totalComissionTaxUSD, '$'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
-                          },
-                        ],
+                        // items: [
+                        //   // {
+                        //   //   label: parseNumberWithPrefix(this.totalComissionTax, '₽'),
+                        //   //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
+                        //   // },
+                        //   // {
+                        //   //   label: parseNumberWithPrefix(this.totalComissionTaxUSD, '$'),
+                        //   //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
+                        //   // },
+                        // ],
                       }),
                     },
                   },
@@ -577,10 +595,10 @@ export class CommonFinancesComponent implements OnInit {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: () => ({
                         items: [
-                          {
-                            label: parseNumberWithPrefix(this.totalSpent, '₽'),
-                            styles: { borderBottom: 'none', backgroundColor: '#f3dcdc' },
-                          },
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalSpent, '₽'),
+                          //   styles: { borderBottom: 'none', backgroundColor: '#f3dcdc' },
+                          // },
                           {
                             label: parseNumberWithPrefix(this.totalSpentUSD, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#f3dcdc' },
@@ -595,31 +613,31 @@ export class CommonFinancesComponent implements OnInit {
                 },
               }),
             },
-            classes: { 'w-200': true },
+            classes: { 'w-90': true },
           },
         },
         {
           matColumnDef: 'consumables',
           header: {
-            label: 'Расходники',
+            label: '',
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: () => ({
                 items: [
                   {
-                    label: '₽',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    label: 'Комиссия',
+                    // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
                   },
                   {
-                    label: '$',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    label: 'Расходники',
+                    // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
                   },
                 ],
               }),
             },
-            classes: { 'w-200': true },
+            classes: { 'w-150': true },
           },
           cell: {
             content: {
@@ -627,7 +645,7 @@ export class CommonFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.consumables, '₽'),
+                    label: parseNumberWithPrefix(el.comission, '$'),
                     classes: { 'w-100': true },
                   },
                   {
@@ -638,7 +656,7 @@ export class CommonFinancesComponent implements OnInit {
               }),
             },
             styles: { backgroundColor: '#f4e1e5' },
-            classes: { 'w-200': true },
+            classes: { 'w-150': true },
           },
           footer: {
             content: {
@@ -650,14 +668,14 @@ export class CommonFinancesComponent implements OnInit {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: () => ({
                         items: [
-                          {
-                            label: parseNumberWithPrefix(this.totalAccountTax, '₽'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                          },
-                          {
-                            label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                          },
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalComission, 'Др'),
+                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          // },
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, 'Др'),
+                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          // },
                         ],
                       }),
                     },
@@ -668,7 +686,7 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.totalConsumables, '₽'),
+                            label: parseNumberWithPrefix(this.totalComission, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#f4e1e5' },
                           },
                           {
@@ -685,58 +703,123 @@ export class CommonFinancesComponent implements OnInit {
                 },
               }),
             },
-            classes: { 'w-200': true },
+            classes: { 'w-150': true },
           },
         },
         {
           matColumnDef: 'incomeRUB',
           header: {
             label: 'Доход',
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: () => ({
-                items: [
-                  {
-                    label: '₽',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
-                  {
-                    label: '$',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
-                  {
-                    label: '€',
-                    styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
-                  },
-                ],
-              }),
-            },
-            classes: { 'w-300': true },
+            // content: {
+            //   templateCalculated: () => this.cellContent.itemsContainer,
+            //   contextCalculated: () => ({
+            //     items: [
+            //       // {
+            //       //   label: '₽',
+            //       //   styles: { borderTop: '1px solid #d1d1d1' },
+            //       //   classes: { 'w-100': true },
+            //       // },
+            //       // {
+            //       //   label: '$',
+            //       //   styles: { borderTop: '1px solid #d1d1d1' },
+            //       //   classes: { 'w-100': true },
+            //       // },
+            //       // {
+            //       //   label: '€',
+            //       //   styles: { borderTop: '1px solid #d1d1d1' },
+            //       //   classes: { 'w-100': true },
+            //       // },
+            //     ],
+            //   }),
+            // },
+            classes: { 'w-100': true },
           },
           cell: {
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
-                  {
-                    label: parseNumberWithPrefix(el.incomeRUB, '₽'),
-                    classes: { 'w-100': true },
-                  },
+                  // {
+                  //   label: parseNumberWithPrefix(el.incomeRUB, '₽'),
+                  //   classes: { 'w-100': true },
+                  // },
                   {
                     label: parseNumberWithPrefix(el.incomeUSD, '$'),
                     classes: { 'w-100': true },
                   },
-                  {
-                    label: parseNumberWithPrefix(el.incomeEUR, '€'),
-                    classes: { 'w-100': true },
-                  },
+                  // {
+                  //   label: parseNumberWithPrefix(el.incomeEUR, '€'),
+                  //   classes: { 'w-100': true },
+                  // },
                 ],
               }),
             },
-            classes: { 'w-300': true },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: () => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalIncome, '₽'),
+                          //   styles: { borderBottom: 'none' },
+                          // },
+                          {
+                            label: parseNumberWithPrefix(this.totalIncomeUSD, '$'),
+                            styles: { borderBottom: 'none' },
+                          },
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalIncomeEUR, '€'),
+                          //   styles: { borderBottom: 'none' },
+                          // },
+                        ],
+                      }),
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                },
+              }),
+            },
+            classes: { 'w-100': true },
+          },
+        },
+
+        {
+          matColumnDef: 'minusPeriod',
+          header: {
+            label: 'Минус прошлого периода',
+            classes: { 'w-100': true },
+          },
+          cell: {
+            calculated: el => parseNumberWithPrefix(el.profit, '$'),
+            // styles: { backgroundColor: '#d5ebd5' },
+            classes: { 'w-100': true },
           },
           footer: {
             content: {
@@ -763,19 +846,14 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.totalIncome, '₽'),
-                            styles: { borderBottom: 'none' },
-                          },
-                          {
-                            label: parseNumberWithPrefix(this.totalIncomeUSD, '$'),
-                            styles: { borderBottom: 'none' },
-                          },
-                          {
-                            label: parseNumberWithPrefix(this.totalIncomeEUR, '€'),
-                            styles: { borderBottom: 'none' },
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            styles: { borderLeft: '1px solid #d1d1d1' },
                           },
                         ],
                       }),
+                    },
+                    styles: {
+                      borderRight: '1px solid #d1d1d1',
                     },
                   },
                 ],
@@ -785,22 +863,27 @@ export class CommonFinancesComponent implements OnInit {
                 styles: {
                   borderTop: 'none',
                   borderRight: 'none',
+                  borderLeft: 'none',
                 },
               }),
             },
-            classes: { 'w-300': true },
+            styles: {
+              borderRight: 'none',
+              borderLeft: 'none',
+            },
+            classes: { 'w-100': true },
           },
         },
 
         {
-          matColumnDef: 'profit',
+          matColumnDef: 'unpaidTraffic',
           header: {
-            label: 'Профит',
+            label: 'Неоплаченный трафик',
             classes: { 'w-100': true },
           },
           cell: {
-            calculated: el => parseNumberWithPrefix(el.profit, '₽'),
-            styles: { backgroundColor: '#d5ebd5' },
+            calculated: el => parseNumberWithPrefix(el.profit, '$'),
+            // styles: { backgroundColor: '#d5ebd5' },
             classes: { 'w-100': true },
           },
           footer: {
@@ -856,15 +939,16 @@ export class CommonFinancesComponent implements OnInit {
             classes: { 'w-100': true },
           },
         },
+
         {
-          matColumnDef: 'roi',
+          matColumnDef: 'slices',
           header: {
-            label: 'ROI',
+            label: 'Срезы',
             classes: { 'w-100': true },
           },
           cell: {
-            calculated: el => parseNumberWithPrefix(el.roi, '%'),
-            styles: { backgroundColor: '#dedede' },
+            calculated: el => parseNumberWithPrefix(el.profit, '$'),
+            // styles: { backgroundColor: '#d5ebd5' },
             classes: { 'w-100': true },
           },
           footer: {
@@ -892,8 +976,8 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
-                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '₽'),
+                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                         ],
                       }),
@@ -916,6 +1000,192 @@ export class CommonFinancesComponent implements OnInit {
             styles: {
               borderRight: 'none',
               borderLeft: 'none',
+            },
+            classes: { 'w-100': true },
+          },
+        },
+
+        {
+          matColumnDef: 'includingMonth',
+          header: {
+            label: 'Внутри месяца',
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: () => ({
+                items: [
+                  {
+                    label: 'Профит',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: 'ROI',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-100': true },
+          },
+          cell: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.profit, '$'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#d5ebd5' },
+                  },
+                  {
+                    label: parseNumberWithPrefix(el.roi, '%'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#dedede' },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: () => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                          },
+                          {
+                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                          },
+                        ],
+                      }),
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                },
+              }),
+            },
+            classes: { 'w-100': true },
+          },
+        },
+
+        {
+          matColumnDef: 'includingMinus',
+          header: {
+            label: 'С учетом минуса',
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: () => ({
+                items: [
+                  {
+                    label: 'Профит',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                  {
+                    label: 'ROI',
+                    styles: { borderTop: '1px solid #d1d1d1' },
+                    classes: { 'w-100': true },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-100': true },
+          },
+          cell: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: el => ({
+                items: [
+                  {
+                    label: parseNumberWithPrefix(el.profit, '$'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#d5ebd5' },
+                  },
+                  {
+                    label: parseNumberWithPrefix(el.roi, '%'),
+                    classes: { 'w-100': true },
+                    styles: { backgroundColor: '#dedede' },
+                  },
+                ],
+              }),
+            },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: () => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                          },
+                          {
+                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                          },
+                        ],
+                      }),
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                },
+              }),
             },
             classes: { 'w-100': true },
           },

@@ -886,9 +886,11 @@ export class PersonalFinancesComponent implements OnInit {
                 items: [
                   {
                     label: 'Минус пред. периода/Неоплаченный траф',
+                    styles: { borderLeft: '1px solid #d1d1d1', borderTop: '1px solid #d1d1d1' },
                   },
                   {
                     label: 'Итого',
+                    styles: { borderLeft: '1px solid #d1d1d1' },
                   },
                 ],
                 classes: {
@@ -905,23 +907,23 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'spent',
           header: {
             label: 'Потрачено',
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: el => ({
-                items: [
-                  // {
-                  //   label: '₽',
-                  //   styles: { display: '1px solid #d1d1d1' },
-                  //   classes: { 'w-100': true },
-                  // },
-                  // {
-                  //   label: '$',
-                  //   styles: { borderTop: '1px solid #d1d1d1' },
-                  //   classes: { 'w-100': true },
-                  // },
-                ],
-              }),
-            },
+            // content: {
+            //   templateCalculated: () => this.cellContent.itemsContainer,
+            //   contextCalculated: el => ({
+            //     items: [
+            //       // {
+            //       //   label: '₽',
+            //       //   styles: { display: '1px solid #d1d1d1' },
+            //       //   classes: { 'w-100': true },
+            //       // },
+            //       // {
+            //       //   label: '$',
+            //       //   styles: { borderTop: '1px solid #d1d1d1' },
+            //       //   classes: { 'w-100': true },
+            //       // },
+            //     ],
+            //   }),
+            // },
             classes: { 'w-200': true },
             // styles: { display: 'none' },
           },
@@ -1188,28 +1190,28 @@ export class PersonalFinancesComponent implements OnInit {
           header: {
             label: 'Доход',
 
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: el => ({
-                // items: [
-                //   // {
-                //   //   label: '₽',
-                //   //   styles: { borderTop: '1px solid #d1d1d1' },
-                //   //   classes: { 'w-100': true },
-                //   // },
-                //   // {
-                //   //   label: '$',
-                //   //   styles: { borderTop: '1px solid #d1d1d1' },
-                //   //   classes: { 'w-100': true },
-                //   // },
-                //   // {
-                //   //   label: '€',
-                //   //   styles: { borderTop: '1px solid #d1d1d1' },
-                //   //   classes: { 'w-100': true },
-                //   // },
-                // ],
-              }),
-            },
+            // content: {
+            //   templateCalculated: () => this.cellContent.itemsContainer,
+            //   contextCalculated: el => ({
+            //     // items: [
+            //     //   // {
+            //     //   //   label: '₽',
+            //     //   //   styles: { borderTop: '1px solid #d1d1d1' },
+            //     //   //   classes: { 'w-100': true },
+            //     //   // },
+            //     //   // {
+            //     //   //   label: '$',
+            //     //   //   styles: { borderTop: '1px solid #d1d1d1' },
+            //     //   //   classes: { 'w-100': true },
+            //     //   // },
+            //     //   // {
+            //     //   //   label: '€',
+            //     //   //   styles: { borderTop: '1px solid #d1d1d1' },
+            //     //   //   classes: { 'w-100': true },
+            //     //   // },
+            //     // ],
+            //   }),
+            // },
             classes: { 'w-200': true },
           },
           cell: {

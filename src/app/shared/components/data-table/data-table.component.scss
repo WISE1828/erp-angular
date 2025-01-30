@@ -91,6 +91,7 @@ mat-table {
     flex-direction: row;
     min-height: 35px;
     border: none;
+    margin-right: 60px;
   }
 
   mat-cell,
@@ -119,6 +120,7 @@ mat-table {
   ::ng-deep {
     mat-footer-row.mat-table-sticky {
       bottom: -1px !important;
+      margin-right: 120px;
     }
   }
 }
@@ -159,7 +161,7 @@ mat-table {
 .m {
   &-l {
     &-150 {
-      margin-left: calc(var(--base-cell-width) * 3);
+      margin-left: 300px;
     }
   }
 }
