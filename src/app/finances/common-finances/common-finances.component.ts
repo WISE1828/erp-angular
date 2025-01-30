@@ -294,7 +294,21 @@ export class CommonFinancesComponent implements OnInit {
   get getTotalRoi(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
+  get getTotalRoiMonth(): number {
+    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
+  }
+  get getTotalRoiMinus(): number {
+    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
+  }
   get getTotalProfit(): number {
+    const expose = 0; // Сюда не тяну this.expose - так как бек отдает уже вычисленный профит для common
+    return this.income - expose || 0;
+  }
+  get getTotalProfitMonth(): number {
+    const expose = 0; // Сюда не тяну this.expose - так как бек отдает уже вычисленный профит для common
+    return this.income - expose || 0;
+  }
+  get getTotalProfitMinus(): number {
     const expose = 0; // Сюда не тяну this.expose - так как бек отдает уже вычисленный профит для common
     return this.income - expose || 0;
   }
@@ -917,8 +931,8 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '₽'),
-                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            styles: { borderBottom: 'none' },
                           },
                         ],
                       }),
@@ -982,8 +996,8 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '₽'),
-                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            styles: { borderBottom: 'none' },
                           },
                         ],
                       }),
@@ -1040,12 +1054,12 @@ export class CommonFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.profit, '$'),
+                    label: parseNumberWithPrefix(el.profitMonth, '$'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roi, '%'),
+                    label: parseNumberWithPrefix(el.roiMonth, '%'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#dedede' },
                   },
@@ -1079,11 +1093,11 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            label: parseNumberWithPrefix(this.getTotalProfitMonth, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            label: parseNumberWithPrefix(this.getTotalRoiMonth, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
@@ -1133,12 +1147,12 @@ export class CommonFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.profit, '$'),
+                    label: parseNumberWithPrefix(el.profitMinus, '$'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roi, '%'),
+                    label: parseNumberWithPrefix(el.roiMinus, '%'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#dedede' },
                   },
@@ -1172,11 +1186,11 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            label: parseNumberWithPrefix(this.getTotalProfitMinus, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            label: parseNumberWithPrefix(this.getTotalRoiMinus, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],

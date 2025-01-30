@@ -556,17 +556,23 @@ export class PersonalFinancesComponent implements OnInit {
   get getTotalRoi(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
+  get getTotalRoiMonth(): number {
+    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
+  }
+  get getTotalRoiMinus(): number {
+    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
+  }
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
   }
 
-  // get getTotalProfitMonth(): number {
-  //   return this.totalProfitAsBackend;
-  // }
+  get getTotalProfitMonth(): number {
+    return this.totalProfitAsBackend;
+  }
 
-  // get getTotalProfitMinus(): number {
-  //   return this.totalProfitAsBackend;
-  // }
+  get getTotalProfitMinus(): number {
+    return this.totalProfitAsBackend;
+  }
 
   get getTotalProfitOld(): number {
     return this.totalProfitAsBackendOld;
@@ -1399,11 +1405,11 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfitMonth, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoiMonth, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
@@ -1498,11 +1504,11 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfitMinus, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoiMinus, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
