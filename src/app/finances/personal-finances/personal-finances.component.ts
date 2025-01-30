@@ -491,6 +491,12 @@ export class PersonalFinancesComponent implements OnInit {
   get profit(): number {
     return this.currentItems.reduce((acc, { profit }) => profit + acc, 0) || 0;
   }
+  get profitMonth(): number {
+    return this.currentItems.reduce((acc, { profitMonth }) => profitMonth + acc, 0) || 0;
+  }
+  get profitMinus(): number {
+    return this.currentItems.reduce((acc, { profitMinus }) => profitMinus + acc, 0) || 0;
+  }
 
   get totalProfitAsBackend(): number {
     let taxes = null;
@@ -553,6 +559,14 @@ export class PersonalFinancesComponent implements OnInit {
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
   }
+
+  // get getTotalProfitMonth(): number {
+  //   return this.totalProfitAsBackend;
+  // }
+
+  // get getTotalProfitMinus(): number {
+  //   return this.totalProfitAsBackend;
+  // }
 
   get getTotalProfitOld(): number {
     return this.totalProfitAsBackendOld;
@@ -1343,12 +1357,12 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: (el, elements) => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.profit, '$'),
+                    label: parseNumberWithPrefix(el.profitMonth, '$'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roi, '%'),
+                    label: parseNumberWithPrefix(el.roiMonth, '%'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#dedede' },
                   },
@@ -1442,12 +1456,12 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: (el, elements) => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.profit, '$'),
+                    label: parseNumberWithPrefix(el.profitMinus, '$'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roi, '%'),
+                    label: parseNumberWithPrefix(el.roiMinus, '%'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#dedede' },
                   },

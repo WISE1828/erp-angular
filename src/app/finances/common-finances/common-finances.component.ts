@@ -85,31 +85,35 @@ export class CommonFinancesComponent implements OnInit {
   ngOnInit(): void {
     this.role = +localStorage.getItem('role');
     this.teamId = +localStorage.getItem('teamId');
-    this.setDataTable();
+    // this.setDataTable();
 
-    // this.refreshDate();
+    this.refreshDate();
 
-    // if ((this.isAdmin || this.isFinancier) && this.startDate.isBefore(oldTableBeforeDate)) {
-    //   this.setDataTableOld();
-    // } else {
-    //   this.setDataTable();
-    // }
+    if ((this.isAdmin || this.isFinancier) && this.startDate.isBefore(oldTableBeforeDate)) {
+      this.setDataTableOld();
+    } else {
+      this.setDataTable();
+    }
   }
 
+  oldDateStart: moment.Moment;
+  oldDateEnd: moment.Moment;
+
   filtersAndDateChange(value: any): void {
-    if (!this.activeFilers[0]) {
-      this.activeFilers = value;
+    this.refreshDate();
+    console.log(this.activeFilers[0]?.control.value.startDate);
+    console.log(value[0]?.control.value.startDate);
+
+    if (!this.oldDateStart || !this.oldDateEnd) {
+      this.oldDateStart = value[0]?.control.value.startDate;
+      this.oldDateEnd = value[0]?.control.value.endDate;
     }
 
-    console.log(this.activeFilers[0].control.value.startDate);
-    console.log(value[0].control.value.startDate);
-
     if (
-      !this.activeFilers[0].control.value.startDate.isSame(value[0].control.value.startDate) ||
-      !this.activeFilers[0].control.value.endDate.isSame(value[0].control.value.endDate)
+      (!this.oldDateStart.isSame(value[0].control.value.startDate) ||
+        !this.oldDateEnd.isSame(value[0].control.value.endDate)) &&
+      this.startDate.isBefore(oldTableBeforeDate) != this.oldDateStart.isBefore(oldTableBeforeDate)
     ) {
-      this.refreshDate();
-
       if ((this.isAdmin || this.isFinancier) && this.startDate.isBefore(oldTableBeforeDate)) {
         this.setDataTableOld();
       } else {
@@ -117,7 +121,9 @@ export class CommonFinancesComponent implements OnInit {
       }
     }
 
-    this.activeFilers = value;
+    this.activeFilers = { ...value };
+    this.oldDateStart = value[0]?.control.value.startDate;
+    this.oldDateEnd = value[0]?.control.value.endDate;
   }
 
   public get isAdmin(): boolean {

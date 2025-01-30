@@ -35,6 +35,11 @@ export interface ICommonDailyRoiItem {
     roi: number;
     usdRub: number;
     eurRub: number;
+    profitMonth: number;
+    profitMinus: number;
+    roiMonth: number;
+    roiMinus: number;
+    slices: number;
   };
 }
 
@@ -64,6 +69,11 @@ export interface IDailyRoiItem {
   accountsTaxUsd?: number;
   dailyRoiTermCount?: number;
   consumablesComment?: string;
+  profitMonth: number;
+  profitMinus: number;
+  roiMonth: number;
+  roiMinus: number;
+  slices: number;
 }
 
 export interface IDailyRoiData {
