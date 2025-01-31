@@ -40,6 +40,8 @@ export interface ICommonDailyRoiItem {
     roiMonth: number;
     roiMinus: number;
     slices: number;
+    minusPreviousPeriod: number;
+    unpaidTraffic: number;
   };
 }
 
@@ -74,6 +76,8 @@ export interface IDailyRoiItem {
   roiMonth: number;
   roiMinus: number;
   slices: number;
+  minusPreviousPeriod: number;
+  unpaidTraffic: number;
 }
 
 export interface IDailyRoiData {

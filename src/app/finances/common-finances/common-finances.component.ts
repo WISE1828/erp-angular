@@ -78,8 +78,12 @@ export class CommonFinancesComponent implements OnInit {
 
   refreshDate() {
     this.queryParams = this.route.snapshot.queryParams;
-    this.startDate = moment(this.queryParams.startDate.split('@')[0], 'DD.MM.YYYY');
-    this.finishDate = moment(this.queryParams.endDate.split('@')[0], 'DD.MM.YYYY');
+    if (this.queryParams.startDate) {
+      this.startDate = moment(this.queryParams.startDate?.split('@')[0], 'DD.MM.YYYY');
+      this.finishDate = moment(this.queryParams.endDate?.split('@')[0], 'DD.MM.YYYY');
+    } else {
+      (this.startDate = moment().startOf('month')), (this.finishDate = moment());
+    }
   }
 
   ngOnInit(): void {
@@ -89,7 +93,7 @@ export class CommonFinancesComponent implements OnInit {
 
     this.refreshDate();
 
-    if ((this.isAdmin || this.isFinancier) && this.startDate.isBefore(oldTableBeforeDate)) {
+    if (this.startDate.isBefore(oldTableBeforeDate)) {
       this.setDataTableOld();
     } else {
       this.setDataTable();
@@ -101,8 +105,6 @@ export class CommonFinancesComponent implements OnInit {
 
   filtersAndDateChange(value: any): void {
     this.refreshDate();
-    console.log(this.activeFilers[0]?.control.value.startDate);
-    console.log(value[0]?.control.value.startDate);
 
     if (!this.oldDateStart || !this.oldDateEnd) {
       this.oldDateStart = value[0]?.control.value.startDate;
