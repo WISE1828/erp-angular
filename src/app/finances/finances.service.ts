@@ -14,6 +14,7 @@ export interface ICommonDailyRoiItem {
   comissionTaxUsd: number;
   accountTax: number;
   accountTaxUsd: number;
+  minusPreviousPeriod: number;
   profitPercent: number;
   userId: number;
   userName: string;
@@ -71,13 +72,10 @@ export interface IDailyRoiItem {
   accountsTaxUsd?: number;
   dailyRoiTermCount?: number;
   consumablesComment?: string;
-  profitMonth: number;
   profitMinus: number;
   roiMonth: number;
-  roiMinus: number;
   slices: number;
   minusPreviousPeriod: number;
-  unpaidTraffic: number;
 }
 
 export interface IDailyRoiData {

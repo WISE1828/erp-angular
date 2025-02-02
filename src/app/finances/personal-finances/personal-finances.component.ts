@@ -36,6 +36,7 @@ export class PersonalFinancesComponent implements OnInit {
   public date = new Date();
   public avrUsdRub: number;
   public monthDay: number;
+  public minusPreviousPeriod: number;
 
   public form: FormGroup;
   public filters: any;
@@ -491,14 +492,32 @@ export class PersonalFinancesComponent implements OnInit {
   get profit(): number {
     return this.currentItems.reduce((acc, { profit }) => profit + acc, 0) || 0;
   }
-  get profitMonth(): number {
-    return this.currentItems.reduce((acc, { profitMonth }) => profitMonth + acc, 0) || 0;
-  }
   get profitMinus(): number {
     return this.currentItems.reduce((acc, { profitMinus }) => profitMinus + acc, 0) || 0;
   }
 
   get totalProfitAsBackend(): number {
+    let taxes = null;
+    this.currentItems.forEach(el => {
+      // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
+      // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
+      taxes = taxes + el.comission + el.accountsTax + el.accountsTaxUsd;
+    });
+
+    // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
+    return (
+      this.totalIncome +
+      this.totalIncomeUSD * this.avrUSD +
+      this.totalIncomeEUR * this.avrEUR -
+      (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
+      (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
+    );
+
+    // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
+    // return this.profit + this.refundsToRub - taxes;
+  }
+
+  get totalProfitAsBackendMinus(): number {
     let taxes = null;
     this.currentItems.forEach(el => {
       // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
@@ -556,9 +575,6 @@ export class PersonalFinancesComponent implements OnInit {
   get getTotalRoi(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
-  get getTotalRoiMonth(): number {
-    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
-  }
   get getTotalRoiMinus(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
@@ -571,7 +587,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get getTotalProfitMinus(): number {
-    return this.totalProfitAsBackend;
+    return this.totalProfitAsBackendMinus;
   }
 
   get getTotalProfitOld(): number {
@@ -704,6 +720,16 @@ export class PersonalFinancesComponent implements OnInit {
     ];
   }
   public updateAccountsTax(accountsTax: { accountsTax: number; accountsTaxUsd: number }) {
+    this.taxForm.patchValue(accountsTax);
+    if (this.bufferResponse?.length) {
+      const { accountsTax, accountsTaxUsd } = this.taxForm.value;
+      this.bufferResponse[0].termTax = { ...this.bufferResponse[0].termTax, accountsTax, accountsTaxUsd };
+      this.updateDailyROI(this.bufferResponse);
+    }
+    this.saveEditingTax();
+  }
+
+  public addSlices(accountsTax: { accountsTax: number; accountsTaxUsd: number }) {
     this.taxForm.patchValue(accountsTax);
     if (this.bufferResponse?.length) {
       const { accountsTax, accountsTaxUsd } = this.taxForm.value;
@@ -996,7 +1022,7 @@ export class PersonalFinancesComponent implements OnInit {
                           //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
                           // },
                           {
-                            label: parseNumberWithPrefix(this.totalSpentUSD, '$'),
+                            label: parseNumberWithPrefix(this.minusPreviousPeriod, '$'),
                             styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' }, //Минус пред периода
                             content: {
                               templateCalculated: () => {
@@ -1145,7 +1171,7 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.totalComission, '$'), //Неоплаченный траф
+                            label: parseNumberWithPrefix(this.totalConsumablesUSD, '$'), //Неоплаченный траф
                             styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
                           },
                           // {
@@ -1409,7 +1435,7 @@ export class PersonalFinancesComponent implements OnInit {
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoiMonth, '%'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
