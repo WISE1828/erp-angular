@@ -36,7 +36,6 @@ export class PersonalFinancesComponent implements OnInit {
   public date = new Date();
   public avrUsdRub: number;
   public monthDay: number;
-  public minusPreviousPeriod: number;
 
   public form: FormGroup;
   public filters: any;
@@ -101,6 +100,8 @@ export class PersonalFinancesComponent implements OnInit {
   budget = 0;
   bufferResponse: IDailyRoiData[];
   isActive: boolean;
+  negativeProfit: number;
+  slices: number;
 
   // ACCESS
   get isAdmin() {
@@ -575,14 +576,15 @@ export class PersonalFinancesComponent implements OnInit {
   get getTotalRoi(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
+
+  get getTotalRoiOld(): number {
+    return checkNumber((this.getTotalProfitOld / this.expose) * 100, 0);
+  }
+
   get getTotalRoiMinus(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
   get getTotalProfit(): number {
-    return this.totalProfitAsBackend;
-  }
-
-  get getTotalProfitMonth(): number {
     return this.totalProfitAsBackend;
   }
 
@@ -713,6 +715,11 @@ export class PersonalFinancesComponent implements OnInit {
     // return this.taxForm.get('accountsTax').value + ' ₽ / ' + this.taxForm.get('accountsTaxUsd').value + ' $';
     return this.taxForm.get('accountsTaxUsd').value + ' $';
   }
+  get slicesView() {
+    // return this.taxForm.get('accountsTax').value + ' ₽ / ' + this.taxForm.get('accountsTaxUsd').value + ' $';
+    return this.taxForm.get('slises').value + ' $';
+  }
+
   get accountsTaxItems() {
     return [
       // { name: 'accountsTax', value: this.taxForm.get('accountsTax').value, postfix: '₽' },
@@ -732,8 +739,8 @@ export class PersonalFinancesComponent implements OnInit {
   public addSlices(accountsTax: { accountsTax: number; accountsTaxUsd: number }) {
     this.taxForm.patchValue(accountsTax);
     if (this.bufferResponse?.length) {
-      const { accountsTax, accountsTaxUsd } = this.taxForm.value;
-      this.bufferResponse[0].termTax = { ...this.bufferResponse[0].termTax, accountsTax, accountsTaxUsd };
+      const { slices } = this.taxForm.value;
+      this.bufferResponse[0].termTax = { ...this.bufferResponse[0].termTax, slices };
       this.updateDailyROI(this.bufferResponse);
     }
     this.saveEditingTax();
@@ -780,6 +787,7 @@ export class PersonalFinancesComponent implements OnInit {
       accountsTax: this.accountsTax,
       accountsTaxUsd: this.accountsTaxUsd,
       comissionTaxUsd: this.comissionTaxUsd,
+      slices: this.slices,
     };
     // this.receivedData.forEach(el => {
     //   el['accountsTax'] = this.accountsTax / el.dailyRoiTermCount;
@@ -1022,7 +1030,7 @@ export class PersonalFinancesComponent implements OnInit {
                           //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
                           // },
                           {
-                            label: parseNumberWithPrefix(this.minusPreviousPeriod, '$'),
+                            label: parseNumberWithPrefix(this.negativeProfit, '$'),
                             styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' }, //Минус пред периода
                             content: {
                               templateCalculated: () => {
@@ -1389,12 +1397,12 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: (el, elements) => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.profitMonth, '$'),
+                    label: parseNumberWithPrefix(el.profit, '$'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roiMonth, '%'),
+                    label: parseNumberWithPrefix(el.roi, '%'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#dedede' },
                   },
@@ -1431,7 +1439,7 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfitMonth, '$'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
@@ -2251,7 +2259,7 @@ export class PersonalFinancesComponent implements OnInit {
                       contextCalculated: el => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoiOld, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],

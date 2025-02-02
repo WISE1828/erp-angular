@@ -40,8 +40,6 @@ export interface ICommonDailyRoiItem {
     profitMinus: number;
     roiMonth: number;
     roiMinus: number;
-    slices: number;
-    minusPreviousPeriod: number;
     unpaidTraffic: number;
   };
 }
@@ -74,8 +72,6 @@ export interface IDailyRoiItem {
   consumablesComment?: string;
   profitMinus: number;
   roiMonth: number;
-  slices: number;
-  minusPreviousPeriod: number;
 }
 
 export interface IDailyRoiData {
@@ -92,15 +88,18 @@ export interface IDailyRoiData {
     accountsTaxUsd: number;
     accountComment: string;
     comissionComment: string;
+    slices: number;
   };
   refunds: IRefunds[];
   isActive?: boolean;
+  negativeProfit: number;
 }
 
 export interface ITermTax {
   comissionTax: number;
   comissionTaxUsd: number;
   accountsTax: number;
+  slices: number;
 }
 
 export interface IComment {

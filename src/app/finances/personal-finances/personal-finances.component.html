@@ -133,7 +133,7 @@
         ></app-input-group>
       </div> -->
 
-      <div *ngIf="termId" class="total-comission-group">
+      <!-- <div *ngIf="termId" class="total-comission-group">
         <app-input-group
           [label]="'Срезы'"
           [loading]="loading"
@@ -142,6 +142,17 @@
           [inputs]="accountsTaxItems"
           [disabled]="!isActive"
           (save)="updateAccountsTax($event)"
+        ></app-input-group>
+      </div> -->
+      <div *ngIf="termId" class="total-comission-group">
+        <app-input-group
+          [label]="'Срезы'"
+          [loading]="loading"
+          [viewData]="slicesView"
+          [currentMonth]="currentMonth"
+          [inputs]="accountsTaxItems"
+          [disabled]="!isActive"
+          (save)="addSlices($event)"
         ></app-input-group>
       </div>
     </div>
