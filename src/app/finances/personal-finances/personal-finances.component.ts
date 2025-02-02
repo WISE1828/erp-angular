@@ -738,7 +738,7 @@ export class PersonalFinancesComponent implements OnInit {
 
   public addSlices(accountsTax: { accountsTax: number; accountsTaxUsd: number }) {
     this.taxForm.patchValue(accountsTax);
-    if (this.bufferResponse?.length) {
+    if (this.bufferResponse?.length && this.taxForm.value.slices) {
       const { slices } = this.taxForm.value;
       this.bufferResponse[0].termTax = { ...this.bufferResponse[0].termTax, slices };
       this.updateDailyROI(this.bufferResponse);
