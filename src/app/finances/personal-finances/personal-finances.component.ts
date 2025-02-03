@@ -43,6 +43,7 @@ export class PersonalFinancesComponent implements OnInit {
   public taxForm: FormGroup = new FormGroup({
     accountsTax: new FormControl(null, []),
     accountsTaxUsd: new FormControl(null, []),
+    slices: new FormControl(null, []),
     comissionTax: new FormControl(0, []),
     comissionTaxUsd: new FormControl(0, []),
     prepaidExpense: new FormGroup({
@@ -1117,9 +1118,9 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: (el, elements) => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.comission, '$'),
+                    label: parseNumberWithPrefix(el.commission, '$'),
                     control: {
-                      calculatedValue: el => el.comission,
+                      calculatedValue: el => el.commission,
                       name: 'comission',
                       type: ControlType.INPUT,
                       valueType: ValueType.NUMBER,
