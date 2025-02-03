@@ -315,6 +315,7 @@ export class PersonalFinancesComponent implements OnInit {
       this.taxForm = new FormGroup({
         accountsTax: new FormControl(this.accountsTax, []),
         accountsTaxUsd: new FormControl(this.accountsTaxUsd, []),
+        slices: new FormControl(this.slices, []),
         comissionTax: new FormControl(this.comissionTax, []),
         comissionTaxUsd: new FormControl(this.comissionTaxUsd, []),
         prepaidExpense: new FormGroup({
@@ -727,6 +728,11 @@ export class PersonalFinancesComponent implements OnInit {
       { name: 'accountsTaxUsd', value: this.taxForm.get('accountsTaxUsd').value, postfix: '$' },
     ];
   }
+
+  get slicesTaxItems() {
+    return [{ name: 'slices', value: this.taxForm.get('slices').value, postfix: '$' }];
+  }
+
   public updateAccountsTax(accountsTax: { accountsTax: number; accountsTaxUsd: number }) {
     this.taxForm.patchValue(accountsTax);
     if (this.bufferResponse?.length) {
@@ -739,7 +745,7 @@ export class PersonalFinancesComponent implements OnInit {
 
   public addSlices(slices: { slices: number }) {
     this.taxForm.patchValue(slices);
-    if (this.bufferResponse?.length && this.taxForm.value.slices) {
+    if (this.bufferResponse?.length) {
       const { slices } = this.taxForm.value;
       this.bufferResponse[0].termTax = { ...this.bufferResponse[0].termTax, slices };
       this.updateDailyROI(this.bufferResponse);
@@ -760,6 +766,7 @@ export class PersonalFinancesComponent implements OnInit {
         item['accountsTaxUsd'] = el.termTax.accountsTaxUsd / el.dailyRoiTermCount;
         item['comissionTax'] = el.termTax.comissionTax / el.dailyRoiTermCount;
         item['comissionTaxUsd'] = el.termTax.comissionTaxUsd / el.dailyRoiTermCount;
+        item['slices'] = el.termTax.slices;
         item['dailyRoiTermCount'] = el.dailyRoiTermCount;
         data.push(item);
       });
@@ -767,6 +774,7 @@ export class PersonalFinancesComponent implements OnInit {
       this.comissionTaxUsd = this.comissionTaxUsd + el.termTax.comissionTaxUsd;
       this.accountsTax = this.accountsTax + el.termTax.accountsTax;
       this.accountsTaxUsd = this.accountsTaxUsd + el.termTax.accountsTaxUsd;
+      this.slices = this.slices + el.termTax.slices;
     });
     return data;
   }
