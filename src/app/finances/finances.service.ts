@@ -21,7 +21,7 @@ export interface ICommonDailyRoiItem {
   userRoleId: number;
   teamId: number;
   isActive: boolean;
-  comission: number;
+  commission: number;
   meta: {
     spentUSD: number;
     clearProfit: number;
@@ -65,7 +65,7 @@ export interface IDailyRoiItem {
   usdRub: number;
   comissionTax?: number;
   comissionTaxUsd?: number;
-  comission: number;
+  commission: number;
   accountsTax?: number;
   accountsTaxUsd?: number;
   dailyRoiTermCount?: number;

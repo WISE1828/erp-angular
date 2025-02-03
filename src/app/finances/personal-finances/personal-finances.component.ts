@@ -72,7 +72,7 @@ export class PersonalFinancesComponent implements OnInit {
   public slices: number;
   public comissionTax: number;
   public comissionTaxUsd: number;
-  public comission: number;
+  public commission: number;
   public user: IUserInfo | IEmptyUser;
   public loading = false;
   public editingComission = false;
@@ -431,7 +431,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get totalComission() {
-    return this.currentItems.reduce((acc, { comission }) => comission + acc, 0);
+    return this.currentItems.reduce((acc, { commission }) => commission + acc, 0);
   }
 
   get totalAccountTax() {
@@ -502,7 +502,7 @@ export class PersonalFinancesComponent implements OnInit {
     this.currentItems.forEach(el => {
       // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
       // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
-      taxes = taxes + el.comission + el.accountsTax + el.accountsTaxUsd;
+      taxes = taxes + el.commission + el.accountsTax + el.accountsTaxUsd;
     });
 
     // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
@@ -523,7 +523,7 @@ export class PersonalFinancesComponent implements OnInit {
     this.currentItems.forEach(el => {
       // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
       // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
-      taxes = taxes + el.comission + el.accountsTax + el.accountsTaxUsd;
+      taxes = taxes + el.commission + el.accountsTax + el.accountsTaxUsd;
     });
 
     // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;

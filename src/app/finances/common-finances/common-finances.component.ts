@@ -222,7 +222,7 @@ export class CommonFinancesComponent implements OnInit {
     return this.currentItems?.reduce((acc, { comissionTaxUsd }) => comissionTaxUsd + acc, 0);
   }
   get totalComission() {
-    return this.currentItems?.reduce((acc, { comission }) => comission + acc, 0);
+    return this.currentItems?.reduce((acc, { commission }) => commission + acc, 0);
   }
   get totalAccountTax() {
     return this.currentItems?.reduce((acc, { accountTax }) => accountTax + acc, 0);
