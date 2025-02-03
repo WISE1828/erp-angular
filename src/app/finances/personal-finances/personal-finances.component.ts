@@ -69,6 +69,7 @@ export class PersonalFinancesComponent implements OnInit {
   public showBackButton: boolean;
   public accountsTax: number;
   public accountsTaxUsd: number;
+  public slices: number;
   public comissionTax: number;
   public comissionTaxUsd: number;
   public comission: number;
@@ -101,7 +102,6 @@ export class PersonalFinancesComponent implements OnInit {
   bufferResponse: IDailyRoiData[];
   isActive: boolean;
   negativeProfit: number;
-  slices: number;
 
   // ACCESS
   get isAdmin() {
@@ -736,8 +736,8 @@ export class PersonalFinancesComponent implements OnInit {
     this.saveEditingTax();
   }
 
-  public addSlices(accountsTax: { accountsTax: number; accountsTaxUsd: number }) {
-    this.taxForm.patchValue(accountsTax);
+  public addSlices(slices: { slices: number }) {
+    this.taxForm.patchValue(slices);
     if (this.bufferResponse?.length && this.taxForm.value.slices) {
       const { slices } = this.taxForm.value;
       this.bufferResponse[0].termTax = { ...this.bufferResponse[0].termTax, slices };
@@ -782,6 +782,7 @@ export class PersonalFinancesComponent implements OnInit {
     this.accountsTax = this.taxForm.get('accountsTax').value;
     this.accountsTaxUsd = this.taxForm.get('accountsTaxUsd').value;
     this.comissionTaxUsd = this.taxForm.get('comissionTaxUsd').value;
+    this.slices = this.taxForm.get('slices').value;
     const tax = {
       comissionTax: this.comissionTax,
       accountsTax: this.accountsTax,
