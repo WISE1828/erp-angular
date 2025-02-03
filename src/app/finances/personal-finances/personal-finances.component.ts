@@ -718,7 +718,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
   get slicesView() {
     // return this.taxForm.get('accountsTax').value + ' ₽ / ' + this.taxForm.get('accountsTaxUsd').value + ' $';
-    return this.taxForm.get('slises').value + ' $';
+    return this.taxForm.get('slices').value + ' $';
   }
 
   get accountsTaxItems() {
