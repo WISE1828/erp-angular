@@ -102,7 +102,7 @@ export class PersonalFinancesComponent implements OnInit {
   budget = 0;
   bufferResponse: IDailyRoiData[];
   isActive: boolean;
-  negativeProfit: number;
+  public negativeProfit: number;
 
   // ACCESS
   get isAdmin() {
@@ -356,6 +356,7 @@ export class PersonalFinancesComponent implements OnInit {
       this.currentItems = [];
       this.currentProfitPercent = null;
     }
+    this.negativeProfit = response[0].negativeProfit;
   }
 
   // TABLE
@@ -508,16 +509,16 @@ export class PersonalFinancesComponent implements OnInit {
     });
 
     // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
-    return (
-      this.totalIncome +
-      this.totalIncomeUSD * this.avrUSD +
-      this.totalIncomeEUR * this.avrEUR -
-      (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
-      (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
-    );
+    // return (
+    //   this.totalIncome +
+    //   this.totalIncomeUSD * this.avrUSD +
+    //   this.totalIncomeEUR * this.avrEUR -
+    //   (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
+    //   (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
+    // );
 
     // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
-    // return this.profit + this.refundsToRub - taxes;
+    return this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission;
   }
 
   get totalProfitAsBackendMinus(): number {
@@ -949,7 +950,7 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: 'Минус пред. периода/Неоплаченный траф',
+                    label: 'Минус пред. периода',
                     styles: { borderLeft: '1px solid #d1d1d1', borderTop: '1px solid #d1d1d1' },
                   },
                   {
@@ -1184,44 +1185,44 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: el => ({
-                        items: [
-                          {
-                            label: parseNumberWithPrefix(this.totalConsumablesUSD, '$'), //Неоплаченный траф
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                          },
-                          // {
-                          //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
-                          //   content: {
-                          //     templateCalculated: () => {
-                          //       return this.cellContent.commentElement;
-                          //     },
-                          //     contextCalculated: () => {
-                          //       return {
-                          //         isSelected: this.selectedCommentId === 'accountComment',
-                          //         isDisabled: !this.isActive,
-                          //         direction: 'top',
-                          //         key: 'accountComment',
-                          //         name: 'accountComment',
-                          //         termId: this.termId,
-                          //         isSaveExternal: false,
-                          //         comment: this.accountComment || '',
-                          //         select: id => {
-                          //           this.selectedCommentId = id;
-                          //         },
-                          //         save: () => {
-                          //           console.log('save');
-                          //         },
-                          //       };
-                          //     },
-                          //   },
-                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                          // },
-                        ],
-                      }),
-                    },
+                    // content: {
+                    //   templateCalculated: () => this.cellContent.itemsContainer,
+                    //   contextCalculated: el => ({
+                    //     items: [
+                    //       {
+                    //         label: parseNumberWithPrefix(this.totalConsumablesUSD, '$'), //Неоплаченный траф
+                    //         styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                    //       },
+                    //       // {
+                    //       //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
+                    //       //   content: {
+                    //       //     templateCalculated: () => {
+                    //       //       return this.cellContent.commentElement;
+                    //       //     },
+                    //       //     contextCalculated: () => {
+                    //       //       return {
+                    //       //         isSelected: this.selectedCommentId === 'accountComment',
+                    //       //         isDisabled: !this.isActive,
+                    //       //         direction: 'top',
+                    //       //         key: 'accountComment',
+                    //       //         name: 'accountComment',
+                    //       //         termId: this.termId,
+                    //       //         isSaveExternal: false,
+                    //       //         comment: this.accountComment || '',
+                    //       //         select: id => {
+                    //       //           this.selectedCommentId = id;
+                    //       //         },
+                    //       //         save: () => {
+                    //       //           console.log('save');
+                    //       //         },
+                    //       //       };
+                    //       //     },
+                    //       //   },
+                    //       //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                    //       // },
+                    //     ],
+                    //   }),
+                    // },
                   },
                   {
                     content: {

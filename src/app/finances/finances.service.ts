@@ -36,11 +36,8 @@ export interface ICommonDailyRoiItem {
     roi: number;
     usdRub: number;
     eurRub: number;
-    profitMonth: number;
     profitMinus: number;
-    roiMonth: number;
     roiMinus: number;
-    unpaidTraffic: number;
   };
 }
 
@@ -72,6 +69,7 @@ export interface IDailyRoiItem {
   consumablesComment?: string;
   profitMinus: number;
   roiMonth: number;
+  negativeProfit: number;
 }
 
 export interface IDailyRoiData {
