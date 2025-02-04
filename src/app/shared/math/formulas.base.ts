@@ -1,5 +1,5 @@
-import { isNullOrUndefined } from 'util';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
+import { isNullOrUndefined } from 'util';
 
 const valueOrDefault = (value: number) => (!isFinite(value) || isNaN(value) || isNullOrUndefined(value) ? 0 : value);
 
@@ -17,10 +17,18 @@ export function consumableInRub({ consumables, consumablesUSD, usdRub }): number
   const consumableUsd = consumablesUSD * usdRub;
   return valueOrDefault(consumableRub + consumableUsd);
 }
+export function consumableInUSD({ consumables, consumablesUSD, usdRub }): number {
+  const consumableUsd = consumablesUSD;
+  return valueOrDefault(consumableUsd);
+}
 export function spentInRub({ spent, spentUSD, usdRub }): number {
   const spentRub = spent;
   const spentUsd = spentUSD * usdRub;
   return valueOrDefault(spentRub + spentUsd);
+}
+export function spentInUSD({ spent, spentUSD, usdRub }): number {
+  const spentUsd = spentUSD;
+  return valueOrDefault(spentUsd);
 }
 export function incomeInRub({ incomeRUB, incomeUSD, incomeEUR, usdRub, eurRub }): number {
   const incomingRub = incomeRUB;
@@ -28,6 +36,11 @@ export function incomeInRub({ incomeRUB, incomeUSD, incomeEUR, usdRub, eurRub })
   const incomingEurAsRub = incomeEUR * eurRub;
   return valueOrDefault(incomingRub + incomingUsdAsRub + incomingEurAsRub);
 }
+export function incomeInUSD({ incomeRUB, incomeUSD, incomeEUR, usdRub, eurRub }): number {
+  const incomingUSD = incomeUSD;
+  return valueOrDefault(incomingUSD);
+}
+
 export function accountsInRub({ accountsTax = 0, accountsTaxUsd = 0, usdRub }): number {
   return accountsTax + accountsTaxUsd * usdRub;
 }

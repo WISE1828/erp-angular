@@ -1,7 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { checkNumber, consumableInRub, incomeInRub, spentInRub } from '../shared/math/formulas.base';
+import { oldTableBeforeDate } from '../shared/constants';
+import {
+  checkNumber,
+  consumableInRub,
+  consumableInUSD,
+  incomeInRub,
+  incomeInUSD,
+  spentInRub,
+  spentInUSD,
+} from '../shared/math/formulas.base';
 import { AppSettings } from '../shared/services/settings';
 
 export interface ICommonFinanceItem {
@@ -135,6 +145,32 @@ export class FinancesService {
   }
 
   public getProfit(item: IDailyRoiItem): number {
+    if (item.usdRub === 0) {
+      item.usdRub = 1;
+    }
+    const income = incomeInRub(item);
+    const spent = spentInRub(item);
+    const consumables = consumableInRub(item);
+    const expose = spent + consumables;
+    const commission = item.commission;
+
+    const incomeUSD = incomeInUSD(item);
+    const spentUSD = spentInUSD(item);
+    const consumablesUSD = consumableInUSD(item);
+    const exposeUSD = spentUSD + consumablesUSD;
+
+    const startDate: moment.Moment = moment();
+
+    if (startDate.isBefore(oldTableBeforeDate)) {
+      return checkNumber(income - expose, 0);
+    } else {
+      return checkNumber(incomeUSD - exposeUSD - commission, 0);
+    }
+    // return checkNumber(income - expose, 0);
+    // return checkNumber(income - expose - commission, 0);
+  }
+
+  public getProfitMinus(item: IDailyRoiItem): number {
     if (item.usdRub === 0) {
       item.usdRub = 1;
     }
