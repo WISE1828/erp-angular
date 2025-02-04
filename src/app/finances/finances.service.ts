@@ -79,7 +79,6 @@ export interface IDailyRoiItem {
   consumablesComment?: string;
   profitMinus: number;
   roiMonth: number;
-  negativeProfit: number;
 }
 
 export interface IDailyRoiData {
@@ -170,17 +169,22 @@ export class FinancesService {
     // return checkNumber(income - expose - commission, 0);
   }
 
-  public getProfitMinus(item: IDailyRoiItem): number {
-    if (item.usdRub === 0) {
-      item.usdRub = 1;
+  public getProfitMinus(item: IDailyRoiItem, data: IDailyRoiData[]): number {
+    const incomeUSD = incomeInUSD(item);
+    const spentUSD = spentInUSD(item);
+    const consumablesUSD = consumableInUSD(item);
+    const exposeUSD = spentUSD + consumablesUSD;
+    const commission = item.commission;
+
+    const zeroProfit = 0;
+
+    // return checkNumber(incomeUSD - exposeUSD - commission, 0);
+
+    if (data[0].negativeProfit === 0) {
+      return checkNumber(incomeUSD - exposeUSD - commission, 0);
+    } else {
+      return checkNumber(zeroProfit, 0);
     }
-    const income = incomeInRub(item);
-    const spent = spentInRub(item);
-    const consumables = consumableInRub(item);
-    const expose = spent + consumables;
-    const commission = item.comissionTax + item.comissionTaxUsd * item.usdRub;
-    return checkNumber(income - expose, 0);
-    // return checkNumber(income - expose - commission, 0);
   }
 
   // http

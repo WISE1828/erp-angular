@@ -301,6 +301,8 @@ export class PersonalFinancesComponent implements OnInit {
         ...el,
         profit: this.financesService.getProfit(el),
         roi: this.financesService.getRoi(data, el),
+        profitMinus: this.financesService.getProfitMinus(el, response),
+        roiMinus: this.financesService.getRoi(data, el),
       }));
       this.accountComment = response[0].termTax.accountComment;
       this.comissionComment = response[0].termTax.comissionComment;
@@ -357,6 +359,7 @@ export class PersonalFinancesComponent implements OnInit {
       this.currentProfitPercent = null;
     }
     this.negativeProfit = response[0].negativeProfit;
+    console.log(response);
   }
 
   // TABLE
@@ -522,24 +525,9 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get totalProfitAsBackendMinus(): number {
-    let taxes = null;
-    this.currentItems.forEach(el => {
-      // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
-      // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
-      taxes = taxes + el.commission + el.accountsTax + el.accountsTaxUsd;
-    });
+    const totalProfit = this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission;
 
-    // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
-    return (
-      this.totalIncome +
-      this.totalIncomeUSD * this.avrUSD +
-      this.totalIncomeEUR * this.avrEUR -
-      (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
-      (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
-    );
-
-    // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
-    // return this.profit + this.refundsToRub - taxes;
+    return this.negativeProfit - totalProfit;
   }
 
   get totalProfitAsBackendOld(): number {
