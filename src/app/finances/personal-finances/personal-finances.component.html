@@ -133,7 +133,7 @@
         ></app-input-group>
       </div> -->
 
-      <div *ngIf="termId" class="total-comission-group">
+      <!-- <div *ngIf="termId" class="total-comission-group">
         <app-input-group
           [label]="'Срезы'"
           [loading]="loading"
@@ -143,8 +143,8 @@
           [disabled]="!isActive"
           (save)="updateAccountsTax($event)"
         ></app-input-group>
-      </div>
-      <!-- <div *ngIf="termId" class="total-comission-group">
+      </div> -->
+      <div *ngIf="termId" class="total-comission-group">
         <app-input-group
           [label]="'Срезы'"
           [loading]="loading"
@@ -154,7 +154,7 @@
           [disabled]="!isActive"
           (save)="addSlices($event)"
         ></app-input-group>
-      </div> -->
+      </div>
     </div>
 
     <div class="footer">

@@ -521,13 +521,16 @@ export class PersonalFinancesComponent implements OnInit {
     // );
 
     // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
-    return this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission;
+    return this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission - this.slices;
   }
 
   get totalProfitAsBackendMinus(): number {
     const totalProfit = this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission;
-
-    return this.negativeProfit - totalProfit;
+    if (this.negativeProfit === 0) {
+      return totalProfit;
+    } else {
+      return this.negativeProfit - totalProfit;
+    }
   }
 
   get totalProfitAsBackendOld(): number {
@@ -564,8 +567,13 @@ export class PersonalFinancesComponent implements OnInit {
   get expose() {
     return this.spendsToRub + this.consumablesToRub;
   }
+
+  get exposeUSD() {
+    return this.totalSpentUSD + this.totalConsumablesUSD;
+  }
+
   get getTotalRoi(): number {
-    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
+    return checkNumber((this.getTotalProfit / this.exposeUSD) * 100, 0);
   }
 
   get getTotalRoiOld(): number {
@@ -573,7 +581,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get getTotalRoiMinus(): number {
-    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
+    return checkNumber((this.getTotalProfitMinus / this.exposeUSD) * 100, 0);
   }
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
@@ -749,6 +757,7 @@ export class PersonalFinancesComponent implements OnInit {
     this.accountsTax = null;
     this.accountsTaxUsd = null;
     this.comissionTaxUsd = null;
+    this.slices = null;
     response.forEach(el => {
       el.dailyRoiDtos.forEach(item => {
         item['accountsTax'] = el.termTax.accountsTax / el.dailyRoiTermCount;
