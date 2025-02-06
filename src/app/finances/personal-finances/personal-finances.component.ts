@@ -302,7 +302,7 @@ export class PersonalFinancesComponent implements OnInit {
         profit: this.financesService.getProfit(el),
         roi: this.financesService.getRoi(data, el),
         profitMinus: this.financesService.getProfitMinus(el, response),
-        roiMinus: this.financesService.getRoi(data, el),
+        roiMinus: this.financesService.getRoiMinus(el, response),
       }));
       this.accountComment = response[0].termTax.accountComment;
       this.comissionComment = response[0].termTax.comissionComment;
@@ -526,11 +526,7 @@ export class PersonalFinancesComponent implements OnInit {
 
   get totalProfitAsBackendMinus(): number {
     const totalProfit = this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission;
-    if (this.negativeProfit === 0) {
-      return totalProfit;
-    } else {
-      return this.negativeProfit - totalProfit;
-    }
+    return totalProfit - this.negativeProfit;
   }
 
   get totalProfitAsBackendOld(): number {
@@ -569,7 +565,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get exposeUSD() {
-    return this.totalSpentUSD + this.totalConsumablesUSD;
+    return this.totalSpentUSD + this.totalConsumablesUSD + this.slices;
   }
 
   get getTotalRoi(): number {
@@ -581,7 +577,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get getTotalRoiMinus(): number {
-    return checkNumber((this.getTotalProfitMinus / this.exposeUSD) * 100, 0);
+    return checkNumber((this.getTotalProfitMinus / this.exposeUSD - this.negativeProfit) * 100, 0);
   }
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
@@ -1127,7 +1123,7 @@ export class PersonalFinancesComponent implements OnInit {
                     label: parseNumberWithPrefix(el.commission, '$'),
                     control: {
                       calculatedValue: el => el.commission,
-                      name: 'comission',
+                      name: 'commission',
                       type: ControlType.INPUT,
                       valueType: ValueType.NUMBER,
                     },

@@ -222,7 +222,7 @@ export class CommonFinancesComponent implements OnInit {
     return this.currentItems?.reduce((acc, { comissionTaxUsd }) => comissionTaxUsd + acc, 0);
   }
   get totalComission() {
-    return this.currentItems?.reduce((acc, { commission }) => commission + acc, 0);
+    return this.currentItems?.reduce((acc, { meta: { commission } }) => commission + acc, 0) || 0;
   }
   get totalAccountTax() {
     return this.currentItems?.reduce((acc, { accountTax }) => accountTax + acc, 0);
@@ -284,6 +284,13 @@ export class CommonFinancesComponent implements OnInit {
   get incomeToRub() {
     return this.totalIncome + this.totalIncomeUSD * this.avrUSD + this.totalIncomeEUR * this.avrEUR;
   }
+  get totalNegativeProfit(): number {
+    return this.currentItems?.reduce((a, c) => a + c.meta.negativeProfit, 0) || 0;
+  }
+
+  get totalSlices(): number {
+    return this.currentItems?.reduce((a, c) => a + c.meta.slices, 0) || 0;
+  }
 
   // FORMULAS
   get income() {
@@ -296,9 +303,6 @@ export class CommonFinancesComponent implements OnInit {
   get getTotalRoi(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
-  get getTotalRoiMonth(): number {
-    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
-  }
   get getTotalRoiMinus(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
@@ -306,13 +310,8 @@ export class CommonFinancesComponent implements OnInit {
     const expose = 0; // Сюда не тяну this.expose - так как бек отдает уже вычисленный профит для common
     return this.income - expose || 0;
   }
-  get getTotalProfitMonth(): number {
-    const expose = 0; // Сюда не тяну this.expose - так как бек отдает уже вычисленный профит для common
-    return this.income - expose || 0;
-  }
   get getTotalProfitMinus(): number {
-    const expose = 0; // Сюда не тяну this.expose - так как бек отдает уже вычисленный профит для common
-    return this.income - expose || 0;
+    return this.getTotalProfit - this.totalNegativeProfit || 0;
   }
   get getResultMoney(): number {
     let result = 0;
@@ -357,7 +356,10 @@ export class CommonFinancesComponent implements OnInit {
       incomeRUB: item.meta.incomeRUB,
       incomeUSD: item.meta.incomeUSD,
       incomeEUR: item.meta.incomeEUR,
+      commission: item.meta.commission,
+      slices: item.meta.slices,
       profit: item.meta.profit,
+      negativeProfit: item.meta.negativeProfit,
       roi: item.meta.roi,
       meta: item.meta,
       actions: true,
@@ -375,7 +377,6 @@ export class CommonFinancesComponent implements OnInit {
         'consumables',
         'incomeRUB',
         'minusPeriod',
-        'unpaidTraffic',
         'slices',
         'includingMonth',
         'includingMinus',
@@ -387,7 +388,6 @@ export class CommonFinancesComponent implements OnInit {
         'consumables',
         'incomeRUB',
         'minusPeriod',
-        'unpaidTraffic',
         'slices',
         'includingMonth',
         'includingMinus',
@@ -623,7 +623,7 @@ export class CommonFinancesComponent implements OnInit {
                           // },
                           {
                             label: parseNumberWithPrefix(this.totalSpentUSD, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#f3dcdc' },
+                            styles: { borderBottom: 'none', backgroundColor: '#f3dcdc', width: '122px' },
                           },
                         ],
                       }),
@@ -667,7 +667,7 @@ export class CommonFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.comission, '$'),
+                    label: parseNumberWithPrefix(el.commission, '$'),
                     classes: { 'w-100': true },
                   },
                   {
@@ -868,7 +868,7 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            calculated: () => parseNumberWithPrefix(this.totalNegativeProfit, '$'),
                             styles: { borderLeft: '1px solid #d1d1d1', backgroundColor: 'rgb(243, 220, 220)' },
                           },
                         ],
@@ -896,76 +896,10 @@ export class CommonFinancesComponent implements OnInit {
             classes: { 'w-100': true },
           },
         },
-
-        {
-          matColumnDef: 'unpaidTraffic',
-          header: {
-            label: 'Неоплаченный трафик',
-            classes: { 'w-100': true },
-          },
-          cell: {
-            calculated: el => parseNumberWithPrefix(el.consumablesUSD, '$'),
-            styles: { backgroundColor: 'rgb(243, 220, 220)' },
-            classes: { 'w-100': true },
-          },
-          footer: {
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: () => ({
-                items: [
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: () => ({
-                        items: [
-                          {
-                            label: '',
-                            styles: { border: 'none' },
-                          },
-                        ],
-                        styles: { border: 'none' },
-                      }),
-                    },
-                  },
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: () => ({
-                        items: [
-                          {
-                            calculated: () => parseNumberWithPrefix(this.totalConsumablesUSD, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: 'rgb(243, 220, 220)' },
-                          },
-                        ],
-                      }),
-                    },
-                    styles: {
-                      borderRight: '1px solid #d1d1d1',
-                    },
-                  },
-                ],
-                classes: {
-                  'column-direction': true,
-                },
-                styles: {
-                  borderTop: 'none',
-                  borderRight: 'none',
-                  borderLeft: 'none',
-                },
-              }),
-            },
-            styles: {
-              borderRight: 'none',
-              borderLeft: 'none',
-            },
-            classes: { 'w-100': true },
-          },
-        },
-
         {
           matColumnDef: 'slices',
           header: {
-            label: 'Срезы',
+            label: 'Неоплаченный трафик',
             classes: { 'w-100': true },
           },
           cell: {
@@ -998,7 +932,7 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            calculated: () => parseNumberWithPrefix(this.totalSlices, '$'),
                             styles: { borderBottom: 'none', backgroundColor: 'rgb(243, 220, 220)' },
                           },
                         ],
@@ -1095,11 +1029,11 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.getTotalProfitMonth, '$'),
+                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            label: parseNumberWithPrefix(this.getTotalRoiMonth, '%'),
+                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
@@ -1149,12 +1083,12 @@ export class CommonFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.profitMinus, '$'),
+                    label: parseNumberWithPrefix(el.profit - el.negativeProfit, '$'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roiMinus, '%'),
+                    label: parseNumberWithPrefix(el.roi, '%'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#dedede' },
                   },
@@ -1188,11 +1122,11 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.getTotalProfitMinus, '$'),
+                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            label: parseNumberWithPrefix(this.getTotalRoiMinus, '%'),
+                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],

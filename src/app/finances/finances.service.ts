@@ -31,7 +31,6 @@ export interface ICommonDailyRoiItem {
   userRoleId: number;
   teamId: number;
   isActive: boolean;
-  commission: number;
   meta: {
     spentUSD: number;
     clearProfit: number;
@@ -48,6 +47,9 @@ export interface ICommonDailyRoiItem {
     eurRub: number;
     profitMinus: number;
     roiMinus: number;
+    negativeProfit: number;
+    slices: number;
+    commission: number;
   };
 }
 
@@ -140,7 +142,23 @@ export class FinancesService {
     const spent = spentInRub(item);
     const consumables = consumableInRub(item);
     const expose = spent + consumables;
+
     return checkNumber((income / expose) * 100, 0);
+  }
+
+  public getRoiMinus(item: IDailyRoiItem, data: IDailyRoiData[]): number {
+    const income = this.getProfit(item);
+    const spent = spentInRub(item);
+    const consumables = consumableInRub(item);
+    const expose = spent + consumables;
+
+    const zeroRoi = 0;
+
+    if (data[0].negativeProfit === 0) {
+      return checkNumber((income / expose) * 100, 0);
+    } else {
+      return checkNumber(zeroRoi, 0);
+    }
   }
 
   public getProfit(item: IDailyRoiItem): number {
