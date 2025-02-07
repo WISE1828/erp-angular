@@ -299,10 +299,10 @@ export class PersonalFinancesComponent implements OnInit {
       let data = this.setTaxes(response);
       data = data.map(el => ({
         ...el,
-        profit: this.financesService.getProfit(el),
-        roi: this.financesService.getRoi(data, el),
+        profit: this.financesService.getProfit(el, moment(this.filters?.startDate)),
+        roi: this.financesService.getRoi(data, el, moment(this.filters?.startDate)),
         profitMinus: this.financesService.getProfitMinus(el, response),
-        roiMinus: this.financesService.getRoiMinus(el, response),
+        roiMinus: this.financesService.getRoiMinus(el, response, moment(this.filters?.startDate)),
       }));
       this.accountComment = response[0].termTax.accountComment;
       this.comissionComment = response[0].termTax.comissionComment;
@@ -1610,8 +1610,12 @@ export class PersonalFinancesComponent implements OnInit {
                     const updatedData = {
                       ...item,
                       ...changes,
-                      profit: this.financesService.getProfit(this.itemById(el.id)),
-                      roi: this.financesService.getRoi(this.currentItems, this.itemById(el.id)),
+                      profit: this.financesService.getProfit(this.itemById(el.id), moment(this.filters?.startDate)),
+                      roi: this.financesService.getRoi(
+                        this.currentItems,
+                        this.itemById(el.id),
+                        moment(this.filters?.startDate)
+                      ),
                       rowId: undefined,
                       actions: undefined,
                     };
@@ -2415,8 +2419,12 @@ export class PersonalFinancesComponent implements OnInit {
                     const updatedData = {
                       ...item,
                       ...changes,
-                      profit: this.financesService.getProfit(this.itemById(el.id)),
-                      roi: this.financesService.getRoi(this.currentItems, this.itemById(el.id)),
+                      profit: this.financesService.getProfit(this.itemById(el.id), moment(this.filters?.startDate)),
+                      roi: this.financesService.getRoi(
+                        this.currentItems,
+                        this.itemById(el.id),
+                        moment(this.filters?.startDate)
+                      ),
                       rowId: undefined,
                       actions: undefined,
                     };

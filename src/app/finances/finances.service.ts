@@ -137,8 +137,8 @@ export class FinancesService {
 
   // TODO: рудимент для работы компонентов редактирования - удалить после рефакторинга таблиц
 
-  public getRoi(list: IDailyRoiItem[], item: IDailyRoiItem): number {
-    const income = this.getProfit(item);
+  public getRoi(list: IDailyRoiItem[], item: IDailyRoiItem, startDate: moment.Moment): number {
+    const income = this.getProfit(item, startDate);
     const spent = spentInRub(item);
     const consumables = consumableInRub(item);
     const expose = spent + consumables;
@@ -146,8 +146,8 @@ export class FinancesService {
     return checkNumber((income / expose) * 100, 0);
   }
 
-  public getRoiMinus(item: IDailyRoiItem, data: IDailyRoiData[]): number {
-    const income = this.getProfit(item);
+  public getRoiMinus(item: IDailyRoiItem, data: IDailyRoiData[], startDate: moment.Moment): number {
+    const income = this.getProfit(item, startDate);
     const spent = spentInRub(item);
     const consumables = consumableInRub(item);
     const expose = spent + consumables;
@@ -161,7 +161,7 @@ export class FinancesService {
     }
   }
 
-  public getProfit(item: IDailyRoiItem): number {
+  public getProfit(item: IDailyRoiItem, startDate: moment.Moment): number {
     if (item.usdRub === 0) {
       item.usdRub = 1;
     }
@@ -176,8 +176,6 @@ export class FinancesService {
     const consumablesUSD = consumableInUSD(item);
     const exposeUSD = spentUSD + consumablesUSD;
 
-    const startDate: moment.Moment = moment();
-
     if (startDate.isBefore(oldTableBeforeDate)) {
       return checkNumber(income - expose, 0);
     } else {
@@ -186,6 +184,32 @@ export class FinancesService {
     // return checkNumber(income - expose, 0);
     // return checkNumber(income - expose - commission, 0);
   }
+
+  // public getProfit(item: IDailyRoiItem): number {
+  //   if (item.usdRub === 0) {
+  //     item.usdRub = 1;
+  //   }
+  //   const income = incomeInRub(item);
+  //   const spent = spentInRub(item);
+  //   const consumables = consumableInRub(item);
+  //   const expose = spent + consumables;
+  //   const commission = item.commission;
+
+  //   const incomeUSD = incomeInUSD(item);
+  //   const spentUSD = spentInUSD(item);
+  //   const consumablesUSD = consumableInUSD(item);
+  //   const exposeUSD = spentUSD + consumablesUSD;
+
+  //   const startDate: moment.Moment = moment();
+
+  //   if (startDate.isBefore(oldTableBeforeDate)) {
+  //     return checkNumber(income - expose, 0);
+  //   } else {
+  //     return checkNumber(incomeUSD - exposeUSD - commission, 0);
+  //   }
+  //   // return checkNumber(income - expose, 0);
+  //   // return checkNumber(income - expose - commission, 0);
+  // }
 
   public getProfitMinus(item: IDailyRoiItem, data: IDailyRoiData[]): number {
     const incomeUSD = incomeInUSD(item);
