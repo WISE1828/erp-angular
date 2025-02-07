@@ -958,7 +958,7 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    label: 'Минус пред. периода',
+                    label: 'Минус пред. периода/Неоплаченный трафик',
                     styles: { borderLeft: '1px solid #d1d1d1', borderTop: '1px solid #d1d1d1' },
                   },
                   {
@@ -1193,44 +1193,44 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: el => ({
                 items: [
                   {
-                    // content: {
-                    //   templateCalculated: () => this.cellContent.itemsContainer,
-                    //   contextCalculated: el => ({
-                    //     items: [
-                    //       {
-                    //         label: parseNumberWithPrefix(this.totalConsumablesUSD, '$'), //Неоплаченный траф
-                    //         styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                    //       },
-                    //       // {
-                    //       //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
-                    //       //   content: {
-                    //       //     templateCalculated: () => {
-                    //       //       return this.cellContent.commentElement;
-                    //       //     },
-                    //       //     contextCalculated: () => {
-                    //       //       return {
-                    //       //         isSelected: this.selectedCommentId === 'accountComment',
-                    //       //         isDisabled: !this.isActive,
-                    //       //         direction: 'top',
-                    //       //         key: 'accountComment',
-                    //       //         name: 'accountComment',
-                    //       //         termId: this.termId,
-                    //       //         isSaveExternal: false,
-                    //       //         comment: this.accountComment || '',
-                    //       //         select: id => {
-                    //       //           this.selectedCommentId = id;
-                    //       //         },
-                    //       //         save: () => {
-                    //       //           console.log('save');
-                    //       //         },
-                    //       //       };
-                    //       //     },
-                    //       //   },
-                    //       //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
-                    //       // },
-                    //     ],
-                    //   }),
-                    // },
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: el => ({
+                        items: [
+                          {
+                            label: parseNumberWithPrefix(this.slices, '$'), //Неоплаченный траф
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          },
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
+                          //   content: {
+                          //     templateCalculated: () => {
+                          //       return this.cellContent.commentElement;
+                          //     },
+                          //     contextCalculated: () => {
+                          //       return {
+                          //         isSelected: this.selectedCommentId === 'accountComment',
+                          //         isDisabled: !this.isActive,
+                          //         direction: 'top',
+                          //         key: 'accountComment',
+                          //         name: 'accountComment',
+                          //         termId: this.termId,
+                          //         isSaveExternal: false,
+                          //         comment: this.accountComment || '',
+                          //         select: id => {
+                          //           this.selectedCommentId = id;
+                          //         },
+                          //         save: () => {
+                          //           console.log('save');
+                          //         },
+                          //       };
+                          //     },
+                          //   },
+                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                          // },
+                        ],
+                      }),
+                    },
                   },
                   {
                     content: {
