@@ -161,7 +161,8 @@ mat-table {
 .m {
   &-l {
     &-150 {
-      margin-left: 300px;
+      // margin-left: 300px;
+      margin-left: calc(var(--base-cell-width) * 3);
     }
   }
 }

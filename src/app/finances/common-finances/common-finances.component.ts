@@ -373,22 +373,22 @@ export class CommonFinancesComponent implements OnInit {
         'userName',
         'roleName',
         'teamId',
+        'minusPeriod',
         'spent',
         'consumables',
-        'incomeRUB',
-        'minusPeriod',
         'slices',
+        'incomeRUB',
         'includingMonth',
         'includingMinus',
         'actions',
       ],
       displayFooter: [
         'teamId',
+        'minusPeriod',
         'spent',
         'consumables',
-        'incomeRUB',
-        'minusPeriod',
         'slices',
+        'incomeRUB',
         'includingMonth',
         'includingMinus',
         'actions',
@@ -545,6 +545,71 @@ export class CommonFinancesComponent implements OnInit {
             },
             styles: { color: '#e3b04e' },
             classes: { 'w-200': true, 'm-l-150': true },
+          },
+        },
+
+        {
+          matColumnDef: 'minusPeriod',
+          header: {
+            label: 'Минус прошлого периода',
+            classes: { 'w-100': true },
+          },
+          cell: {
+            calculated: el => parseNumberWithPrefix(el.negativeProfit, '$'),
+            styles: { backgroundColor: 'rgb(243, 220, 220)' },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: () => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            calculated: () => parseNumberWithPrefix(this.totalNegativeProfit, '$'),
+                            styles: { borderLeft: '1px solid #d1d1d1', backgroundColor: 'rgb(243, 220, 220)' },
+                          },
+                        ],
+                      }),
+                    },
+                    styles: {
+                      borderRight: '1px solid #d1d1d1',
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                  borderLeft: 'none',
+                },
+              }),
+            },
+            styles: {
+              borderRight: 'none',
+              borderLeft: 'none',
+            },
+            classes: { 'w-100': true },
           },
         },
 
@@ -729,6 +794,70 @@ export class CommonFinancesComponent implements OnInit {
           },
         },
         {
+          matColumnDef: 'slices',
+          header: {
+            label: 'Неоплаченный трафик',
+            classes: { 'w-100': true },
+          },
+          cell: {
+            calculated: el => parseNumberWithPrefix(el.slices, '$'),
+            styles: { backgroundColor: 'rgb(243, 220, 220)' },
+            classes: { 'w-100': true },
+          },
+          footer: {
+            content: {
+              templateCalculated: () => this.cellContent.itemsContainer,
+              contextCalculated: () => ({
+                items: [
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            label: '',
+                            styles: { border: 'none' },
+                          },
+                        ],
+                        styles: { border: 'none' },
+                      }),
+                    },
+                  },
+                  {
+                    content: {
+                      templateCalculated: () => this.cellContent.itemsContainer,
+                      contextCalculated: () => ({
+                        items: [
+                          {
+                            calculated: () => parseNumberWithPrefix(this.totalSlices, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: 'rgb(243, 220, 220)' },
+                          },
+                        ],
+                      }),
+                    },
+                    styles: {
+                      borderRight: '1px solid #d1d1d1',
+                    },
+                  },
+                ],
+                classes: {
+                  'column-direction': true,
+                },
+                styles: {
+                  borderTop: 'none',
+                  borderRight: 'none',
+                  borderLeft: 'none',
+                },
+              }),
+            },
+            styles: {
+              borderRight: 'none',
+              borderLeft: 'none',
+            },
+            classes: { 'w-100': true },
+          },
+        },
+        {
           matColumnDef: 'incomeRUB',
           header: {
             label: 'Доход',
@@ -831,136 +960,6 @@ export class CommonFinancesComponent implements OnInit {
             classes: { 'w-100': true },
           },
         },
-
-        {
-          matColumnDef: 'minusPeriod',
-          header: {
-            label: 'Минус прошлого периода',
-            classes: { 'w-100': true },
-          },
-          cell: {
-            calculated: el => parseNumberWithPrefix(el.negativeProfit, '$'),
-            styles: { backgroundColor: 'rgb(243, 220, 220)' },
-            classes: { 'w-100': true },
-          },
-          footer: {
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: () => ({
-                items: [
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: () => ({
-                        items: [
-                          {
-                            label: '',
-                            styles: { border: 'none' },
-                          },
-                        ],
-                        styles: { border: 'none' },
-                      }),
-                    },
-                  },
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: () => ({
-                        items: [
-                          {
-                            calculated: () => parseNumberWithPrefix(this.totalNegativeProfit, '$'),
-                            styles: { borderLeft: '1px solid #d1d1d1', backgroundColor: 'rgb(243, 220, 220)' },
-                          },
-                        ],
-                      }),
-                    },
-                    styles: {
-                      borderRight: '1px solid #d1d1d1',
-                    },
-                  },
-                ],
-                classes: {
-                  'column-direction': true,
-                },
-                styles: {
-                  borderTop: 'none',
-                  borderRight: 'none',
-                  borderLeft: 'none',
-                },
-              }),
-            },
-            styles: {
-              borderRight: 'none',
-              borderLeft: 'none',
-            },
-            classes: { 'w-100': true },
-          },
-        },
-        {
-          matColumnDef: 'slices',
-          header: {
-            label: 'Неоплаченный трафик',
-            classes: { 'w-100': true },
-          },
-          cell: {
-            calculated: el => parseNumberWithPrefix(el.slices, '$'),
-            styles: { backgroundColor: 'rgb(243, 220, 220)' },
-            classes: { 'w-100': true },
-          },
-          footer: {
-            content: {
-              templateCalculated: () => this.cellContent.itemsContainer,
-              contextCalculated: () => ({
-                items: [
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: () => ({
-                        items: [
-                          {
-                            label: '',
-                            styles: { border: 'none' },
-                          },
-                        ],
-                        styles: { border: 'none' },
-                      }),
-                    },
-                  },
-                  {
-                    content: {
-                      templateCalculated: () => this.cellContent.itemsContainer,
-                      contextCalculated: () => ({
-                        items: [
-                          {
-                            calculated: () => parseNumberWithPrefix(this.totalSlices, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: 'rgb(243, 220, 220)' },
-                          },
-                        ],
-                      }),
-                    },
-                    styles: {
-                      borderRight: '1px solid #d1d1d1',
-                    },
-                  },
-                ],
-                classes: {
-                  'column-direction': true,
-                },
-                styles: {
-                  borderTop: 'none',
-                  borderRight: 'none',
-                  borderLeft: 'none',
-                },
-              }),
-            },
-            styles: {
-              borderRight: 'none',
-              borderLeft: 'none',
-            },
-            classes: { 'w-100': true },
-          },
-        },
-
         {
           matColumnDef: 'includingMonth',
           header: {
@@ -972,17 +971,17 @@ export class CommonFinancesComponent implements OnInit {
                   {
                     label: 'Профит',
                     styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                   },
                   {
                     label: 'ROI',
                     styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                   },
                 ],
               }),
             },
-            classes: { 'w-100': true },
+            classes: { 'w-150': true },
           },
           cell: {
             content: {
@@ -991,18 +990,18 @@ export class CommonFinancesComponent implements OnInit {
                 items: [
                   {
                     label: parseNumberWithPrefix(el.profit, '$'),
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
                     label: parseNumberWithPrefix(el.roi, '%'),
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                     styles: { backgroundColor: '#dedede' },
                   },
                 ],
               }),
             },
-            classes: { 'w-100': true },
+            classes: { 'w-150': true },
           },
           footer: {
             content: {
@@ -1050,7 +1049,7 @@ export class CommonFinancesComponent implements OnInit {
                 },
               }),
             },
-            classes: { 'w-100': true },
+            classes: { 'w-150': true },
           },
         },
 
@@ -1065,17 +1064,17 @@ export class CommonFinancesComponent implements OnInit {
                   {
                     label: 'Профит',
                     styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                   },
                   {
                     label: 'ROI',
                     styles: { borderTop: '1px solid #d1d1d1' },
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                   },
                 ],
               }),
             },
-            classes: { 'w-100': true },
+            classes: { 'w-150': true },
           },
           cell: {
             content: {
@@ -1084,18 +1083,18 @@ export class CommonFinancesComponent implements OnInit {
                 items: [
                   {
                     label: parseNumberWithPrefix(el.profit - el.negativeProfit, '$'),
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
                     label: parseNumberWithPrefix(el.roi, '%'),
-                    classes: { 'w-100': true },
+                    classes: { 'w-150': true },
                     styles: { backgroundColor: '#dedede' },
                   },
                 ],
               }),
             },
-            classes: { 'w-100': true },
+            classes: { 'w-150': true },
           },
           footer: {
             content: {
@@ -1143,7 +1142,7 @@ export class CommonFinancesComponent implements OnInit {
                 },
               }),
             },
-            classes: { 'w-100': true },
+            classes: { 'w-150': true },
           },
         },
 
