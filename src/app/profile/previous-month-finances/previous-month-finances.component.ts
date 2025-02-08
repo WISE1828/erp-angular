@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { untilDestroyed } from '@ngneat/until-destroy';
 import * as moment from 'moment';
 import { finalize } from 'rxjs/operators';
 import { FinancesService } from '../../finances/finances.service';
@@ -69,7 +68,7 @@ export class PreviousMonthFinancesComponent implements OnInit {
     this.closingDailyRoi = true;
     this.userInfoService
       .closeDailyRoi({ startDate: this.range.startDate, finishDate: this.range.endDate })
-      .pipe(untilDestroyed(this))
+      // .pipe(untilDestroyed(this))
       .subscribe(
         () => {
           this.closingDailyRoi = false;
