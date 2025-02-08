@@ -577,7 +577,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get getTotalRoiMinus(): number {
-    return checkNumber((this.getTotalProfitMinus / this.exposeUSD - this.negativeProfit) * 100, 0);
+    return checkNumber((this.getTotalProfitMinus / this.exposeUSD) * 100, 0);
   }
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
