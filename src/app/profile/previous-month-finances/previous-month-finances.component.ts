@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { untilDestroyed } from '@ngneat/until-destroy';
 import * as moment from 'moment';
 import { finalize } from 'rxjs/operators';
 import { FinancesService } from '../../finances/finances.service';
 import { ControlType, ValueType } from '../../shared/components/data-table/data-table.models';
+import { NotificationService } from '../../shared/services/notification.service';
+import { UserInfoService } from '../../shared/services/user-info.service';
 
 @Component({
   selector: 'app-previous-month-finances',
@@ -12,7 +15,9 @@ import { ControlType, ValueType } from '../../shared/components/data-table/data-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreviousMonthFinancesComponent implements OnInit {
+  public closingDailyRoi = false;
   public isLoading = false;
+  public isPayedTermClosed = false;
   public messages = {
     success: false,
     error: false,
@@ -36,6 +41,8 @@ export class PreviousMonthFinancesComponent implements OnInit {
   constructor(
     private financesService: FinancesService,
     private cd: ChangeDetectorRef,
+    private userInfoService: UserInfoService,
+    private notificationService: NotificationService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -58,23 +65,23 @@ export class PreviousMonthFinancesComponent implements OnInit {
       );
   }
 
-  // public closeDailyRoi(): void {
-  //   this.closingDailyRoi = true;
-  //   this.userInfoService
-  //     .closeDailyRoi()
-  //     .pipe(untilDestroyed(this))
-  //     .subscribe(
-  //       () => {
-  //         this.closingDailyRoi = false;
-  //         this.isPayedTermClosed = true;
-  //         this.cd.detectChanges();
-  //       },
-  //       () => {
-  //         this.notificationService.showMessage('error', 'При совершении запроса произошла ошибка');
-  //         this.cd.detectChanges();
-  //       }
-  //     );
-  // }
+  public closeDailyRoi(): void {
+    this.closingDailyRoi = true;
+    this.userInfoService
+      .closeDailyRoi({ startDate: this.range.startDate, finishDate: this.range.endDate })
+      .pipe(untilDestroyed(this))
+      .subscribe(
+        () => {
+          this.closingDailyRoi = false;
+          this.isPayedTermClosed = true;
+          this.cd.detectChanges();
+        },
+        () => {
+          this.notificationService.showMessage('error', 'При совершении запроса произошла ошибка');
+          this.cd.detectChanges();
+        }
+      );
+  }
 
   public showMessage(type: string): void {
     this.messages[type] = true;
