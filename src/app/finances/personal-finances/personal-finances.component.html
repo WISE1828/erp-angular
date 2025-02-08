@@ -152,7 +152,7 @@
         <p>
           За период заработано:
           <span *ngIf="isCurrentDate" class="money">{{ getResultMoney | currency: 'USD' }}</span>
-          <span *ngIf="!isCurrentDate" class="money">{{ getResultMoneyOld | currency: 'USD' }}</span>
+          <span *ngIf="!isCurrentDate" class="money">{{ getResultMoneyOld | currency: 'RUB' }}</span>
         </p>
       </div>
       <div *ngIf="termId" class="total-comission-group">
