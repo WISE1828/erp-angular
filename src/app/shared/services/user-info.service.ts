@@ -351,9 +351,11 @@ export class UserInfoService {
   public closeDailyRoi(date: IRecountParams): Observable<any> {
     // return this.http.post<any>(`${AppSettings.API_PERSONAL_INFRASTRUCTURE}/payedTerms/closePreviousMonth`, {});
     const params = { ...date };
-    return this.http.post<IRecountParams>(`${AppSettings.API_PERSONAL_INFRASTRUCTURE}/payedTerms/closePreviousMonth`, {
-      params,
-    });
+    return this.http.post<IRecountParams>(
+      `${AppSettings.API_PERSONAL_INFRASTRUCTURE}/payedTerms/closePreviousMonth`,
+      undefined,
+      { params }
+    );
   }
 
   public updateInternshipDays(id: number, days: number): Observable<any> {
