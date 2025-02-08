@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { IStatistic, UserInfoService } from '../../shared/services/user-info.service';
-import { NotificationService } from '../../shared/services/notification.service';
 import { MatDialog } from '@angular/material/dialog';
-import { PercentsGridComponent } from '../percents-grid/percents-grid.component';
-import { MotivationsGridComponent } from '../motivations-grid/motivations-grid.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NotificationService } from '../../shared/services/notification.service';
 import { TrackersService } from '../../shared/services/trackers.service';
+import { IStatistic, UserInfoService } from '../../shared/services/user-info.service';
 import { WorkPerformanceService } from '../../shared/services/work-performance.service';
 import { DailyRoiRecountComponent } from '../daily-roi-recount/daily-roi-recount.component';
+import { MotivationsGridComponent } from '../motivations-grid/motivations-grid.component';
+import { PercentsGridComponent } from '../percents-grid/percents-grid.component';
+import { PreviousMonthFinancesComponent } from '../previous-month-finances/previous-month-finances.component';
 
 @UntilDestroy()
 @Component({
@@ -91,6 +92,14 @@ export class AdministrationComponent {
 
   public showRoiRecount() {
     this.dialog.open(DailyRoiRecountComponent, {
+      width: '520px',
+      autoFocus: false,
+      hasBackdrop: true,
+    });
+  }
+
+  public openPreviousMonthFinances() {
+    this.dialog.open(PreviousMonthFinancesComponent, {
       width: '520px',
       autoFocus: false,
       hasBackdrop: true,

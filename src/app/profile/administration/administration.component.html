@@ -12,7 +12,7 @@
     </button>
     <app-spinner *ngIf="closingOS"></app-spinner>
   </div>
-  <div class="adm-row">
+  <!-- <div class="adm-row">
     <div class="adm-task-name">Финансы за предыдущий месяц</div>
     <button
       *ngIf="!closingDailyRoi"
@@ -24,6 +24,12 @@
       <span *ngIf="statistic?.isPayedTermClosed || isPayedTermClosed">Закрыт</span>
     </button>
     <app-spinner *ngIf="closingDailyRoi"></app-spinner>
+  </div> -->
+  <div class="adm-row">
+    <div class="adm-task-name">Финансы за предыдущий месяц</div>
+    <button class="btn btn-close btn-s" (click)="openPreviousMonthFinances()">
+      <span>Обзор</span>
+    </button>
   </div>
   <div class="adm-row">
     <div class="adm-task-name">Процентные сетки</div>
