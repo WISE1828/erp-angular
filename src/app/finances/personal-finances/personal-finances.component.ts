@@ -120,6 +120,16 @@ export class PersonalFinancesComponent implements OnInit {
     return this.role === this.auth.roles.financier;
   }
 
+  public get isCurrentDate(): boolean {
+    const startDate = moment(this.filters?.startDate);
+
+    if (startDate.isBefore(oldTableBeforeDate)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   canEditUsdRub(): boolean {
     return this.isAdmin || this.isFinancier;
   }
@@ -593,29 +603,31 @@ export class PersonalFinancesComponent implements OnInit {
     //return checkNumber(this.income - this.expose, 0);
   }
 
-  // get getResultMoneyOld(): number {
-  //   let result = 0;
-  //   let percent = 0;
-  //   this.currentItems.forEach(el => {
-  //     const comissionTax = checkNumber(el.comissionTax + el.comissionTaxUsd * el.usdRub, 0);
-  //     const profit = checkNumber(el.profit, 0);
-  //     const accountsTax = checkNumber(el.accountsTax + el.accountsTaxUsd * el.usdRub, 0);
-  //     const clearProfit = checkNumber(el.isInternship ? 0 : profit - comissionTax - accountsTax, 0);
-  //     result += (clearProfit * el.profitPercent) / 100;
-  //     percent += el.profitPercent;
-  //   });
-  //   percent = percent / this.currentItems.length / 100;
-  //   return checkNumber(result + this.refundsToRub * percent, 0);
-  // }
+  get getResultMoneyOld(): number {
+    let result = 0;
+    let percent = 0;
+    this.currentItems.forEach(el => {
+      const comissionTax = checkNumber(el.comissionTax + el.comissionTaxUsd * el.usdRub, 0);
+      const profit = checkNumber(el.profit, 0);
+      const accountsTax = checkNumber(el.accountsTax + el.accountsTaxUsd * el.usdRub, 0);
+      const clearProfit = checkNumber(el.isInternship ? 0 : profit - comissionTax - accountsTax, 0);
+      result += (clearProfit * el.profitPercent) / 100;
+      percent += el.profitPercent;
+    });
+    percent = percent / this.currentItems.length / 100;
+    return checkNumber(result + this.refundsToRub * percent, 0);
+  }
 
   get getResultMoney(): number {
     let result = 0;
     let percent = 0;
+    const dailySlice = this.slices / this.currentItems.length;
     this.currentItems.forEach(el => {
       const comission = checkNumber(el.commission, 0);
       const profit = checkNumber(el.profit, 0);
-      const accountsTax = checkNumber(el.accountsTaxUsd, 0);
-      const clearProfit = checkNumber(el.isInternship ? 0 : profit - comission - accountsTax, 0);
+      // const accountsTax = checkNumber(el.accountsTaxUsd, 0);
+      const slices = checkNumber(dailySlice, 0);
+      const clearProfit = checkNumber(el.isInternship ? 0 : profit - comission - slices, 0);
       result += (clearProfit * el.profitPercent) / 100;
       percent += el.profitPercent;
     });

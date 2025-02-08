@@ -151,7 +151,8 @@
         <svg-icon class="result-icon" src="assets/icons/finances.svg"></svg-icon>
         <p>
           За период заработано:
-          <span class="money">{{ getResultMoney | currency: 'USD' }}</span>
+          <span *ngIf="isCurrentDate" class="money">{{ getResultMoney | currency: 'USD' }}</span>
+          <span *ngIf="!isCurrentDate" class="money">{{ getResultMoneyOld | currency: 'USD' }}</span>
         </p>
       </div>
       <div *ngIf="termId" class="total-comission-group">
