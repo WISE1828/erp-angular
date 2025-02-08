@@ -1,11 +1,11 @@
-﻿import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AppSettings } from './settings';
-import { PercentItem } from './percents-grid.service';
-import { MotivationChart } from './motivations-grid.service';
-import { tap } from 'rxjs/operators';
+﻿import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { MotivationChart } from './motivations-grid.service';
+import { PercentItem } from './percents-grid.service';
+import { AppSettings } from './settings';
 
 export interface ITopData {
   teamTopStatistics: ITeamTopStatisticsItem[];
@@ -98,6 +98,11 @@ export interface IHelperStatistic {
   motivationChart: MotivationChart;
   motivationChartLastMonth: MotivationChart;
   fixedSalary: number;
+}
+
+interface IRecountParams {
+  startDate: string;
+  finishDate: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -343,8 +348,12 @@ export class UserInfoService {
     return this.http.post<any>(`${AppSettings.API_PERSONAL_INFRASTRUCTURE}/WorkingCapital/closeLastMonth`, {});
   }
 
-  public closeDailyRoi(): Observable<any> {
-    return this.http.post<any>(`${AppSettings.API_PERSONAL_INFRASTRUCTURE}/payedTerms/closePreviousMonth`, {});
+  public closeDailyRoi(date: IRecountParams): Observable<any> {
+    // return this.http.post<any>(`${AppSettings.API_PERSONAL_INFRASTRUCTURE}/payedTerms/closePreviousMonth`, {});
+    const params = { ...date };
+    return this.http.post<IRecountParams>(`${AppSettings.API_PERSONAL_INFRASTRUCTURE}/payedTerms/closePreviousMonth`, {
+      params,
+    });
   }
 
   public updateInternshipDays(id: number, days: number): Observable<any> {

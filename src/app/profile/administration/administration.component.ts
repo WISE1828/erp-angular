@@ -52,23 +52,23 @@ export class AdministrationComponent {
       );
   }
 
-  public closeDailyRoi(): void {
-    this.closingDailyRoi = true;
-    this.userInfoService
-      .closeDailyRoi()
-      .pipe(untilDestroyed(this))
-      .subscribe(
-        () => {
-          this.closingDailyRoi = false;
-          this.isPayedTermClosed = true;
-          this.cd.detectChanges();
-        },
-        () => {
-          this.notificationService.showMessage('error', 'При совершении запроса произошла ошибка');
-          this.cd.detectChanges();
-        }
-      );
-  }
+  // public closeDailyRoi(): void {
+  //   this.closingDailyRoi = true;
+  //   this.userInfoService
+  //     .closeDailyRoi()
+  //     .pipe(untilDestroyed(this))
+  //     .subscribe(
+  //       () => {
+  //         this.closingDailyRoi = false;
+  //         this.isPayedTermClosed = true;
+  //         this.cd.detectChanges();
+  //       },
+  //       () => {
+  //         this.notificationService.showMessage('error', 'При совершении запроса произошла ошибка');
+  //         this.cd.detectChanges();
+  //       }
+  //     );
+  // }
 
   public openPercentsGridWindow() {
     this.dialog.open(PercentsGridComponent, {

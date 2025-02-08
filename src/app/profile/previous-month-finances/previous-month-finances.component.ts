@@ -58,6 +58,24 @@ export class PreviousMonthFinancesComponent implements OnInit {
       );
   }
 
+  // public closeDailyRoi(): void {
+  //   this.closingDailyRoi = true;
+  //   this.userInfoService
+  //     .closeDailyRoi()
+  //     .pipe(untilDestroyed(this))
+  //     .subscribe(
+  //       () => {
+  //         this.closingDailyRoi = false;
+  //         this.isPayedTermClosed = true;
+  //         this.cd.detectChanges();
+  //       },
+  //       () => {
+  //         this.notificationService.showMessage('error', 'При совершении запроса произошла ошибка');
+  //         this.cd.detectChanges();
+  //       }
+  //     );
+  // }
+
   public showMessage(type: string): void {
     this.messages[type] = true;
     setTimeout(() => {
