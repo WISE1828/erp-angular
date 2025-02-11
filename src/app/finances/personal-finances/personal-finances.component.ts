@@ -536,7 +536,7 @@ export class PersonalFinancesComponent implements OnInit {
 
   get totalProfitAsBackendMinus(): number {
     const totalProfit = this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission;
-    return totalProfit - this.negativeProfit;
+    return totalProfit - this.slices - this.negativeProfit;
   }
 
   get totalProfitAsBackendOld(): number {
@@ -1501,7 +1501,7 @@ export class PersonalFinancesComponent implements OnInit {
         {
           matColumnDef: 'includingMinus',
           header: {
-            label: 'C учетом Минуса',
+            label: 'С учетом прошлого периода',
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({

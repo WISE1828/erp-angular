@@ -1056,7 +1056,7 @@ export class CommonFinancesComponent implements OnInit {
         {
           matColumnDef: 'includingMinus',
           header: {
-            label: 'С учетом минуса',
+            label: 'С учетом прошлого периода',
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: () => ({
