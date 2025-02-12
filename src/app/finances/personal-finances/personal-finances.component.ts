@@ -311,8 +311,13 @@ export class PersonalFinancesComponent implements OnInit {
         ...el,
         profit: this.financesService.getProfit(el, moment(this.filters?.startDate)),
         roi: this.financesService.getRoi(data, el, moment(this.filters?.startDate)),
-        profitMinus: this.financesService.getProfitMinus(el, response),
-        roiMinus: this.financesService.getRoiMinus(el, response, moment(this.filters?.startDate)),
+        profitMinus: this.financesService.getProfitMinus(
+          el,
+          response,
+          moment(this.filters?.startDate, 'DD.MM.YYYY'),
+          moment(this.filters?.endDate, 'DD.MM.YYYY')
+        ),
+        roiMinus: this.financesService.getRoiMinus(el, response, moment(this.filters?.startDate, 'DD.MM.YYYY')),
       }));
       this.accountComment = response[0].termTax.accountComment;
       this.comissionComment = response[0].termTax.comissionComment;

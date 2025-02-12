@@ -151,13 +151,13 @@ export class FinancesService {
     const spent = spentInRub(item);
     const consumables = consumableInRub(item);
     const expose = spent + consumables;
-
-    const zeroRoi = 0;
+    const negativeProfit = data[0].negativeProfit;
+    const daysInMonth = startDate.daysInMonth();
 
     if (data[0].negativeProfit === 0) {
       return checkNumber((income / expose) * 100, 0);
     } else {
-      return checkNumber(zeroRoi, 0);
+      return checkNumber(((income - negativeProfit / daysInMonth) / expose) * 100, 0);
     }
   }
 
@@ -211,21 +211,25 @@ export class FinancesService {
   //   // return checkNumber(income - expose - commission, 0);
   // }
 
-  public getProfitMinus(item: IDailyRoiItem, data: IDailyRoiData[]): number {
+  public getProfitMinus(
+    item: IDailyRoiItem,
+    data: IDailyRoiData[],
+    startDate: moment.Moment,
+    endDate: moment.Moment
+  ): number {
     const incomeUSD = incomeInUSD(item);
     const spentUSD = spentInUSD(item);
     const consumablesUSD = consumableInUSD(item);
     const exposeUSD = spentUSD + consumablesUSD;
     const commission = item.commission;
+    const negativeProfit = data[0].negativeProfit;
+    const daysInMonth = startDate.daysInMonth();
+    const profitMinus = incomeUSD - exposeUSD - commission - negativeProfit / daysInMonth;
 
-    const zeroProfit = 0;
-
-    // return checkNumber(incomeUSD - exposeUSD - commission, 0);
-
-    if (data[0].negativeProfit === 0) {
+    if (negativeProfit === 0) {
       return checkNumber(incomeUSD - exposeUSD - commission, 0);
     } else {
-      return checkNumber(zeroProfit, 0);
+      return checkNumber(profitMinus, 0);
     }
   }
 
