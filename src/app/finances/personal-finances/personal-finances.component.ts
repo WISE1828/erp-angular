@@ -627,12 +627,14 @@ export class PersonalFinancesComponent implements OnInit {
     let result = 0;
     let percent = 0;
     const dailySlice = this.slices / this.currentItems.length;
+    const dailyNegativeProfit = this.negativeProfit / this.currentItems.length;
     this.currentItems.forEach(el => {
       const comission = checkNumber(el.commission, 0);
       const profit = checkNumber(el.profit, 0);
+      const negativeProfit = checkNumber(dailyNegativeProfit, 0);
       // const accountsTax = checkNumber(el.accountsTaxUsd, 0);
       const slices = checkNumber(dailySlice, 0);
-      const clearProfit = checkNumber(el.isInternship ? 0 : profit - comission - slices, 0);
+      const clearProfit = checkNumber(el.isInternship ? 0 : profit - negativeProfit - comission - slices, 0);
       result += (clearProfit * el.profitPercent) / 100;
       percent += el.profitPercent;
     });
