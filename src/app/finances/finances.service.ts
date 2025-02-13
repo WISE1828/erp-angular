@@ -157,7 +157,8 @@ export class FinancesService {
     if (data[0].negativeProfit === 0) {
       return checkNumber((income / expose) * 100, 0);
     } else {
-      return checkNumber(((income - negativeProfit / daysInMonth) / expose) * 100, 0);
+      // return checkNumber(((income - negativeProfit / daysInMonth) / expose) * 100, 0);
+      return checkNumber(0, 0);
     }
   }
 
@@ -229,7 +230,8 @@ export class FinancesService {
     if (negativeProfit === 0) {
       return checkNumber(incomeUSD - exposeUSD - commission, 0);
     } else {
-      return checkNumber(profitMinus, 0);
+      // return checkNumber(profitMinus, 0);
+      return checkNumber(0, 0);
     }
   }
 
