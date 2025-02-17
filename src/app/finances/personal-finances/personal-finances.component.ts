@@ -519,23 +519,6 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get totalProfitAsBackend(): number {
-    let taxes = null;
-    this.currentItems.forEach(el => {
-      // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
-      // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
-      taxes = taxes + el.commission + el.accountsTax + el.accountsTaxUsd;
-    });
-
-    // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
-    // return (
-    //   this.totalIncome +
-    //   this.totalIncomeUSD * this.avrUSD +
-    //   this.totalIncomeEUR * this.avrEUR -
-    //   (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
-    //   (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
-    // );
-
-    // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
     return this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission - this.slices;
   }
 
@@ -580,7 +563,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get exposeUSD() {
-    return this.totalSpentUSD + this.totalConsumablesUSD + this.slices;
+    return this.totalSpentUSD + this.totalConsumablesUSD + this.totalComission + this.slices;
   }
 
   get getTotalRoi(): number {
@@ -638,8 +621,9 @@ export class PersonalFinancesComponent implements OnInit {
       result += (clearProfit * el.profitPercent) / 100;
       percent += el.profitPercent;
     });
-    percent = percent / this.currentItems.length / 100;
-    return checkNumber(result * percent, 0);
+    // percent = percent / this.currentItems.length / 100;
+    // const total = result * percent;
+    return checkNumber(result, 0);
   }
 
   // REFUNDS
