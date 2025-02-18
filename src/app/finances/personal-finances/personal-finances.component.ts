@@ -608,21 +608,22 @@ export class PersonalFinancesComponent implements OnInit {
 
   get getResultMoney(): number {
     let result = 0;
+
+    let comission = 0;
+    let profit = 0;
     let percent = 0;
-    const dailySlice = this.slices / this.currentItems.length;
-    const dailyNegativeProfit = this.negativeProfit / this.currentItems.length;
+    let isInternship = false;
+
     this.currentItems.forEach(el => {
-      const comission = checkNumber(el.commission, 0);
-      const profit = checkNumber(el.profit, 0);
-      const negativeProfit = checkNumber(dailyNegativeProfit, 0);
-      // const accountsTax = checkNumber(el.accountsTaxUsd, 0);
-      const slices = checkNumber(dailySlice, 0);
-      const clearProfit = checkNumber(el.isInternship ? 0 : profit - negativeProfit - comission - slices, 0);
-      result += (clearProfit * el.profitPercent) / 100;
-      percent += el.profitPercent;
+      comission += checkNumber(el.commission, 0);
+      profit += checkNumber(el.profit, 0);
+      percent = el.profitPercent / 100;
+      isInternship = el.isInternship;
+      // const clearProfit = checkNumber(el.isInternship ? 0 : profit - comission - slices, 0);
+      // result += (clearProfit * el.profitPercent) / 100;
     });
-    // percent = percent / this.currentItems.length / 100;
-    // const total = result * percent;
+    const clearProfit = checkNumber(isInternship ? 0 : profit - comission - this.slices - this.negativeProfit, 0);
+    result = clearProfit * percent;
     return checkNumber(result, 0);
   }
 
@@ -1047,10 +1048,6 @@ export class PersonalFinancesComponent implements OnInit {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: el => ({
                         items: [
-                          // {
-                          //   label: parseNumberWithPrefix(this.totalComissionTax, '₽'),
-                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
-                          // },
                           {
                             label: parseNumberWithPrefix(this.negativeProfit, '$'),
                             styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' }, //Минус пред периода

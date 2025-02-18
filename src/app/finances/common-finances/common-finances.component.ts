@@ -1121,7 +1121,7 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            label: parseNumberWithPrefix(this.getTotalProfitMinus, '$'),
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {

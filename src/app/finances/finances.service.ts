@@ -143,7 +143,23 @@ export class FinancesService {
     const consumables = consumableInRub(item);
     const expose = spent + consumables;
 
-    return checkNumber((income / expose) * 100, 0);
+    const spentUsd = spentInUSD(item);
+    const consumablesUSD = consumableInUSD(item);
+    const commissionUSD = item.commission;
+    const incomeUSD = this.getProfit(item, startDate);
+    const exposeUSD = spentUsd + commissionUSD + consumablesUSD;
+
+    let result = 0;
+    if (exposeUSD === 0) {
+      return 0;
+    }
+
+    if (startDate.isBefore(oldTableBeforeDate)) {
+      return checkNumber((income / expose) * 100, 0);
+    } else {
+      result = checkNumber(incomeUSD / exposeUSD, 0) * 100;
+      return result;
+    }
   }
 
   public getRoiMinus(item: IDailyRoiItem, data: IDailyRoiData[], startDate: moment.Moment): number {
