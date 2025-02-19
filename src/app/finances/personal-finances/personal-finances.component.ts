@@ -575,7 +575,9 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get getTotalRoiMinus(): number {
-    return checkNumber((this.getTotalProfitMinus / this.exposeUSD) * 100, 0);
+    const profit = this.getTotalProfitMinus;
+    const expose = this.exposeUSD + this.negativeProfit;
+    return checkNumber((profit / expose) * 100, 0);
   }
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
@@ -622,7 +624,7 @@ export class PersonalFinancesComponent implements OnInit {
       // const clearProfit = checkNumber(el.isInternship ? 0 : profit - comission - slices, 0);
       // result += (clearProfit * el.profitPercent) / 100;
     });
-    const clearProfit = checkNumber(isInternship ? 0 : profit - comission - this.slices - this.negativeProfit, 0);
+    const clearProfit = checkNumber(isInternship ? 0 : profit - this.slices - this.negativeProfit, 0);
     result = clearProfit * percent;
     return checkNumber(result, 0);
   }

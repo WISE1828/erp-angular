@@ -287,7 +287,6 @@ export class CommonFinancesComponent implements OnInit {
   get totalNegativeProfit(): number {
     return this.currentItems?.reduce((a, c) => a + c.meta.negativeProfit, 0) || 0;
   }
-
   get totalSlices(): number {
     return this.currentItems?.reduce((a, c) => a + c.meta.slices, 0) || 0;
   }
@@ -300,11 +299,14 @@ export class CommonFinancesComponent implements OnInit {
   get expose() {
     return this.spendsToRub + this.consumablesToRub;
   }
+
   get getTotalRoi(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
   get getTotalRoiMinus(): number {
-    return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
+    const profit = this.getTotalProfitMinus;
+    const expose = this.expose + this.totalNegativeProfit;
+    return checkNumber((profit / expose) * 100, 0);
   }
   get getTotalProfit(): number {
     const expose = 0; // Сюда не тяну this.expose - так как бек отдает уже вычисленный профит для common
@@ -1087,7 +1089,12 @@ export class CommonFinancesComponent implements OnInit {
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roi, '%'),
+                    label: parseNumberWithPrefix(
+                      ((el.profit - el.negativeProfit) /
+                        (el.negativeProfit + el.consumablesUSD + el.slices + el.spentUSD)) *
+                        100,
+                      '%'
+                    ),
                     classes: { 'w-150': true },
                     styles: { backgroundColor: '#dedede' },
                   },
@@ -1125,7 +1132,7 @@ export class CommonFinancesComponent implements OnInit {
                             styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
                           },
                           {
-                            label: parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            label: parseNumberWithPrefix(this.getTotalRoiMinus, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
