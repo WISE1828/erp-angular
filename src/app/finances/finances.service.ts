@@ -198,35 +198,7 @@ export class FinancesService {
     } else {
       return checkNumber(incomeUSD - exposeUSD - commission, 0);
     }
-    // return checkNumber(income - expose, 0);
-    // return checkNumber(income - expose - commission, 0);
   }
-
-  // public getProfit(item: IDailyRoiItem): number {
-  //   if (item.usdRub === 0) {
-  //     item.usdRub = 1;
-  //   }
-  //   const income = incomeInRub(item);
-  //   const spent = spentInRub(item);
-  //   const consumables = consumableInRub(item);
-  //   const expose = spent + consumables;
-  //   const commission = item.commission;
-
-  //   const incomeUSD = incomeInUSD(item);
-  //   const spentUSD = spentInUSD(item);
-  //   const consumablesUSD = consumableInUSD(item);
-  //   const exposeUSD = spentUSD + consumablesUSD;
-
-  //   const startDate: moment.Moment = moment();
-
-  //   if (startDate.isBefore(oldTableBeforeDate)) {
-  //     return checkNumber(income - expose, 0);
-  //   } else {
-  //     return checkNumber(incomeUSD - exposeUSD - commission, 0);
-  //   }
-  //   // return checkNumber(income - expose, 0);
-  //   // return checkNumber(income - expose - commission, 0);
-  // }
 
   public getProfitMinus(
     item: IDailyRoiItem,

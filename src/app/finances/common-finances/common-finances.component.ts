@@ -1090,9 +1090,12 @@ export class CommonFinancesComponent implements OnInit {
                   },
                   {
                     label: parseNumberWithPrefix(
-                      ((el.profit - el.negativeProfit) /
-                        (el.negativeProfit + el.consumablesUSD + el.slices + el.spentUSD)) *
-                        100,
+                      checkNumber(
+                        ((el.profit - el.negativeProfit) /
+                          (el.negativeProfit + el.consumablesUSD + el.slices + el.spentUSD)) *
+                          100,
+                        0
+                      ),
                       '%'
                     ),
                     classes: { 'w-150': true },

@@ -1517,12 +1517,12 @@ export class PersonalFinancesComponent implements OnInit {
               contextCalculated: (el, elements) => ({
                 items: [
                   {
-                    label: parseNumberWithPrefix(el.profitMinus, '$'),
+                    label: parseNumberWithPrefix(0, '$'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#d5ebd5' },
                   },
                   {
-                    label: parseNumberWithPrefix(el.roiMinus, '%'),
+                    label: parseNumberWithPrefix(0, '%'),
                     classes: { 'w-100': true },
                     styles: { backgroundColor: '#dedede' },
                   },
