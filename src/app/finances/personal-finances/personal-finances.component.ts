@@ -519,6 +519,23 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get totalProfitAsBackend(): number {
+    let taxes = null;
+    this.currentItems.forEach(el => {
+      // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
+      // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
+      taxes = taxes + el.commission + el.accountsTax + el.accountsTaxUsd;
+    });
+
+    // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
+    // return (
+    //   this.totalIncome +
+    //   this.totalIncomeUSD * this.avrUSD +
+    //   this.totalIncomeEUR * this.avrEUR -
+    //   (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
+    //   (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
+    // );
+
+    // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
     return this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission - this.slices;
   }
 
@@ -563,7 +580,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get exposeUSD() {
-    return this.totalSpentUSD + this.totalConsumablesUSD + this.totalComission + this.slices;
+    return this.totalSpentUSD + this.totalConsumablesUSD + this.slices;
   }
 
   get getTotalRoi(): number {
@@ -575,9 +592,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get getTotalRoiMinus(): number {
-    const profit = this.getTotalProfitMinus;
-    const expose = this.exposeUSD + this.negativeProfit;
-    return checkNumber((profit / expose) * 100, 0);
+    return checkNumber((this.getTotalProfitMinus / this.exposeUSD) * 100, 0);
   }
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
@@ -610,23 +625,21 @@ export class PersonalFinancesComponent implements OnInit {
 
   get getResultMoney(): number {
     let result = 0;
-
-    let comission = 0;
-    let profit = 0;
     let percent = 0;
-    let isInternship = false;
-
+    const dailySlice = this.slices / this.currentItems.length;
+    const dailyNegativeProfit = this.negativeProfit / this.currentItems.length;
     this.currentItems.forEach(el => {
-      comission += checkNumber(el.commission, 0);
-      profit += checkNumber(el.profit, 0);
-      percent = el.profitPercent / 100;
-      isInternship = el.isInternship;
-      // const clearProfit = checkNumber(el.isInternship ? 0 : profit - comission - slices, 0);
-      // result += (clearProfit * el.profitPercent) / 100;
+      const comission = checkNumber(el.commission, 0);
+      const profit = checkNumber(el.profit, 0);
+      const negativeProfit = checkNumber(dailyNegativeProfit, 0);
+      // const accountsTax = checkNumber(el.accountsTaxUsd, 0);
+      const slices = checkNumber(dailySlice, 0);
+      const clearProfit = checkNumber(el.isInternship ? 0 : profit - negativeProfit - comission - slices, 0);
+      result += (clearProfit * el.profitPercent) / 100;
+      percent += el.profitPercent;
     });
-    const clearProfit = checkNumber(isInternship ? 0 : profit - this.slices - this.negativeProfit, 0);
-    result = clearProfit * percent;
-    return checkNumber(result, 0);
+    percent = percent / this.currentItems.length / 100;
+    return checkNumber(result * percent, 0);
   }
 
   // REFUNDS
@@ -953,6 +966,7 @@ export class PersonalFinancesComponent implements OnInit {
           header: {
             label: 'Дата',
             classes: { 'w-150': true },
+            styles: { color: '#FFFFFF' },
           },
           cell: {
             calculated: el => formatDate(el.date, 'mediumDate', 'ru'),
@@ -965,11 +979,16 @@ export class PersonalFinancesComponent implements OnInit {
                 items: [
                   {
                     label: 'Минус пред. периода/Неоплаченный трафик',
-                    styles: { borderLeft: '1px solid #d1d1d1', borderTop: '1px solid #d1d1d1' },
+                    styles: {
+                      borderLeft: '1px solid #d1d1d1',
+                      borderTop: '1px solid #d1d1d1',
+                      backgroundColor: '#000',
+                      color: '#FFFFFF',
+                    },
                   },
                   {
                     label: 'Итого',
-                    styles: { borderLeft: '1px solid #d1d1d1' },
+                    styles: { borderLeft: '1px solid #d1d1d1', backgroundColor: '#000', color: '#FFFFFF' },
                   },
                 ],
                 classes: {
@@ -1004,6 +1023,7 @@ export class PersonalFinancesComponent implements OnInit {
             //   }),
             // },
             classes: { 'w-200': true },
+            styles: { color: '#FFFFFF' },
             // styles: { display: 'none' },
           },
           cell: {
@@ -1037,7 +1057,7 @@ export class PersonalFinancesComponent implements OnInit {
                 showControl: this.selectedItemId === el?.rowId,
               }),
             },
-            styles: { backgroundColor: '#f3dcdc' },
+            styles: { backgroundColor: '#f8e4af' },
             classes: { 'w-200': true },
           },
           footer: {
@@ -1050,9 +1070,13 @@ export class PersonalFinancesComponent implements OnInit {
                       templateCalculated: () => this.cellContent.itemsContainer,
                       contextCalculated: el => ({
                         items: [
+                          // {
+                          //   label: parseNumberWithPrefix(this.totalComissionTax, '₽'),
+                          //   styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' },
+                          // },
                           {
                             label: parseNumberWithPrefix(this.negativeProfit, '$'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f3dcdc' }, //Минус пред периода
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f8e4af' }, //Минус пред периода
                             content: {
                               templateCalculated: () => {
                                 return this.cellContent.commentElement;
@@ -1092,7 +1116,7 @@ export class PersonalFinancesComponent implements OnInit {
                           // },
                           {
                             label: parseNumberWithPrefix(this.totalSpentUSD, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#f3dcdc' },
+                            styles: { borderBottom: 'none', backgroundColor: '#f8e4af' },
                           },
                         ],
                       }),
@@ -1120,11 +1144,13 @@ export class PersonalFinancesComponent implements OnInit {
                     label: 'Комиссия',
                     // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
+                    styles: { color: '#FFFFFF' },
                   },
                   {
                     label: 'Расходники',
                     // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
+                    styles: { color: '#FFFFFF' },
                   },
                 ],
               }),
@@ -1186,7 +1212,7 @@ export class PersonalFinancesComponent implements OnInit {
                 showControl: this.selectedItemId === el?.rowId,
               }),
             },
-            styles: { backgroundColor: '#f4e1e5' },
+            styles: { backgroundColor: '#ececec' },
             classes: { 'w-200': true },
           },
           footer: {
@@ -1201,7 +1227,7 @@ export class PersonalFinancesComponent implements OnInit {
                         items: [
                           {
                             label: parseNumberWithPrefix(this.slices, '$'), //Неоплаченный траф
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f4e1e5' },
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#ececec' },
                           },
                           // {
                           //   label: parseNumberWithPrefix(this.totalAccountTaxUSD, '$'),
@@ -1241,11 +1267,11 @@ export class PersonalFinancesComponent implements OnInit {
                         items: [
                           {
                             label: parseNumberWithPrefix(this.totalComission, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#f4e1e5' },
+                            styles: { borderBottom: 'none', backgroundColor: '#ececec' },
                           },
                           {
                             label: parseNumberWithPrefix(this.totalConsumablesUSD, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#f4e1e5' },
+                            styles: { borderBottom: 'none', backgroundColor: '#ececec' },
                           },
                         ],
                       }),
@@ -1288,6 +1314,7 @@ export class PersonalFinancesComponent implements OnInit {
             //   }),
             // },
             classes: { 'w-200': true },
+            styles: { color: '#FFFFFF' },
           },
           cell: {
             content: {
@@ -1393,18 +1420,19 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'includingMonth',
           header: {
             label: 'Внутри месяца',
+            styles: { color: '#FFFFFF' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
                   {
                     label: 'Профит',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
                     classes: { 'w-100': true },
                   },
                   {
                     label: 'ROI',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
                     classes: { 'w-100': true },
                   },
                 ],
@@ -1420,12 +1448,12 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     label: parseNumberWithPrefix(el.profit, '$'),
                     classes: { 'w-100': true },
-                    styles: { backgroundColor: '#d5ebd5' },
+                    styles: { backgroundColor: '#92bda1' },
                   },
                   {
                     label: parseNumberWithPrefix(el.roi, '%'),
                     classes: { 'w-100': true },
-                    styles: { backgroundColor: '#dedede' },
+                    styles: { backgroundColor: '#ececec' },
                   },
                 ],
                 element: el,
@@ -1461,11 +1489,11 @@ export class PersonalFinancesComponent implements OnInit {
                         items: [
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                            styles: { borderBottom: 'none', backgroundColor: '#92bda1' },
                           },
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
-                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                            styles: { borderBottom: 'none', backgroundColor: '#ececec' },
                           },
                         ],
                       }),
@@ -1492,18 +1520,19 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'includingMinus',
           header: {
             label: 'С учетом прошлого периода',
+            styles: { color: '#FFFFFF' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
                   {
                     label: 'Профит',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
                     classes: { 'w-100': true },
                   },
                   {
                     label: 'ROI',
-                    styles: { borderTop: '1px solid #d1d1d1' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
                     classes: { 'w-100': true },
                   },
                 ],
@@ -1519,12 +1548,12 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     label: parseNumberWithPrefix(0, '$'),
                     classes: { 'w-100': true },
-                    styles: { backgroundColor: '#d5ebd5' },
+                    styles: { backgroundColor: '#7ec694' },
                   },
                   {
                     label: parseNumberWithPrefix(0, '%'),
                     classes: { 'w-100': true },
-                    styles: { backgroundColor: '#dedede' },
+                    styles: { backgroundColor: '#e0e0e0' },
                   },
                 ],
                 element: el,
@@ -1560,11 +1589,11 @@ export class PersonalFinancesComponent implements OnInit {
                         items: [
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalProfitMinus, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#d5ebd5' },
+                            styles: { borderBottom: 'none', backgroundColor: '#7ec694' },
                           },
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalRoiMinus, '%'),
-                            styles: { borderBottom: 'none', backgroundColor: '#dedede' },
+                            styles: { borderBottom: 'none', backgroundColor: '#e0e0e0' },
                           },
                         ],
                       }),
@@ -1590,6 +1619,7 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'actions',
           header: {
             classes: { 'hide-border': true, 'w-50': true },
+            styles: { backgroundColor: '#dedede' },
           },
           cell: {
             content: {
