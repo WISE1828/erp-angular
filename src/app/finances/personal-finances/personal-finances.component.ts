@@ -519,23 +519,6 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get totalProfitAsBackend(): number {
-    let taxes = null;
-    this.currentItems.forEach(el => {
-      // taxes = taxes + el.comissionTaxUsd * this.avrUSD + el.comissionTax + el.accountsTax + el.accountsTaxUsd * this.avrUSD;
-      // taxes = taxes + el.comissionTaxUsd + el.comissionTax + el.accountsTax + el.accountsTaxUsd;
-      taxes = taxes + el.commission + el.accountsTax + el.accountsTaxUsd;
-    });
-
-    // return this.totalIncomeCPA + this.totalIncomeAgency - this.totalSpentUSDnewCommission - this.totalConsumablesUSD;
-    // return (
-    //   this.totalIncome +
-    //   this.totalIncomeUSD * this.avrUSD +
-    //   this.totalIncomeEUR * this.avrEUR -
-    //   (this.totalSpent + this.totalSpentUSD * this.avrUSD) -
-    //   (this.totalConsumables + this.totalConsumablesUSD * this.avrUSD)
-    // );
-
-    // return (this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD) * this.avrUSD
     return this.totalIncomeUSD - this.totalSpentUSD - this.totalConsumablesUSD - this.totalComission - this.slices;
   }
 
@@ -580,7 +563,7 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get exposeUSD() {
-    return this.totalSpentUSD + this.totalConsumablesUSD + this.slices;
+    return this.totalSpentUSD + this.totalConsumablesUSD + this.totalComission + this.slices;
   }
 
   get getTotalRoi(): number {
@@ -592,7 +575,9 @@ export class PersonalFinancesComponent implements OnInit {
   }
 
   get getTotalRoiMinus(): number {
-    return checkNumber((this.getTotalProfitMinus / this.exposeUSD) * 100, 0);
+    const profit = this.getTotalProfitMinus;
+    const expose = this.exposeUSD + this.negativeProfit;
+    return checkNumber((profit / expose) * 100, 0);
   }
   get getTotalProfit(): number {
     return this.totalProfitAsBackend;
@@ -625,21 +610,24 @@ export class PersonalFinancesComponent implements OnInit {
 
   get getResultMoney(): number {
     let result = 0;
+
+    let comission = 0;
+    let profit = 0;
     let percent = 0;
-    const dailySlice = this.slices / this.currentItems.length;
-    const dailyNegativeProfit = this.negativeProfit / this.currentItems.length;
+
+    let isInternship = false;
+
     this.currentItems.forEach(el => {
-      const comission = checkNumber(el.commission, 0);
-      const profit = checkNumber(el.profit, 0);
-      const negativeProfit = checkNumber(dailyNegativeProfit, 0);
-      // const accountsTax = checkNumber(el.accountsTaxUsd, 0);
-      const slices = checkNumber(dailySlice, 0);
-      const clearProfit = checkNumber(el.isInternship ? 0 : profit - negativeProfit - comission - slices, 0);
-      result += (clearProfit * el.profitPercent) / 100;
-      percent += el.profitPercent;
+      comission += checkNumber(el.commission, 0);
+      profit += checkNumber(el.profit, 0);
+      percent = el.profitPercent / 100;
+      isInternship = el.isInternship;
+      // const clearProfit = checkNumber(el.isInternship ? 0 : profit - comission - slices, 0);
+      // result += (clearProfit * el.profitPercent) / 100;
     });
-    percent = percent / this.currentItems.length / 100;
-    return checkNumber(result * percent, 0);
+    const clearProfit = checkNumber(isInternship ? 0 : profit - this.slices - this.negativeProfit, 0);
+    result = clearProfit * percent;
+    return checkNumber(result, 0);
   }
 
   // REFUNDS

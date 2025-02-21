@@ -142,7 +142,6 @@ export class FinancesService {
     const spent = spentInRub(item);
     const consumables = consumableInRub(item);
     const expose = spent + consumables;
-
     const spentUsd = spentInUSD(item);
     const consumablesUSD = consumableInUSD(item);
     const commissionUSD = item.commission;
