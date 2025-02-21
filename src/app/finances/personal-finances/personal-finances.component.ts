@@ -1064,7 +1064,7 @@ export class PersonalFinancesComponent implements OnInit {
                           // },
                           {
                             label: parseNumberWithPrefix(this.negativeProfit, '$'),
-                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#f8e4af' }, //Минус пред периода
+                            styles: { borderBottom: '1px solid #d1d1d1', backgroundColor: '#ea9a99' }, //Минус пред периода
                             content: {
                               templateCalculated: () => {
                                 return this.cellContent.commentElement;
