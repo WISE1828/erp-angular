@@ -482,7 +482,7 @@ export class CommonFinancesComponent implements OnInit {
           header: {
             label: 'ID',
             classes: { 'w-50': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             calculated: el => el.userId,
@@ -494,7 +494,7 @@ export class CommonFinancesComponent implements OnInit {
           header: {
             label: 'Пользователь',
             classes: { 'w-150': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             content: {
@@ -513,7 +513,7 @@ export class CommonFinancesComponent implements OnInit {
           header: {
             label: 'Роль',
             classes: { 'w-70': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             calculated: el => el.roleName,
@@ -525,7 +525,7 @@ export class CommonFinancesComponent implements OnInit {
           header: {
             label: 'Команда',
             classes: { 'w-60': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             calculated: el => el.teamId,
@@ -559,7 +559,7 @@ export class CommonFinancesComponent implements OnInit {
           header: {
             label: 'Минус прошлого периода',
             classes: { 'w-100': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             calculated: el => parseNumberWithPrefix(el.negativeProfit, '$'),
@@ -642,7 +642,7 @@ export class CommonFinancesComponent implements OnInit {
             //   }),
             // },
             classes: { 'w-100': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             content: {
@@ -716,6 +716,7 @@ export class CommonFinancesComponent implements OnInit {
           matColumnDef: 'consumables',
           header: {
             label: '',
+            styles: { backgroundColor: '#101010' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: () => ({
@@ -724,13 +725,13 @@ export class CommonFinancesComponent implements OnInit {
                     label: 'Комиссия',
                     // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
-                    styles: { color: '#FFFFFF' },
+                    styles: { color: '#FFFFFF', backgroundColor: '#101010' },
                   },
                   {
                     label: 'Расходники',
                     // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
-                    styles: { color: '#FFFFFF' },
+                    styles: { color: '#FFFFFF', backgroundColor: '#101010' },
                   },
                 ],
               }),
@@ -809,7 +810,7 @@ export class CommonFinancesComponent implements OnInit {
           header: {
             label: 'Неоплаченный трафик',
             classes: { 'w-100': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             calculated: el => parseNumberWithPrefix(el.slices, '$'),
@@ -896,7 +897,7 @@ export class CommonFinancesComponent implements OnInit {
             //   }),
             // },
             classes: { 'w-100': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             content: {
@@ -977,19 +978,19 @@ export class CommonFinancesComponent implements OnInit {
           matColumnDef: 'includingMonth',
           header: {
             label: 'Внутри месяца',
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: () => ({
                 items: [
                   {
                     label: 'Профит',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-150': true },
                   },
                   {
                     label: 'ROI',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-150': true },
                   },
                 ],
@@ -1071,19 +1072,19 @@ export class CommonFinancesComponent implements OnInit {
           matColumnDef: 'includingMinus',
           header: {
             label: 'С учетом прошлого периода',
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: () => ({
                 items: [
                   {
                     label: 'Профит',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-150': true },
                   },
                   {
                     label: 'ROI',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-150': true },
                   },
                 ],

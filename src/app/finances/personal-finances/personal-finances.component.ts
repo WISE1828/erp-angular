@@ -954,7 +954,7 @@ export class PersonalFinancesComponent implements OnInit {
           header: {
             label: 'Дата',
             classes: { 'w-150': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             calculated: el => formatDate(el.date, 'mediumDate', 'ru'),
@@ -1011,7 +1011,7 @@ export class PersonalFinancesComponent implements OnInit {
             //   }),
             // },
             classes: { 'w-200': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
             // styles: { display: 'none' },
           },
           cell: {
@@ -1123,6 +1123,7 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'consumables',
           header: {
             label: '',
+            styles: { backgroundColor: '#101010' },
             // styles: { display: '1px solid #d1d1d1' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
@@ -1132,13 +1133,13 @@ export class PersonalFinancesComponent implements OnInit {
                     label: 'Комиссия',
                     // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
-                    styles: { color: '#FFFFFF' },
+                    styles: { color: '#FFFFFF', backgroundColor: '#101010' },
                   },
                   {
                     label: 'Расходники',
                     // styles: { borderTop: '1px solid #d1d1d1' },
                     classes: { 'w-100': true },
-                    styles: { color: '#FFFFFF' },
+                    styles: { color: '#FFFFFF', backgroundColor: '#101010' },
                   },
                 ],
               }),
@@ -1302,7 +1303,7 @@ export class PersonalFinancesComponent implements OnInit {
             //   }),
             // },
             classes: { 'w-200': true },
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
           },
           cell: {
             content: {
@@ -1408,19 +1409,19 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'includingMonth',
           header: {
             label: 'Внутри месяца',
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
                   {
                     label: 'Профит',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-100': true },
                   },
                   {
                     label: 'ROI',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-100': true },
                   },
                 ],
@@ -1508,19 +1509,19 @@ export class PersonalFinancesComponent implements OnInit {
           matColumnDef: 'includingMinus',
           header: {
             label: 'С учетом прошлого периода',
-            styles: { color: '#FFFFFF' },
+            styles: { color: '#FFFFFF', backgroundColor: '#101010' },
             content: {
               templateCalculated: () => this.cellContent.itemsContainer,
               contextCalculated: el => ({
                 items: [
                   {
                     label: 'Профит',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-100': true },
                   },
                   {
                     label: 'ROI',
-                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e' },
+                    styles: { borderTop: '1px solid #d1d1d1', color: '#e3b04e', backgroundColor: '#101010' },
                     classes: { 'w-100': true },
                   },
                 ],

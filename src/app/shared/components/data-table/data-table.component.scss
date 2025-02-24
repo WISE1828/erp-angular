@@ -69,7 +69,8 @@ mat-table {
   }
 
   mat-header-cell {
-    background-color: #101010;
+    //background-color: #101010;
+    background-color: #e5e5e5;
     padding-top: 5px !important;
     ::ng-deep {
       .cell-custom {
