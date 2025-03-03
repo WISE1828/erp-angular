@@ -157,11 +157,11 @@ export function parseMoment(date) {
   return moment(date.split('.').reverse().join('-'));
 }
 
-export function parseNumber(value, locale = 'ru', replacer = '1.1-1') {
+export function parseNumber(value, locale = 'ru', replacer = '1.0-0') {
   return formatNumber(value, locale, replacer);
 }
 
-export function parseNumberWithPrefix(value, prefix = '', locale = 'ru', replacer = '1.1-1') {
+export function parseNumberWithPrefix(value, prefix = '', locale = 'ru', replacer = '1.0-0') {
   return parseNumber(value, 'ru', replacer) + ' ' + prefix;
 }
 
