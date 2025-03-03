@@ -1437,7 +1437,7 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     label: parseNumberWithPrefix(el.profit, '$'),
                     classes: { 'w-100': true },
-                    styles: { backgroundColor: '#92bda1' },
+                    styles: { backgroundColor: '#D1EBD8' },
                   },
                   {
                     label: parseNumberWithPrefix(el.roi, '%'),
@@ -1478,7 +1478,7 @@ export class PersonalFinancesComponent implements OnInit {
                         items: [
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalProfit, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#92bda1' },
+                            styles: { borderBottom: 'none', backgroundColor: '#D1EBD8' },
                           },
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
@@ -1537,7 +1537,7 @@ export class PersonalFinancesComponent implements OnInit {
                   {
                     label: parseNumberWithPrefix(0, '$'),
                     classes: { 'w-100': true },
-                    styles: { backgroundColor: '#7ec694' },
+                    styles: { backgroundColor: '#7DC597' },
                   },
                   {
                     label: parseNumberWithPrefix(0, '%'),
@@ -1578,7 +1578,7 @@ export class PersonalFinancesComponent implements OnInit {
                         items: [
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalProfitMinus, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#7ec694' },
+                            styles: { borderBottom: 'none', backgroundColor: '#7DC597' },
                           },
                           {
                             calculated: () => parseNumberWithPrefix(this.getTotalRoiMinus, '%'),

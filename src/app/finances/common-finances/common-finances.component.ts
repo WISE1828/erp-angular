@@ -300,12 +300,21 @@ export class CommonFinancesComponent implements OnInit {
     return this.spendsToRub + this.consumablesToRub;
   }
 
+  get exposeUSD() {
+    return this.totalSpentUSD + this.totalConsumablesUSD;
+  }
+
   get getTotalRoi(): number {
+    return checkNumber((this.getTotalProfit / this.exposeUSD) * 100, 0);
+  }
+
+  get getTotalRoiOld(): number {
     return checkNumber((this.getTotalProfit / this.expose) * 100, 0);
   }
+
   get getTotalRoiMinus(): number {
     const profit = this.getTotalProfitMinus;
-    const expose = this.expose + this.totalNegativeProfit;
+    const expose = this.exposeUSD + this.totalNegativeProfit;
     return checkNumber((profit / expose) * 100, 0);
   }
   get getTotalProfit(): number {
@@ -1006,7 +1015,7 @@ export class CommonFinancesComponent implements OnInit {
                   {
                     label: parseNumberWithPrefix(el.profit, '$'),
                     classes: { 'w-150': true },
-                    styles: { backgroundColor: '#92bda1' },
+                    styles: { backgroundColor: '#D1EBD8' },
                   },
                   {
                     label: parseNumberWithPrefix(el.roi, '%'),
@@ -1043,8 +1052,8 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            label: parseNumberWithPrefix(this.getTotalProfitMinus, '$'),
-                            styles: { borderBottom: 'none', backgroundColor: '#ECECEC' },
+                            label: parseNumberWithPrefix(this.getTotalProfit, '$'),
+                            styles: { borderBottom: 'none', backgroundColor: '#D1EBD8' },
                           },
                           {
                             label: parseNumberWithPrefix(this.getTotalRoi, '%'),
@@ -1100,7 +1109,7 @@ export class CommonFinancesComponent implements OnInit {
                   {
                     label: parseNumberWithPrefix(el.profit - el.negativeProfit, '$'),
                     classes: { 'w-150': true },
-                    styles: { backgroundColor: '#7ec694' },
+                    styles: { backgroundColor: '#7DC597' },
                   },
                   {
                     label: parseNumberWithPrefix(
@@ -1787,7 +1796,7 @@ export class CommonFinancesComponent implements OnInit {
                       contextCalculated: () => ({
                         items: [
                           {
-                            calculated: () => parseNumberWithPrefix(this.getTotalRoi, '%'),
+                            calculated: () => parseNumberWithPrefix(this.getTotalRoiOld, '%'),
                             styles: { borderBottom: 'none', backgroundColor: '#dedede' },
                           },
                         ],
